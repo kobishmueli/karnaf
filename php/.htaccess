@@ -1,0 +1,18 @@
+php_flag magic_quotes_gpc off
+php_flag mysql.connect_timeout 30
+
+<Files "ktools.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "defines.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "contentpage_*.php">
+    Order allow,deny
+    Deny from all
+</Files>
+

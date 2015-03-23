@@ -1,0 +1,76 @@
+body {
+  background-color: #DEF0D8;
+}
+
+h5 {
+  color: White;
+  font-weight: bold;
+  background-color: Black;
+  text-align: center;
+  font-size: 36pt;
+  margin-bottom: 25px;
+}
+
+.Karnaf_P_Head {
+  color: Black;
+  font-weight: bold;
+  background-color: #a7a7a7;
+  text-align: center;
+}
+th,.Karnaf_L_Head {
+  font-weight: bold;
+  background-color: LightGreen;
+  color: Black;
+  text-align: center;
+}
+.Karnaf_Head2 {
+  font-weight: bold;
+  background-color: LightGreen;
+  color: Black;
+  text-align: center;
+}
+tr.Karnaf_P_Normal {
+  color: Black;
+  background-color: #EFEFEF;
+  font-family: "Arial";
+  font-size: 12pt;
+}
+tr.Karnaf_P_Low {
+  color: Black;
+  background-color: #4DB0F7;
+  font-family: "Arial";
+  font-size: 12pt;
+}
+tr.Karnaf_P_High {
+  color: White;
+  background-color: #FF3300;
+  font-family: "Arial";
+  font-size: 12pt;
+}
+tr.Karnaf_P_Critical {
+  color: Black;
+  background-color: Magenta;
+  font-family: "Arial";
+  font-size: 12pt;
+}
+tr.Karnaf_P_Closed {
+  color: Black;
+  background-color: Gray;
+  font-family: "Arial";
+  font-size: 12pt;
+}
+
+div.status { color: Blue; }
+div.status_err { color: Red; }
+
+td.karnaf_my_team {
+  color: Black;
+  background-color: #cc6600;
+  border: 1px solid Black;
+}
+
+td.karnaf_not_my_team {
+  color: Black;
+  background-color: LightBlue;
+  border: 1px solid Black;
+}

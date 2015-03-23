@@ -1,0 +1,13 @@
+##################################################################
+# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# See the LICENSE file for more information.                     #
+##################################################################
+
+TODO List:
+----------
+Add support for email attachments
+Sync LDAP users & groups
+Check LDAP user / Reset password from the ticket
+Send secure message from the tickets
+Send SMS messages from tickets
+grep -R "TODO:" php/*.php

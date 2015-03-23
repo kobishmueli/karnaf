@@ -1,0 +1,56 @@
+<?
+##################################################################
+# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# See the LICENSE file for more information.                     #
+##################################################################
+/* This is a script to deal with scheduled Karnaf tasks */
+
+require("../ktools.php");
+
+squery("UPDATE karnaf_tickets SET cat3_id=95 WHERE status=1 AND cat3_id=1 AND description like 'Subject: New User Request Form - %%'");
+
+/* Check for open tickets... (only once per two hours) */
+$query = squery("SELECT id,rep_g,count(rep_g) FROM karnaf_tickets WHERE status=1 AND rep_u='' GROUP BY rep_g");
+while($result = sql_fetch_array($query)) {
+  $number = (int)$result[2];
+  if($number == 1) echo "-".$result[1]."- ".$number." ticket is not assigned to anyone. ".KARNAF_URL."/list.php?group=".$result[1]."\n";
+  else echo "-".$result[1]."- ".$number." tickets are not assigned to anyone. ".KARNAF_URL."/list.php?group=".$result[1]."\n";
+}
+sql_free_result($query);
+
+/* TODO: Send memos... */
+#$query = squery("SELECT id,tonick,memo FROM karnaf_memo_queue");
+#while($result = sql_fetch_array($query)) {
+#}
+#sql_free_result($query);
+
+/* Search tickets that are waiting for user reply for more than a week... */
+$query = squery("SELECT id,rep_g,unick,uemail FROM karnaf_tickets WHERE status=2 AND lastupd_time<%d", time()-604800);
+while($result = sql_fetch_array($query)) {
+  $sender = $result['unick'];
+  if($sender == "Guest" && !empty($result['uemail'])) $sender = $result['uemail'];
+  echo "Ticket #".$result['id']." from ".$sender." is being automatically closed. ".KARNAF_URL."/view.php?id=".$result['id']."\n";
+  squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,0,1,'%s',%d,'%s','%s')",
+         $result['id'], "Ticket has been automatically closed due to being waiting for user reply for a week.", time(), "System", $result['rep_g']);
+  squery("UPDATE karnaf_tickets SET close_time=%d,status=0 WHERE id=%d", time(), $result['id']);
+}
+sql_free_result($query);
+
+/* Search for tickets that are *open* and waiting for an oper-reply for more than a week... */
+$query = squery("SELECT id,rep_g,unick,uemail FROM karnaf_tickets WHERE status=1 AND (lastupd_time<%d OR (open_time<%d AND lastupd_time is NULL AND rep_g='')) AND priority>=0 AND priority<20",
+                time()-604800, time()-604800);
+while($result = sql_fetch_array($query)) {
+  $sender = $result['unick'];
+  if($sender == "Guest" && !empty($result['uemail'])) $sender = $result['uemail'];
+  echo "-".$result['rep_g']."- Ticket #".$result['id']." from ".$sender." is now getting higher priority. ".KARNAF_URL."/edit.php?id=".$result['id']."\n";
+  squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,0,1,'%s',%d,'%s','%s')",
+         $result['id'], "System priority increased to High", time(), "System", $result['rep_g']);
+  squery("UPDATE karnaf_tickets SET priority=20 WHERE id=%d", $result['id']);
+  #squery("INSERT INTO karnaf_memo_queue(tonick,memo) VALUES('%s','*Warning* Priority for ticket #%s has been increased to High. For more information visit: XXX/edit.php?id=%s')", $sender);
+  #squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,0,1,'%s',%d,'%s','%s')", $result['id'],
+  #       "Team leader was notified by MemoServ", time()+1, "System", $result['rep_g']);
+}
+sql_free_result($query);
+
+require_once("../contentpage_ftr.php");
+?>

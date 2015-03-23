@@ -1,0 +1,10 @@
+##################################################################
+# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# See the LICENSE file for more information.                     #
+##################################################################
+
+Karnaf v5.0
+- Merged Karnaf IRC and Karnaf LDAP versions.
+- Converted the old C background code to scheduler.php.
+- Added import-from-sysaid.php: A script to import tickets from a SysAid database into Karnaf.
+- Fixed karnaf/karnaf_templates.php not to leak information to unauthorized users.

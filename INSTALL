@@ -1,0 +1,29 @@
+##################################################################
+# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# See the LICENSE file for more information.                     #
+##################################################################
+
+1) Install required packages:
+yum install mysql-server php-mysql php-imap
+
+2) Create "karnaf" mysql database and user:
+CREATE DATABASE `karnaf`;
+GRANT ALL PRIVILEGES ON `karnaf`.* TO `karnaf`@localhost;
+SET PASSWORD FOR `karnaf`@localhost = PASSWORD('changeme');
+
+3) Import the DB schema:
+mysql karnaf < schema.sql
+
+4) Edit php/defines.php with your favorite text editor.
+
+5) Make sure you change COOKIE_HASH's XXXX to some random text.
+
+6) Copy everything from the php directory to /var/www/html (or whatever).
+
+7) Make sure your defines.php isn't accessed from the Internet.. i.e. http://helpdesk.nonstop.co.il/defines.php should return access denied.
+
+8) Go to http://whatever/karnaf/ and login with the following credentials:
+Default username: admin
+Default password: test
+
+Good luck!
