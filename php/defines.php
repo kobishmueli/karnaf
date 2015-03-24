@@ -4,8 +4,8 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
-define("ADMINS_GROUP", "karnaf-admins");
-define("OPERS_GROUP", "karnaf-opers");
+define("KARNAF_ADMINS_GROUP", "karnaf-admins");
+define("KARNAF_OPERS_GROUP", "karnaf-opers");
 define("DB_HOST", "localhost");
 define("DB_USER", "karnaf");
 define("DB_PASS", "changeme");

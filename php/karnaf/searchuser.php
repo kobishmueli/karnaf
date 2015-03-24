@@ -108,7 +108,7 @@ href="javascript:setinfo('<?=$result['user']?>','<?=$result['fullname']?>','<?=$
 </form>
 <? } ?>
 </div>
-<? include("sql_close.php"); ?>
+<? include("karnaf_footer.php"); ?>
 </body>
 </html>
 

@@ -12,7 +12,7 @@ check_auth();
 <title>Karnaf v<?=KARNAF_VERSION?></title>
 </head>
 <?
-if(!$a_id) AccessDenied("");
+if (!isset($a_user) || $a_user=="Guest") AccessDenied("");
 else if(IsKarnafOperSession()) {
 ?>
 <frameset border="0" cols="100,*">

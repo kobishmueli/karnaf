@@ -12,8 +12,8 @@ if(isset($_POST['max_results'])) {
 ?>
 <table border="1" width="90%" bgcolor="White" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
 <tr class="Karnaf_L_Head">
-<th>ID</th>
-<th>Nick</th>
+<td>ID</td>
+<td>Nick</td>
 <td>Opened by</td>
 <td>Assigned to</td>
 <td>Priority</td>
@@ -364,7 +364,7 @@ sql_free_result($query2);
 <? if(IsKarnafAdminSession()) { ?>
 <tr>
 <td>Show private tickets:</td>
-<td><input name="show_private" type="checkbox"> (limited to <?=ADMINS_GROUP?>)</td>
+<td><input name="show_private" type="checkbox"> (limited to <?=KARNAF_ADMINS_GROUP?>)</td>
 </tr>
 <? } ?>
 <tr>

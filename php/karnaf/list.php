@@ -28,8 +28,8 @@ sql_free_result($query2);
 <br><br>
 <table border="1" width="90%" bgcolor="White" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
 <tr class="Karnaf_L_Head">
-<th>ID</th>
-<th>User</th>
+<td>ID</td>
+<td>User</td>
 <td>Opened by</td>
 <td>Assigned to</td>
 <td>Priority</td>
@@ -50,22 +50,18 @@ array_push($argv, $status);
 if(isset($_GET['oper'])) {
   $qstr .= " AND rep_u='%s'";
   array_push($argv, $_GET['oper']);
-  $i++;
 }
 else if(isset($_GET['rep_u'])) {
   $qstr .= " AND rep_u='%s'";
   array_push($argv, $_GET['rep_u']);
-  $i++;
 }
 if(isset($_GET['group'])) {
   $qstr .= " AND rep_g='%s'";
   array_push($argv, $_GET['group']);
-  $i++;
 }
 else if(isset($_GET['rep_g'])) {
   $qstr .= " AND rep_g='%s'";
   array_push($argv, $_GET['rep_g']);
-  $i++;
 }
 $qstr .= " ORDER BY t.priority DESC,t.open_time";
 $limit = 100;

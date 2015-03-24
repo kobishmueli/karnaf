@@ -77,9 +77,9 @@ sql_free_result($query2);
 <br><br>
 <table border="1" width="90%" bgcolor="White" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
 <tr class="Karnaf_L_Head">
-<th><input name="allbox" type="checkbox" onClick="javascript:CheckAll()"></th>
-<th>ID</th>
-<th>User</th>
+<td><input name="allbox" type="checkbox" onClick="javascript:CheckAll()"></td>
+<td>ID</td>
+<td>User</td>
 <td>Opened by</td>
 <td>Assigned to</td>
 <td>Priority</td>
@@ -99,7 +99,6 @@ $argv = array();
 array_push($argv, $status);
 $qstr .= " AND (rep_u='%s' or rep_u='')";
 array_push($argv, $nick);
-$i++;
 $qstr .= " ORDER BY t.priority DESC,t.open_time";
 $cnt = 0;
 array_unshift($argv, $qstr);

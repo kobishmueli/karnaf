@@ -89,7 +89,7 @@ Action on behalf of:
 <?
   $query2 = squery("SELECT id,name,gdesc FROM groups ORDER BY name");
   while($result2 = sql_fetch_array($query2)) {
-    if(!IsGroupMember($result2['name']) || ($result2['name']!=ADMINS_GROUP && $result2['name']!="dalnet-aob" && $result2['name']!="dalnet-sra" && $result2['name']!=$result['rep_g'])) continue;
+    if(!IsGroupMember($result2['name']) || ($result2['name']!=KARNAF_ADMINS_GROUP && $result2['name']!="dalnet-aob" && $result2['name']!="dalnet-sra" && $result2['name']!=$result['rep_g'])) continue;
 ?>
 <option value="<?=$result2['name']?>"<? if(($result2['name'] == $result['rep_g'])) echo " SELECTED"; ?>><?=$result2['name']?></option>
 <?

@@ -3,35 +3,37 @@
 # Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
-/* KTools v1.1 */
+/* KTools v1.2 */
 
 require_once("defines.php");
-define("KARNAF_VERSION", "5.0.1");
+define("KARNAF_VERSION", "5.0.2");
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 set_magic_quotes_runtime(0);
 if(!isset($override_magicquotes) && get_magic_quotes_gpc() == 1) die("Error: Incorrect magic_quotes_gpc setting!");
 if(function_exists("date_default_timezone_set")) date_default_timezone_set("UTC");
 
 /* safe_die - same as die() but also adds the footer and closes the database connection */
-function safe_die($reason="", $boxtitle="Application Error") {
-  global $connection,$contentpage_hdr,$nohotspots,$nick,$skinpath,$menus2,$myurl;
-  if($reason != "none") {
-    echo "<font color=\"Black\"><table width=\"300\">";
-    echo "<tr><td bgcolor=\"red\" align=\"center\">";
-    echo "<b>".$boxtitle."</b></td></tr>";
-    echo "<tr><td bgcolor=\"#EEEEEE\" align=\"left\">";
-    echo str_replace("<","&lt;",$reason);
-    echo "</td></tr></table></font>";
+if(!function_exists("safe_die")) {
+  function safe_die($reason="", $boxtitle="Application Error") {
+    global $connection,$contentpage_hdr,$nohotspots,$nick,$skinpath,$menus2,$myurl;
+    if($reason != "none") {
+      echo "<font color=\"Black\"><table width=\"300\">";
+      echo "<tr><td bgcolor=\"red\" align=\"center\">";
+      echo "<b>".$boxtitle."</b></td></tr>";
+      echo "<tr><td bgcolor=\"#EEEEEE\" align=\"left\">";
+      echo str_replace("<","&lt;",$reason);
+      echo "</td></tr></table></font>";
+    }
+    if(isset($contentpage_hdr)) {
+       if(file_exists("contentpage_ftr.php")) require_once("contentpage_ftr.php");
+       else if(file_exists("../contentpage_ftr.php")) require_once("../contentpage_ftr.php");
+       else if(file_exists("../../contentpage_ftr.php")) require_once("../../contentpage_ftr.php");
+    }
+    else {
+      if(isset($connection)) mysql_close($connection);
+    }
+    die();
   }
-  if(isset($contentpage_hdr)) {
-     if(file_exists("contentpage_ftr.php")) require_once("contentpage_ftr.php");
-     else if(file_exists("../contentpage_ftr.php")) require_once("../contentpage_ftr.php");
-     else if(file_exists("../../contentpage_ftr.php")) require_once("../../contentpage_ftr.php");
-  }
-  else {
-    if(isset($connection)) mysql_close($connection);
-  }
-  die();
 }
 
 /* get_session_ip - get the user's (real) IP */
@@ -58,19 +60,23 @@ function fix_html($text) {
 }
 
 /* add_log - add logging event into the ws_logs table */
-function add_log($logtype, $action) {
-  global $nick;
+if(!function_exists("add_log")) {
+  function add_log($logtype, $action) {
+    global $nick;
 
-  squery("INSERT INTO ws_logs(date,action,user,logtype,ip) VALUES(%d,'%s','%s','%s','%s')",
-         time(), $action, $nick, $logtype, get_session_ip());
+    squery("INSERT INTO ws_logs(date,action,user,logtype,ip) VALUES(%d,'%s','%s','%s','%s')",
+           time(), $action, $nick, $logtype, get_session_ip());
 
-  return 1;
+    return 1;
+  }
 }
 
 /* isodd - check if a number is an odd number or not */
-function isodd($i) {
-  if($i % 2) return 1;
-  return 0;
+if(!function_exists("isodd")) {
+  function isodd($i) {
+    if($i % 2) return 1;
+    return 0;
+  }
 }
 
 /* send_mail - send a mail to a user (actually adds it to the mailing queue for sending later) */
@@ -82,9 +88,11 @@ function send_mail($to,$subject,$body) {
 }
 
 /* showyesno - return a textual Yes/No response to 1/0 */
-function showyesno($val) {
-  if($val == 1) return "Yes";
-  else return "No";
+if(!function_exists("showyesno")) {
+  function showyesno($val) {
+    if($val == 1) return "Yes";
+    else return "No";
+  }
 }
 
 /* RandomNumber - generate a random number */
@@ -109,7 +117,7 @@ function is_backup_running() {
 /* IsKarnafAdminSession - check if the user has Karnaf Admin access */
 function IsKarnafAdminSession() {
   global $a_groups,$a_operlev;
-  if(in_array(ADMINS_GROUP, $a_groups)) return 1;
+  if(in_array(KARNAF_ADMINS_GROUP, $a_groups)) return 1;
   if($a_operlev==80) return 1;
   else return 0;
 }
@@ -117,16 +125,16 @@ function IsKarnafAdminSession() {
 /* IsKarnafOperSession - check if the user has Karnaf Operator access */
 function IsKarnafOperSession() {
   global $a_groups,$a_operlev;
-  if(in_array(OPERS_GROUP, $a_groups)) return 1;
+  if(in_array(KARNAF_ADMINS_GROUP, $a_groups) || in_array(KARNAF_OPERS_GROUP, $a_groups)) return 1;
   if($a_operlev==80) return 1;
   else return 0;
 }
 
 /* CheckOperSession - check if the user has Karnaf Operator access and exit otherwise */
-function CheckOperSession($requiredacc = 25) {
+function CheckOperSession($requiredacc = 0) {
   global $a_groups,$a_operlev;
   $res = 0;
-  if(in_array(OPERS_GROUP, $a_groups)) $res = 1;
+  if(in_array(KARNAF_ADMINS_GROUP, $a_groups) || in_array(KARNAF_OPERS_GROUP, $a_groups)) $res = 1;
   if($res != 1) AccessDenied("This page is limited to Server Operators.");
   if($a_operlev < $requiredacc) AccessDenied("This page is limited to $requiredacc.");
 
@@ -134,19 +142,26 @@ function CheckOperSession($requiredacc = 25) {
 }
 
 /* IsGroupMember - check if the user is a member of a group */
-function IsGroupMember($group_name) {
-  global $a_groups;
+if(!function_exists("IsGroupMember")) {
+  function IsGroupMember($group_name) {
+    global $a_groups;
 
-  if(in_array($group_name, $a_groups)) return 1;
-  else return 0;
+    if(in_array($group_name, $a_groups)) return 1;
+    else return 0;
+  }
 }
 
 /* show_title - nice way to show the page title */
-function show_title($title) {
-  echo "<h5>$title</h5>\n";
+if(!function_exists("show_title")) {
+  function show_title($title) {
+    echo "<h5>$title</h5>\n";
+  }
 }
 
+if(!function_exists("squery")) {
+
 /* sql_connect - connect to the mysql server */
+if(!function_exists("sql_connect")) {
 function sql_connect() {
   global $connection;
 
@@ -156,6 +171,7 @@ function sql_connect() {
     mysql_select_db(DB_DB) or die("Error: Can't select mysql database!");
     error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
   }
+}
 }
 
 /* squery - helper function for real_squery() */
@@ -222,6 +238,7 @@ function real_squery($argv) {
 
   return $query;
 }
+}
 
 function sql_fetch_array(&$x) {
   if(is_array($x)) {
@@ -280,8 +297,12 @@ function sqldiff_compare() {
   return $res;
 }
 
+} # end of function_exists("squery")
+
 function check_auth($xhost="") {
   global $nick,$a_user,$a_id,$a_operlev,$a_groups,$a_flags,$a_email,$a_timezone,$a_fullname,$error,$no_cache,$nologin;
+
+  if(function_exists("check_access")) { return check_access(); }
 
   if($xhost == "") $xhost = $_SERVER['REMOTE_ADDR']; /* This is to let the login API "impersonate" IPs... */
 
@@ -335,7 +356,6 @@ function check_auth($xhost="") {
           }
         }
         sql_free_result($query2);
-        if($a_operlev > 25) array_push($a_groups, OPERS_GROUP);
         $ckey = md5(COOKIE_HASH.$result['pass']);
         if(isset($_POST['user']) && isset($_POST['pass']) && !isset($error)) {
           squery("UPDATE users SET lasthost='%s',lasttime=%d WHERE user='%s'", $xhost, time(), $nick);
@@ -369,34 +389,37 @@ function check_auth($xhost="") {
   return 0;
 }
 
-function load_template($file) {
-  global $title,$theme,$a_user;
+if(!function_exists("load_template")) {
+  function load_template($file) {
+    global $title,$theme,$a_user;
 
-  if(!is_file($file)) $file = "../".$file;
-  if(!is_file($file)) $file = "../".$file;
-  if(!is_file($file)) safe_die("Can't find template file!", "Theme Error");
-  $handle = fopen($file,"r");
-  if(!$handle) safe_die("Can't open template!", "Theme Error");
-  while(!feof($handle)) {
-    $buffer = str_replace("%TITLE%",$title,fgets($handle, 4096));
-    $buffer = str_replace("%MY_URL%",MY_URL,$buffer);
-    $buffer = str_replace("%THEMEPATH%",MY_URL."/themes/".$theme,$buffer);
-    $buffer = str_replace("%USER%",$a_user,$buffer);
-    #For future use:
-    #if($a_lang==1) $buffer = str_replace("%DIR%"," dir=\"rtl\"",$buffer);
-    #else $buffer = str_replace("%DIR%","",$buffer);
-    if(strstr($buffer, "%MENUS%")) $buffer = str_replace("%MENUS%",get_menus(),$buffer);
-    /* TODO: Add more variables, and optimize the code... */
-    echo $buffer;
+    if(!is_file($file)) $file = "../".$file;
+    if(!is_file($file)) $file = "../".$file;
+    if(!is_file($file)) safe_die("Can't find template file!", "Theme Error");
+    $handle = fopen($file,"r");
+    if(!$handle) safe_die("Can't open template!", "Theme Error");
+    while(!feof($handle)) {
+      $buffer = str_replace("%TITLE%",$title,fgets($handle, 4096));
+      $buffer = str_replace("%MY_URL%",MY_URL,$buffer);
+      $buffer = str_replace("%THEMEPATH%",MY_URL."/themes/".$theme,$buffer);
+      $buffer = str_replace("%USER%",$a_user,$buffer);
+      #For future use:
+      #if($a_lang==1) $buffer = str_replace("%DIR%"," dir=\"rtl\"",$buffer);
+      #else $buffer = str_replace("%DIR%","",$buffer);
+      if(strstr($buffer, "%MENUS%")) $buffer = str_replace("%MENUS%",get_menus(),$buffer);
+      /* TODO: Add more variables, and optimize the code... */
+      echo $buffer;
+    }
+    fclose($handle);
   }
-  fclose($handle);
 }
 
-function AccessDenied($reason="You don't have access to view the page you requested.") {
-  global $nick;
+if(!function_exists("AccessDenied")) {
+  function AccessDenied($reason="You don't have access to view the page you requested.") {
+    global $nick;
 
-  if(!empty($reason)) show_title($reason);
-  if($nick == "Guest") {
+    if(!empty($reason)) show_title($reason);
+    if($nick == "Guest") {
 ?>
 <b>Please login using your username and nick password:</b>
 <form method="post">
@@ -413,10 +436,11 @@ function AccessDenied($reason="You don't have access to view the page you reques
 </table>
 </form>
 <?
-  }
-  safe_die("none");
+    }
+    safe_die("none");
 
-  return 1;
+    return 1;
+  }
 }
 
 function datetounixtime($date) {
@@ -425,14 +449,18 @@ function datetounixtime($date) {
   return mktime(0, 0, 0, $month, $day, $year) - $a_timezone;
 }
 
-function showtime($timevar) {
-  global $a_timezone;
-  return strftime("%d/%m/%Y %R", $timevar + $a_timezone);
+if(!function_exists("showtime")) {
+  function showtime($timevar) {
+    global $a_timezone;
+    return strftime("%d/%m/%Y %R", $timevar + $a_timezone);
+  }
 }
 
-function showdate($timevar) {
-  global $a_timezone;
-  return strftime("%d/%m/%Y", $timevar + $a_timezone);
+if(!function_exists("showdate")) {
+  function showdate($timevar) {
+    global $a_timezone;
+    return strftime("%d/%m/%Y", $timevar + $a_timezone);
+  }
 }
 
 function do_duration($orgvar) {
@@ -515,31 +543,37 @@ function show_board_body($body) {
   echo $body;
 }
 
-function merge_array($arr) {
-  $res = "";
-  foreach($arr as $x) {
-    if($res <> "") $res .= ",";
-    if(is_array($x)) $res .= $x[0];
-    else $res .= $x;
-  }
+if(!function_exists("merge_array")) {
+  function merge_array($arr) {
+    $res = "";
+    foreach($arr as $x) {
+      if($res <> "") $res .= ",";
+      if(is_array($x)) $res .= $x[0];
+      else $res .= $x;
+    }
 
-  return $res;
+    return $res;
+  }
 }
 
-function htmlspecialchars2($text) {
-  /* PHP 5.4.0+ defaults the charset to UTF-8 instead of ISO-8859-1... */
-  if(!defined("ENT_COMPAT") || !defined("ENT_HTML401")) return htmlspecialchars($text);
-  return htmlspecialchars($text,ENT_COMPAT | ENT_HTML401, "ISO-8859-1");
+if(!function_exists("htmlspecialchars2")) {
+  function htmlspecialchars2($text) {
+    /* PHP 5.4.0+ defaults the charset to UTF-8 instead of ISO-8859-1... */
+    if(!defined("ENT_COMPAT") || !defined("ENT_HTML401")) return htmlspecialchars($text);
+    return htmlspecialchars($text,ENT_COMPAT | ENT_HTML401, "ISO-8859-1");
+  }
 }
 
 /* coolsize - convert size in bytes to human-readable format */
-function coolsize($bytes) {
-  $b = (int)$bytes;
-  $s = array('B', 'KB', 'MB', 'GB', 'TB');
-  if($b < 0) return "0".$s[0];
-  $con = 1024;
-  $e = (int)(log($b,$con));
-  return number_format($b/pow($con,$e),2,'.','.').' '.$s[$e];
+if(!function_exists("coolsize")) {
+  function coolsize($bytes) {
+    $b = (int)$bytes;
+    $s = array('B', 'KB', 'MB', 'GB', 'TB');
+    if($b < 0) return "0".$s[0];
+    $con = 1024;
+    $e = (int)(log($b,$con));
+    return number_format($b/pow($con,$e),2,'.','.').' '.$s[$e];
+  }
 }
 
 /* make_menus - unused function (reserved for DALnet) */

@@ -3,6 +3,17 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.2 (mostly cosmetic changes)
+- OPERS_GROUP --> KARNAF_OPERS_GROUP
+- ADMINS_GROUP --> KARNAF_ADMINS_GROUP
+- <th> --> <td>
+- </th> --> </th> (list.php & mylist.php & search.php)
+- Removed unused variables (list.php & mylist.php)
+- sql_close.php --> karnaf_footer.php (searchuser.php)
+- $a_id check to $a_user (karnaf.php)
+- Updated ktools.php to ignore common functions if they already exist.
+- Updated to version 5.0.2.
+
 Karnaf v5.0.1
 - chmod -R 755 php
 - Changes to import-from-sysaid.php:
