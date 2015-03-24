@@ -77,6 +77,7 @@ if(isset($_POST['submit'])) {
     $id = sql_insert_id();
     foreach($sql_rows as $row) {
       if(is_array($row)) $row = $row[0];
+      if($row == $sql_id) continue; /* No need to update the primary ID since we already insrted it... */
       $query = squery(0, "UPDATE ".$sql_table." SET ".$row."='%s' WHERE ".$sql_id."=%d", $_POST["es-".$row], $id);
     }
     add_log($sql_table, "INSERT ".$sql_id."=".$id);

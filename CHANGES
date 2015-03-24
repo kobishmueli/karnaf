@@ -3,6 +3,9 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.3a
+- Fixed a bug on php/karnaf/mng_editsql.php when trying to insert an entry that supports setting the primary id.
+
 Karnaf v5.0.2 (mostly cosmetic changes)
 - OPERS_GROUP --> KARNAF_OPERS_GROUP
 - ADMINS_GROUP --> KARNAF_ADMINS_GROUP
