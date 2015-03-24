@@ -3,8 +3,18 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
-Karnaf v5.0
+Karnaf v5.0.1
+- chmod -R 755 php
+- Changes to import-from-sysaid.php:
+  1) Import attachments.
+  2) Import logs (actions).
+- Added attachments support to view.php and allow users to upload new attachments.
+- Added download.php to download/view attachments.
+- Added coolsize() function to convert size in bytes to human-readable format.
+
+Karnaf v5.0.0
 - Merged Karnaf IRC and Karnaf LDAP versions.
 - Converted the old C background code to scheduler.php.
 - Added import-from-sysaid.php: A script to import tickets from a SysAid database into Karnaf.
 - Fixed karnaf/karnaf_templates.php not to leak information to unauthorized users.
+- Added delete-karnaf-db.php: A script to delete karnaf's tickets database.

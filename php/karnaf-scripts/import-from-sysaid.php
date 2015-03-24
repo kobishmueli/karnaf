@@ -159,6 +159,8 @@ while($result = sql_fetch_array($query)) {
     squery("DELETE FROM karnaf_tickets WHERE id=%d", $tid);
     squery("DELETE FROM karnaf_actions WHERE tid=%d", $tid);
     squery("DELETE FROM karnaf_replies WHERE tid=%d", $tid);
+    squery("DELETE FROM karnaf_files WHERE tid=%d", $tid);
+    if(defined("KARNAF_UPLOAD_PATH") && KARNAF_UPLOAD_PATH!="" && file_exists(KARNAF_UPLOAD_PATH."/".$tid)) system("find ".KARNAF_UPLOAD_PATH."/".$tid." -type f -delete");
   }
   if(empty($result['submit_user'])) {
     echo "Skipping ticket #".$tid." (no submit user)...\n";
@@ -232,6 +234,21 @@ while($result = sql_fetch_array($query)) {
   }
   sql_free_result($query2);
 
+  /* Check actions */
+  $query2 = squery("SELECT UNIX_TIMESTAMP(log_time) AS log_time,user_name,log_description FROM sysaid.service_req_log WHERE service_req_id=%d", $tid);
+  while($result2 = sql_fetch_array($query2)) {
+    $msg_user = remove_before_slashes($result2['user_name']);
+    if($msg_user == $uuser) continue; /* Skip ticket opener actions */
+    $body = $result2['log_description'];
+    $body = str_ireplace("<br>","\n",$body);
+    $body = strip_tags($body);
+    if(substr($body,0,1) == "\n") $body = substr($body,1);
+    echo "Adding action to ticket #".$tid."...\n";
+    squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'%s','%s','%s',%d,0,%d)",
+           $tid, $body, $msg_user, "karnaf-imported", $result2['log_time'], 0);
+  }
+  sql_free_result($query2);
+
   /* Now let's add the solution if one exists.. */
   if(!empty($result['solution'])) {
     echo "Adding solution to ticket #".$tid."...\n";
@@ -242,6 +259,37 @@ while($result = sql_fetch_array($query)) {
       squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s')", $tid, $body,
              "Guest", $msg_time, $msg_user, "(IMPORTED)");
     }
+  }
+
+  /* Add the attachments */
+  if(defined("KARNAF_UPLOAD_PATH") && KARNAF_UPLOAD_PATH!="") {
+    $query2 = squery("SELECT UNIX_TIMESTAMP(file_date) AS file_date,file_name,file_content FROM sysaid.service_req_files WHERE id=%d", $tid);
+    while($result2 = sql_fetch_array($query2)) {
+      $file_name = $result2['file_name'];
+      $file_ext = strtolower(substr($file_name,-4));
+      $data = $result2['file_content'];
+      if($file_ext == ".jpg") $file_type = "image/jpeg";
+      else if($file_ext == ".png") $file_type = "image/png";
+      else if($file_ext == ".gif") $file_type = "image/gif";
+      else $file_type = "application/octet-stream";
+      $file_desc = "Imported from SysAid";
+      $file_size = 0;
+      squery("INSERT INTO karnaf_files(tid,file_name,file_type,file_desc,file_size,lastupd_time) VALUES(%d,'%s','%s','%s',%d,%d)",
+             $tid, $file_name, $file_type, $file_desc, $file_size, $result2['file_date']);
+      $id = sql_insert_id();
+      $fn = KARNAF_UPLOAD_PATH."/".$tid;
+      if(!file_exists($fn)) {
+        if(!mkdir($fn)) return "Can't create attachment directory!";
+      }
+      $fn .= "/".$id.$file_ext;
+      if(($file = fopen($fn, "wb"))) {
+        fwrite($file, $result2['file_content']);
+        fclose($file);
+      }
+      /* Let's check the file's size and update the entry... */
+      squery("UPDATE karnaf_files SET file_size=%d WHERE id=%d", filesize($fn), $id);
+    }
+    sql_free_result($query2);
   }
 }
 sql_free_result($query);

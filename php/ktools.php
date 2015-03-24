@@ -3,10 +3,10 @@
 # Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
-/* KTools v1.0 */
+/* KTools v1.1 */
 
 require_once("defines.php");
-define("KARNAF_VERSION", "5.0");
+define("KARNAF_VERSION", "5.0.1");
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 set_magic_quotes_runtime(0);
 if(!isset($override_magicquotes) && get_magic_quotes_gpc() == 1) die("Error: Incorrect magic_quotes_gpc setting!");
@@ -530,6 +530,16 @@ function htmlspecialchars2($text) {
   /* PHP 5.4.0+ defaults the charset to UTF-8 instead of ISO-8859-1... */
   if(!defined("ENT_COMPAT") || !defined("ENT_HTML401")) return htmlspecialchars($text);
   return htmlspecialchars($text,ENT_COMPAT | ENT_HTML401, "ISO-8859-1");
+}
+
+/* coolsize - convert size in bytes to human-readable format */
+function coolsize($bytes) {
+  $b = (int)$bytes;
+  $s = array('B', 'KB', 'MB', 'GB', 'TB');
+  if($b < 0) return "0".$s[0];
+  $con = 1024;
+  $e = (int)(log($b,$con));
+  return number_format($b/pow($con,$e),2,'.','.').' '.$s[$e];
 }
 
 /* make_menus - unused function (reserved for DALnet) */

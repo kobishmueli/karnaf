@@ -4,6 +4,31 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+function do_upload($tid) {
+  global $nick;
+
+  if($_FILES['attachment-file']['size'] < 1) return "File size is too small!";
+
+  $file_name = $_FILES['attachment-file']['name'];
+  $file_ext = strtolower(substr($file_name,-4));
+  if($file_ext!=".jpg" && $file_ext!=".png" && $file_ext!=".pdf" && $file_ext!=".log" && $file_ext!=".txt") return "You can only upload jpg/png/pdf/log/txt files!";
+  $file_type = $_FILES['attachment-file']['type'];
+  $file_size = $_FILES['attachment-file']['size'];
+  $file_desc = "Attachment by ".$nick;
+  if(!is_numeric($file_size)) safe_die("Error! Invalid number in file size!");
+  $query = squery("INSERT INTO karnaf_files(tid,file_name,file_type,file_desc,file_size,lastupd_time) VALUES(%d,'%s','%s','%s',%d,%d)",
+                  $tid, $file_name, $file_type, $file_desc, $file_size, time());
+  if(!$query) return "SQL Error! Query failed on do_upload() function: ".mysql_error();
+  $id = sql_insert_id();
+  $fn = KARNAF_UPLOAD_PATH."/".$tid;
+  if(!file_exists($fn)) {
+    if(!mkdir($fn)) return "Can't create attachment directory!";
+  }
+  $fn .= "/".$id.$file_ext;
+  if(!copy($_FILES['attachment-file']['tmp_name'],$fn)) return "Couldn't create attachment file!";
+  return "";
+}
+
 if(isset($_GET['ajax']) && $_GET['ajax']=="1") {
   require_once("../ktools.php");
   check_auth();
@@ -34,6 +59,18 @@ if($result = sql_fetch_array($query)) {
       send_memo($result['rep_u'], "User has replied to ticket #".$result['id'].". For more information visit: ".OPERS_URL."/karnaf/edit.php?id=".$result['id']);
     }
     echo "<div class=\"status\">Your reply has been saved.</div><br>";
+    $result['status'] = 1;
+  }
+  if(isset($_FILES['attachment-file']['name']) && !empty($_FILES['attachment-file']['name'])) {
+    $error = do_upload($id);
+    if($error == "") {
+      if((int)$result['status'] == 2) {
+        squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d AND status=2", time(), $id);
+        send_memo($result['rep_u'], "User has added an attachment to ticket #".$result['id'].". For more information visit: ".OPERS_URL."/karnaf/edit.php?id=".$result['id']);
+      }
+      echo "<div class=\"status\">Your attachment has been saved.</div><br>";
+    }
+    else echo "<div class=\"status_err\">Error: ".$error."</div><br>";
   }
   if($isoper) {
     if(IsGroupMember($result['rep_g']) || IsKarnafAdminSession()) $isadmin = 1;
@@ -288,6 +325,38 @@ else echo $result['rep_g'];
 <tr><td colspan="2">
 <?=show_board_body($result['description'])?>
 </td></tr>
+<?
+  $query2 = squery("SELECT id,file_name,file_desc,file_size FROM karnaf_files WHERE tid=%d ORDER BY id", $id);
+  $cnt = 0;
+  while($result2 = sql_fetch_array($query2)) {
+    $cnt++;
+    if($cnt == 1) {
+?>
+<tr class="Karnaf_Head2"><td colspan="2">Attachments</td></tr>
+<tr><td colspan="2">
+<table border="1" width="100%" cellpadding="0" cellspacing="0">
+<tr class="Karnaf_P_Head">
+<td>File</td>
+<td>Size</td>
+<td width="80%">Description</td>
+</tr>
+<?
+    }
+?>
+<tr>
+<td><a href="download.php?id=<?=$id?>&download=<?=$result2['id']?>"><?=$result2['file_name']?></a></td>
+<td><?=coolsize($result2['file_size'])?></td>
+<td><?=$result2['file_desc']?></td>
+</tr>
+<?
+  }
+  #if(!$cnt) echo "<tr><td colspan=\"3\" align=\"center\">*** None ***</td></tr>";
+  sql_free_result($query2);
+  if($cnt) {
+?>
+</table>
+</td></tr>
+<? } ?>
 <tr class="Karnaf_Head2"><td colspan="2">Actions</td></tr>
 <tr><td colspan="2">
 <table border="1" width="100%" cellpadding="0" cellspacing="0">
@@ -371,8 +440,11 @@ Add new reply
 </tr>
 <tr>
 <td colspan="2">
-<form name="form1" id="form1" method="post">
+<form name="form1" id="form1" method="post" enctype="multipart/form-data">
 <textarea rows="8" style="width:100%" name="reply_text" id="reply_text"></textarea><br>
+<? if(defined("KARNAF_UPLOAD_PATH") && KARNAF_UPLOAD_PATH!="") { ?>
+Add attachment: <input type="file" style="width:100%" name="attachment-file" id="attachment-file">
+<? } ?>
 <center><input name="submit" type="submit" value="Submit!"></center>
 </form>
 </td>

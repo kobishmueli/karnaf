@@ -10,9 +10,11 @@ require("../ktools.php");
 squery("DELETE FROM karnaf_tickets");
 squery("DELETE FROM karnaf_replies");
 squery("DELETE FROM karnaf_actions");
+squery("DELETE FROM karnaf_files");
 squery("ALTER TABLE karnaf_tickets AUTO_INCREMENT = 0");
 squery("ALTER TABLE karnaf_replies AUTO_INCREMENT = 0");
 squery("ALTER TABLE karnaf_actions AUTO_INCREMENT = 0");
+squery("ALTER TABLE karnaf_files AUTO_INCREMENT = 0");
 
 echo "Done.";
 

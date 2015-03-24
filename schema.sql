@@ -197,11 +197,24 @@ CREATE TABLE `karnaf_mail_accounts` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `karnaf_files` (
+  `id` int(11) NOT NULL auto_increment,
+  `tid` int(11) NOT NULL default '0',
+  `file_name` varchar(250) NOT NULL,
+  `file_type` varchar(50) NOT NULL,
+  `file_desc` varchar(250) NOT NULL,
+  `file_path` varchar(250) NOT NULL,
+  `file_size` int(11) NOT NULL,
+  `lastupd_time` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+);
+
 CREATE TABLE `karnaf_schema` (
   `version` varchar(30) NOT NULL DEFAULT ''
 );
 
 INSERT INTO `karnaf_schema` VALUES ('1');
+INSERT INTO `karnaf_schema` VALUES ('2');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');

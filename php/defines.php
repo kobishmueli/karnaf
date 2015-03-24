@@ -18,4 +18,5 @@ define("COOKIE_NICK", "i_user");
 define("COOKIE_KEY", "i_key");
 define("COOKIE_HASH", "XXXX");
 define("KARNAF_DEFAULT_GROUP", "karnaf-helpdesk");
+define("KARNAF_UPLOAD_PATH", "/var/www/karnaf/upload");
 ?>
