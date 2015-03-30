@@ -105,13 +105,13 @@ while($result = sql_fetch_array($query)) {
         if($m_body == "") $m_body = imap_fetchbody($mbox, $m_id, "1");
         $m_body = quoted_printable_decode($m_body);
         #For debugging:
-        $m_body = "Type: multi-part\n".$m_body;
+        #$m_body = "Type: multi-part\n".$m_body;
       }
       else {
         # not multi-part email
         $m_body = imap_body($mbox, $m_id);
         #For debugging:
-        $m_body = "Type: not-multi-part\n".$m_body;
+        #$m_body = "Type: not-multi-part\n".$m_body;
       }
       $attachments = array();
       if(isset($structure->parts)) {
@@ -250,10 +250,22 @@ while($result = sql_fetch_array($query)) {
            $randstr,$status,$m_body,$cat3_id,$unick,$uname,$reply_to,$uphone,$uip,$upriority,$priority,time(),"(EMAIL)",$rep_u,
            $rep_g,0,0,1,0,$m_msgid);
         $tid = sql_insert_id();
-        $reply = "Your ticket has been opened and we will take care of it as soon as possible.\n\n";
-        $reply .= "Your Ticket ID: ".$tid."\nYour Verification Number: ".$randstr."\nThe ticket has been assigned to: ".$rep_g."\n";
-        $reply .= "To view the ticket status: ".KARNAF_URL."/view.php?id=".$tid."&code=".$randstr."\n";
+        $reply = "Your ticket has been opened and we will take care of it as soon as possible.\r\n\r\n";
+        $reply .= "Your Ticket ID: ".$tid."\r\nYour Verification Number: ".$randstr."\r\nThe ticket has been assigned to: ".$rep_g."\r\n";
+        $reply .= "To view the ticket status: ".KARNAF_URL."/view.php?id=".$tid."&code=".$randstr."\r\n";
         if($status != 4) karnaf_email($reply_to, "Ticket #".$tid, $reply);
+        $query2 = squery("SELECT autoforward FROM groups WHERE name='%s'", $rep_g);
+        if($result2 = sql_fetch_array($query2)) {
+          if(!empty($result2['autoforward'])) {
+            /* Automatically forward new tickets to the team... */
+            $text = "New ticket from: ".$unick."\r\n\r\n";
+            $text .= "To edit the ticket: ".KARNAF_URL."/edit.php?id=".$tid."\r\n";
+            $text = "Body: ".$m_body."\r\n";
+            $text .= "To edit the ticket: ".KARNAF_URL."/edit.php?id=".$tid."\r\n";
+            karnaf_email($result2['autoforward'], "[".$rep_g."] New Ticket #".$tid, $text);
+          }
+        }
+        sql_free_result($query2);
       }
       if($tid && isset($attachments) && count($attachments)>0) {
         /* We have attachment(s), let's add them to the ticket... */

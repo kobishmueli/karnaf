@@ -23,7 +23,7 @@ $ureplies = 0;
 Statistics between <?=showdate($starttime)?> to <?=showdate(time())?><br><br>
 <table border="1">
 <tr>
-<th>Nick</th>
+<th><?=USER_FIELD?></th>
 <th>Replies to unique tickets</th>
 <th>Total Replies</th>
 </tr>

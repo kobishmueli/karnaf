@@ -40,7 +40,7 @@ sql_free_result($query2);
 </select>
 </form>
 <br><br>
-<table border="1" width="90%" bgcolor="White" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
+<table border="1" width="90%" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
 <tr class="Karnaf_L_Head">
 <td>ID</td>
 <td>User</td>
@@ -50,6 +50,7 @@ sql_free_result($query2);
 <td>Open Date</td>
 <td>Actions</td>
 <td>Duration</td>
+<td>Note</td>
 </tr>
 <?
 $qstr = "SELECT t.id,t.randcode,t.status,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
@@ -123,11 +124,10 @@ echo $userinfo;
 <td><?=$result['spriority']?></td>
 <td><?=showtime($result['open_time'])?></td>
 <td>
-<span title="<?=str_replace("\"","''",$result['last_note'])?>" style="cursor:pointer">
 <?=$action_cnt+$reply_cnt?>
-</span>
 </td>
 <td><?=do_duration(time() - $result['open_time'])?></td>
+<td><?=$result['last_note']?></td>
 <td>
 <!--
 <a href="view.php?id=<?=$result['id']?>">View Ticket</a> | <a href="edit.php?id=<?=$result['id']?>" !target="_blank">Edit Ticket</a>
@@ -139,7 +139,7 @@ echo $userinfo;
 </tr>
 <?
 }
-if(!$cnt) echo "<tr><td colspan=\"8\" align=\"center\">*** None ***</td></tr>";
+if(!$cnt) echo "<tr><td colspan=\"9\" align=\"center\">*** None ***</td></tr>";
 ?>
 </table>
 <?

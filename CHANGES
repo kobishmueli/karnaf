@@ -3,6 +3,21 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.5
+- Removed debugging from php/karnaf-scripts/fetch-emails.php.
+- Added autoforward setting to groups to automatically forward opened tickets as emails.
+- Cosmetic changes (Nick-->USER_FIELD and other style changes).
+- Added last note as an extra row to list.php (requested by Maria G).
+
+Karnaf v5.0.4
+- Updated php/karnaf-scripts/fetch-emails.php to support file attachments.
+- Added lock file check to php/karnaf-scripts/fetch-emails.php.
+- Changed php/karnaf-scripts/fetch-emails.php to create new tickets when trying to add a reply to a non-existing ticket.
+- Added "last note" support (save the last note and show it on the tickets list).
+- Updated operator select to php/karnaf/list.php (requested by Maria G).
+- Updated schema.
+- Updated version.
+
 Karnaf v5.0.3a
 - Fixed a bug on php/karnaf/mng_editsql.php when trying to insert an entry that supports setting the primary id.
 

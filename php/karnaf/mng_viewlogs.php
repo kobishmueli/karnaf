@@ -14,7 +14,7 @@ if(isset($_POST['max_results'])) {
 <tr>
 <th>Time</th>
 <th>IP</th>
-<th>Nick</th>
+<th><?=USER_FIELD?></th>
 <th>Action</th>
 </tr>
 <?

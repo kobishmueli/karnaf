@@ -74,3 +74,14 @@ td.karnaf_not_my_team {
   background-color: LightBlue;
   border: 1px solid Black;
 }
+
+td.ticket_body {
+  background-color: White;
+  color: Black;
+}
+
+td.ticket_replies {
+  background-color: White;
+  color: Black;
+}
+

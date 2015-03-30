@@ -79,7 +79,7 @@ if($result = sql_fetch_array($query)) {
     if(isset($_GET['usermode'])) $isoper = $isadmin = 0;
     else make_menus("Karnaf (HelpDesk)");
   }
-  if($isoper) echo "<center>*** You are an IRC Operator and see things users don't ***</center><br>\r\n";
+  if($isoper && defined("IRC_MODE")) echo "<center>*** You are an IRC Operator and see things users don't ***</center><br>\r\n";
 ?>
 <table width="100%">
 <tr>
@@ -292,7 +292,7 @@ else echo $result['rep_g'];
 <table border="1" bordercolor="Black" width="100%" cellpadding="0" cellspacing="0">
 <tr class="Karnaf_P_Head">
 <td>ID</td>
-<td>Nick</td>
+<td><?=USER_FIELD?></td>
 <td>E-Mail</td>
 <td>Assigned to</td>
 </tr>
@@ -322,7 +322,7 @@ else echo $result['rep_g'];
 <? } ?>
 <? } ?>
 <tr class="Karnaf_Head2"><td colspan="2">Ticket Description</td></tr>
-<tr><td colspan="2">
+<tr><td class="ticket_body" colspan="2">
 <?=show_board_body($result['description'])?>
 </td></tr>
 <?
@@ -421,7 +421,7 @@ else echo $result['rep_g'];
 ?>
 <tr class="Karnaf_P_Head"><td colspan="2">Reply #<?=$cnt?> from <?=$result2['r_from']?> at <?=showtime($result2['r_time'])?></td></tr>
 <tr>
-<td colspan="2"><?=show_board_body($result2['reply'])?></td>
+<td class="ticket_replies" colspan="2"><?=show_board_body($result2['reply'])?></td>
 </tr>
 <?
   }

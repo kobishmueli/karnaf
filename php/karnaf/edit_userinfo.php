@@ -24,7 +24,7 @@ if($result = sql_fetch_array($query)) {
 <table width="100%">
 <tr class="Karnaf_Head2"><td colspan="2">User Information</td></tr>
 <tr>
-<td>Nick:</td>
+<td><?=USER_FIELD?>:</td>
 <td><input name="unick" type="text" value="<?=$result['unick']?>"></td>
 </tr>
 <tr>
@@ -75,7 +75,7 @@ Other open tickets for this user:<br>
 </tr>
 <tr class="Karnaf_P_Head">
 <td>ID</td>
-<td>Nick</td>
+<td><?=USER_FIELD?></td>
 <td>E-Mail</td>
 <td>Assigned to</td>
 </tr>
