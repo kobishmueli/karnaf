@@ -13,7 +13,7 @@ if(isset($_POST['max_results'])) {
 <table border="1" width="90%" bgcolor="White" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
 <tr class="Karnaf_L_Head">
 <td>ID</td>
-<td>Nick</td>
+<td><?=USER_FIELD?></td>
 <td>Opened by</td>
 <td>Assigned to</td>
 <td>Priority</td>

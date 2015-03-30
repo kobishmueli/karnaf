@@ -6,7 +6,7 @@
 /* KTools v1.2 */
 
 require_once("defines.php");
-define("KARNAF_VERSION", "5.0.4");
+define("KARNAF_VERSION", "5.0.5");
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 set_magic_quotes_runtime(0);
 if(!isset($override_magicquotes) && get_magic_quotes_gpc() == 1) die("Error: Incorrect magic_quotes_gpc setting!");
@@ -536,7 +536,7 @@ function show_board_body($body) {
   $body = str_ireplace("[/small]","</small>",$body);
   $body = str_replace("\n","<br>\n",$body);
   $body = preg_replace_callback(
-      '|(http(s)?://[a-zA-Z0-9./_\:\-?=#~&]{1,100})([\w/])|',
+      '|(http(s)?://[a-zA-Z0-9./_\:\-?=#~+]{1,100}(\?[a-zA-Z0-9./_\:\-=#~&+]{1,100})?)([\w/])|',
       "gethttplink",
       $body
   );
