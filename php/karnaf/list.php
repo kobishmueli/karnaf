@@ -24,6 +24,20 @@ while($result2 = sql_fetch_array($query2)) {
 sql_free_result($query2);
 ?>
 </select>
+<select name="oper" onChange="form1.submit();">
+<option value="">---</option>
+<?
+if(isset($_GET['oper'])) $rep_u = $_GET['oper'];
+else $rep_u = "";
+$query2 = squery("SELECT DISTINCT(rep_u) FROM karnaf_tickets WHERE status!=0 AND rep_u!='' ORDER BY rep_u");
+while($result2 = sql_fetch_array($query2)) {
+?>
+<option value="<?=$result2['rep_u']?>"<? if($result2['rep_u'] == $rep_u) echo " SELECTED"; ?>><?=$result2['rep_u']?></option>
+<?
+}
+sql_free_result($query2);
+?>
+</select>
 </form>
 <br><br>
 <table border="1" width="90%" bgcolor="White" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
@@ -40,7 +54,7 @@ sql_free_result($query2);
 <?
 $qstr = "SELECT t.id,t.randcode,t.status,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS
-cat3_name,s.status_name,up.priority_name AS upriority,t.priority,sp.priority_name AS spriority
+cat3_name,s.status_name,up.priority_name AS upriority,t.priority,sp.priority_name AS spriority,t.last_note 
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent
 INNER JOIN karnaf_cat1 AS c1 ON c1.id=c2.parent INNER JOIN karnaf_statuses AS s ON s.status_id=t.status INNER JOIN karnaf_priorities AS up ON
 up.priority_id=t.upriority INNER JOIN karnaf_priorities AS sp ON
@@ -108,7 +122,11 @@ echo $userinfo;
 ?>
 <td><?=$result['spriority']?></td>
 <td><?=showtime($result['open_time'])?></td>
-<td><?=$action_cnt+$reply_cnt?></td>
+<td>
+<span title="<?=str_replace("\"","''",$result['last_note'])?>" style="cursor:pointer">
+<?=$action_cnt+$reply_cnt?>
+</span>
+</td>
 <td><?=do_duration(time() - $result['open_time'])?></td>
 <td>
 <!--

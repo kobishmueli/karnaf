@@ -133,6 +133,7 @@ CREATE TABLE `karnaf_tickets` (
   `cc` varchar(250) DEFAULT NULL,
   `lastupd_time` bigint(14) DEFAULT NULL,
   `message_id` varchar(250) DEFAULT NULL,
+  `last_note` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `rep_u` (`rep_u`),
   KEY `status` (`status`),
@@ -215,6 +216,7 @@ CREATE TABLE `karnaf_schema` (
 
 INSERT INTO `karnaf_schema` VALUES ('1');
 INSERT INTO `karnaf_schema` VALUES ('2');
+INSERT INTO `karnaf_schema` VALUES ('3');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');

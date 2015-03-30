@@ -16,6 +16,14 @@ function karnaf_email($mail_to, $mail_subject, $mail_body) {
        "Reply-To: ".MY_EMAIL);
 }
 
+if(file_exists("/tmp/karnaf-fetch-emails.lock")) {
+  safe_die("Error: lock file exists!");
+}
+
+$fp = fopen("/tmp/karnaf-fetch-emails.lock", "w");
+fwrite($fp, "locked");
+fclose($fp);
+
 $query = squery("SELECT type,host,port,user,pass,cat3_id FROM karnaf_mail_accounts WHERE active=1");
 while($result = sql_fetch_array($query)) {
   echo "Checking ".$result['host'].":".$result['port']."...\n";
@@ -105,6 +113,31 @@ while($result = sql_fetch_array($query)) {
         #For debugging:
         $m_body = "Type: not-multi-part\n".$m_body;
       }
+      $attachments = array();
+      if(isset($structure->parts)) {
+        for($i = 0; $i < count($structure->parts); $i++) {
+          $attachments[$i] = array();
+          if($structure->parts[$i]->ifdparameters) {
+            foreach($structure->parts[$i]->dparameters as $object) {
+              if(strtolower($object->attribute) == "filename") {
+                $attachments[$i]['filename'] = $object->value;
+              }
+            }
+          }
+          if($structure->parts[$i]->ifparameters) {
+            foreach($structure->parts[$i]->parameters as $object) {
+              if(strtolower($object->attribute) == "name") {
+                $attachments[$i]['filename'] = $object->value;
+              }
+            }
+          }
+          if(isset($attachments[$i]['filename'])) {
+            $attachments[$i]['data'] = imap_fetchbody($mbox, $m_id, $i+1);
+            if($structure->parts[$i]->encoding == 3) $attachments[$i]['data'] = base64_decode($attachments[$i]['data']);
+            if($structure->parts[$i]->encoding == 4) $attachments[$i]['data'] = quoted_printable_decode($attachments[$i]['data']);
+          }
+        }
+      }
       if(substr($m_body,0,1) == "\n") $m_body = substr($m_body,1);
       if(!empty($m_subject)) $m_body = "Subject: ".$m_subject."\n".$m_body;
       if(strstr($m_body,"<DEFANGED_DIV>")) $m_body = strip_tags($m_body);
@@ -189,9 +222,10 @@ while($result = sql_fetch_array($query)) {
             else squery("UPDATE karnaf_tickets SET lastupd_time=%d WHERE id=%d", time(), $tid);
           }
         }
+        else $tid = 0; /* We tried to add a reply to a non-existing ticket, let's create a new ticket instead... */
         sql_free_result($query2);
       }
-      else {
+      if(!$tid) {
         /* --- New ticket --- */
         $randstr = RandomNumber(10);
         $unick = "Guest";
@@ -215,11 +249,38 @@ while($result = sql_fetch_array($query)) {
         squery("INSERT INTO karnaf_tickets(randcode,status,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id) VALUES('%s',%d,'%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s')",
            $randstr,$status,$m_body,$cat3_id,$unick,$uname,$reply_to,$uphone,$uip,$upriority,$priority,time(),"(EMAIL)",$rep_u,
            $rep_g,0,0,1,0,$m_msgid);
-        $id = sql_insert_id();
+        $tid = sql_insert_id();
         $reply = "Your ticket has been opened and we will take care of it as soon as possible.\n\n";
-        $reply .= "Your Ticket ID: ".$id."\nYour Verification Number: ".$randstr."\nThe ticket has been assigned to: ".$rep_g."\n";
-        $reply .= "To view the ticket status: ".KARNAF_URL."/view.php?id=".$id."&code=".$randstr."\n";
-        if($status != 4) karnaf_email($reply_to, "Ticket #".$id, $reply);
+        $reply .= "Your Ticket ID: ".$tid."\nYour Verification Number: ".$randstr."\nThe ticket has been assigned to: ".$rep_g."\n";
+        $reply .= "To view the ticket status: ".KARNAF_URL."/view.php?id=".$tid."&code=".$randstr."\n";
+        if($status != 4) karnaf_email($reply_to, "Ticket #".$tid, $reply);
+      }
+      if($tid && isset($attachments) && count($attachments)>0) {
+        /* We have attachment(s), let's add them to the ticket... */
+        foreach($attachments as $attachment) {
+          if(!isset($attachment['filename'])) continue; /* Skip empty attachments */
+          $file_name = $attachment['filename'];
+          $file_desc = "Attachment by ".$uname;
+          $file_size = mb_strlen($attachment['data']);
+          $file_ext = strtolower(substr($file_name,-4));
+          if($file_ext == ".jpg") $file_type = "image/jpeg";
+          else if($file_ext == ".png") $file_type = "image/png";
+          else if($file_ext == ".gif") $file_type = "image/gif";
+          else $file_type = "application/octet-stream";
+          if($file_ext!=".jpg" && $file_ext!=".png" && $file_ext!=".pdf" && $file_ext!=".log" && $file_ext!=".txt") continue; /* Skip invalid file extensions */
+          squery("INSERT INTO karnaf_files(tid,file_name,file_type,file_desc,file_size,lastupd_time) VALUES(%d,'%s','%s','%s',%d,%d)",
+                 $tid, $file_name, $file_type, $file_desc, $file_size, time());
+          $id = sql_insert_id();
+          $fn = KARNAF_UPLOAD_PATH."/".$tid;
+          if(!file_exists($fn)) {
+            if(!mkdir($fn)) continue; /* Error: can't make directory! */ 
+          }
+          $fn .= "/".$id.$file_ext;
+          if(($file = fopen($fn, "wb"))) {
+            fwrite($file, $attachment['data']);
+            fclose($file);
+          }
+        }
       }
       imap_delete($mbox, $m_id);
     }
@@ -229,5 +290,6 @@ while($result = sql_fetch_array($query)) {
   else echo "Couldn't open mailbox! Error: ".imap_last_error()."\n";
 }
 sql_free_result($query);
+unlink("/tmp/karnaf-fetch-emails.lock");
 require_once("../contentpage_ftr.php");
 ?>
