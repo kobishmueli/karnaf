@@ -14,6 +14,7 @@ Karnaf v5.0.6
 - Updated searchuser.php to actually work.
 - Added fetch-users.php script to sync LDAP users and group membership into Karnaf.
 - Added force option to fetch-emails.php.
+- Cosmetic changes to list.php, mylist.php, search.php and view.php (onmouseover+click links instead of a hrefs).
 
 Karnaf v5.0.5
 - Removed debugging from php/karnaf-scripts/fetch-emails.php.

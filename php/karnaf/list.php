@@ -104,7 +104,7 @@ while($result = sql_fetch_array($query)) {
   if($priority > 19) $status_style = "Karnaf_P_High"; // Red
   if($priority > 29) $status_style = "Karnaf_P_Critical";
 ?>
-<tr class="<?=$status_style?>">
+<tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.parent.main.location.href="edit.php?id=<?=$result['id']?>">
 <td><span title="<?=str_replace("\"","''",$result['description'])?>" style="cursor:pointer"><?=$result['id']?></span></td>
 <td>
 <?
@@ -127,15 +127,7 @@ echo $userinfo;
 <?=$action_cnt+$reply_cnt?>
 </td>
 <td><?=do_duration(time() - $result['open_time'])?></td>
-<td><?=$result['last_note']?></td>
-<td>
-<!--
-<a href="view.php?id=<?=$result['id']?>">View Ticket</a> | <a href="edit.php?id=<?=$result['id']?>" !target="_blank">Edit Ticket</a>
--->
-<a href="view.php?id=<?=$result['id']?>">View</a>
-<br>
-<a href="edit.php?id=<?=$result['id']?>">Edit</a>
-</td>
+<td><?=empty($result['last_note'])?"<center>N/A</center>":$result['last_note']?></td>
 </tr>
 <?
 }

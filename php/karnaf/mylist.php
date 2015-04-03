@@ -120,7 +120,7 @@ while($result = sql_fetch_array($query)) {
   if($priority > 19) $status_style = "Karnaf_P_High"; // Red
   if($priority > 29) $status_style = "Karnaf_P_Critical";
 ?>
-<tr class="<?=$status_style?>">
+<tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:showspan('tspan<?=$result['id']?>')>
 <td><input name="spams[]" type="checkbox" value="<?=$result['id']?>"></td>
 <td><span title="<?=str_replace("\"","''",$result['description'])?>" style="cursor:pointer"><?=$result['id']?></span></td>
 <td><?=($result['unick']=="Guest"?$result['uemail']:$result['unick'])?></td>
@@ -139,21 +139,16 @@ while($result = sql_fetch_array($query)) {
 <tr>
 <td colspan="9">
 <span id="tspan<?=$result['id']?>" style="display:none">
-<textarea style="width:100%" rows="10" readonly disabled>
+<textarea style="width:98%" rows="10" readonly disabled>
 <?=str_replace("<","&lt;",$result['description'])?>
 </textarea>
 <br>
-</span>
 <center>
-<a href="javascript:showspan('tspan<?=$result['id']?>')">Ticket Description</a> |
-<a href="edit.php?id=<?=$result['id']?>">Edit Ticket</a> | 
-<a href="view.php?id=<?=$result['id']?>">View Ticket</a> | 
+<a href="edit.php?id=<?=$result['id']?>">Edit</a> | 
+<a href="view.php?id=<?=$result['id']?>">View</a> | 
 <a href="edit.php?id=<?=$result['id']?>&reassign">Re-assign</a>
-<!--
- | 
-<a href="spam.php?id=<?=$result['id']?>">Flag as spam</a>
--->
 </center>
+</span>
 </td>
 </tr>
 <?

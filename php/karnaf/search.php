@@ -154,7 +154,7 @@ sp.priority_id=t.priority) WHERE 1";
     if($priority > 29) $status_style = "Karnaf_P_Critical";
     if($result['status'] == 0) $status_style = "Karnaf_P_Closed";
 ?>
-<tr class="<?=$status_style?>">
+<tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.parent.main.location.href="edit.php?id=<?=$result['id']?>">
 <td><?=$result['id']?></td>
 <td><?=$result['unick']?></td>
 <td><?=$result['opened_by']?></td>
@@ -168,7 +168,6 @@ sp.priority_id=t.priority) WHERE 1";
     else echo do_duration(time() - $result['open_time']);
 ?>
 </td>
-<td><a href="view.php?id=<?=$result['id']?>">View Ticket</a> | <a href="edit.php?id=<?=$result['id']?>" !target="_blank">Edit Ticket</a></td>
 </tr>
 <?
   }
