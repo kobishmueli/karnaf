@@ -16,8 +16,10 @@ function karnaf_email($mail_to, $mail_subject, $mail_body) {
        "Reply-To: ".MY_EMAIL);
 }
 
-if(file_exists("/tmp/karnaf-fetch-emails.lock")) {
-  safe_die("Error: lock file exists!");
+if(!isset($argv[1]) || $argv[1]!="force") {
+  if(file_exists("/tmp/karnaf-fetch-emails.lock")) {
+    safe_die("Error: lock file exists!");
+  }
 }
 
 $fp = fopen("/tmp/karnaf-fetch-emails.lock", "w");
