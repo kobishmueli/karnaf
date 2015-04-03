@@ -172,6 +172,14 @@ CREATE TABLE `users` (
   `signature` text,
   `newemail` varchar(250) default NULL,
   `fullname` varchar(250) default NULL,
+  `fname` varchar(250) default NULL,
+  `lname` varchar(250) default NULL,
+  `department` varchar(250) default NULL,
+  `team` varchar(250) default NULL,
+  `title` varchar(250) default NULL,
+  `phone` varchar(250) default NULL,
+  `room` varchar(250) default NULL,
+  `lastsync` int(11) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `user` (`user`)
@@ -199,6 +207,18 @@ CREATE TABLE `karnaf_mail_accounts` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `karnaf_ldap_accounts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `type` tinyint(1) NOT NULL DEFAULT '0',
+  `host` varchar(250) NOT NULL DEFAULT '',
+  `user` varchar(250) NOT NULL DEFAULT '',
+  `pass` varchar(250) NOT NULL DEFAULT '',
+  `ou` text NOT NULL,
+  `filter` text NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `karnaf_files` (
   `id` int(11) NOT NULL auto_increment,
   `tid` int(11) NOT NULL default '0',
@@ -219,6 +239,7 @@ INSERT INTO `karnaf_schema` VALUES ('1');
 INSERT INTO `karnaf_schema` VALUES ('2');
 INSERT INTO `karnaf_schema` VALUES ('3');
 INSERT INTO `karnaf_schema` VALUES ('4');
+INSERT INTO `karnaf_schema` VALUES ('5');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');

@@ -7,6 +7,12 @@ Karnaf v5.0.6
 - Cosmetic: OPERS_URL --> KARNAF_URL.
 - Added ticket_replies style class.
 - Updated TODO.
+- Updated SQL schema:
+  - Added more rows to the users table.
+  - Added karnaf_ldap_accounts table.
+- Added karnaf_ldap_accounts to mng_editsql.php.
+- Updated searchuser.php to actually work.
+- Added fetch-users.php script to sync LDAP users and group membership into Karnaf.
 
 Karnaf v5.0.5
 - Removed debugging from php/karnaf-scripts/fetch-emails.php.

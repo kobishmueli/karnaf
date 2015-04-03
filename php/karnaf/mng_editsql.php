@@ -38,6 +38,15 @@ $allowed_tables = array(
                           array("cat3_id","sqlselect","select cat3.id,concat(cat1.name,' - ',cat2.name,' - ',cat3.name) from (karnaf_cat3 AS cat3 LEFT JOIN karnaf_cat2 AS cat2 ON cat3.parent=cat2.id LEFT JOIN karnaf_cat1 AS cat1 ON cat1.id=cat2.parent)"),
                           array("default_group","sqlselect","select '','---' union select id,name FROM groups WHERE iskarnaf=1"),
                     )),
+                    array("karnaf_ldap_accounts","id",array(
+                          array("active","sqlselect","select 1,'Yes' union select 0,'No'"),
+                          array("type","sqlselect","select 0,'LDAP' union select 1,'LDAPS'"),
+                          "host",
+                          "user",
+                          array("pass","password"),
+                          "ou",
+                          "filter",
+                    )),
                     array("users", "id", array("user", "pass", "email")),
 );
 $sql_rows = 0;

@@ -28,32 +28,28 @@ function setinfo(username,name,email,phone) {
 <table border=1>
 <tr class="Karnaf_L_Head">
 <td>Username</td>
-<td>Display</td>
+<td>Full Name</td>
 <td>E-Mail</td>
-<td>Location</td>
+<td>Department</td>
 <td>Phone</td>
 </tr>
 <?
   $next = 0;
   $limit = 100;
   $argv = array();
-  $querystr = "SELECT user,email,fullname FROM users WHERE 1 ";
+  $querystr = "SELECT user,email,fullname,phone,department FROM users WHERE 1 ";
   if(!empty($_POST['s_username'])) {
     $querystr .= " AND user LIKE '%s'";
     array_push($argv, "%".$_POST['s_username']."%");
   }
-#  if(!empty($_POST['s_fname'])) {
-#    $querystr .= " AND fname LIKE '%s'";
-#    array_push($argv, "%".$_POST['s_fname']."%");
-#  }
-#  if(!empty($_POST['s_lname'])) {
-#    $querystr .= " AND lname LIKE '%s'";
-#    array_push($argv, "%".$_POST['s_lname']."%");
-#  }
-#  if(!empty($_POST['s_location'])) {
-#    $querystr .= " AND location LIKE '%s'";
-#    array_push($argv, "%".$_POST['s_location']."%");
-#  }
+  if(!empty($_POST['s_name'])) {
+    $querystr .= " AND fullname LIKE '%s'";
+    array_push($argv, "%".$_POST['s_name']."%");
+  }
+  if(!empty($_POST['s_location'])) {
+    $querystr .= " AND department LIKE '%s'";
+    array_push($argv, "%".$_POST['s_location']."%");
+  }
   $querystr .= " ORDER BY user LIMIT ".$next.",".($next+$limit+1);
   array_unshift($argv, $querystr);
   $query = squery_args($argv);
@@ -64,14 +60,14 @@ function setinfo(username,name,email,phone) {
 <tr>
 <td>
 <a
-href="javascript:setinfo('<?=$result['user']?>','<?=$result['fullname']?>','<?=$result['email']?>','000')">
+href="javascript:setinfo('<?=$result['user']?>','<?=$result['fullname']?>','<?=$result['email']?>','<?=$result['phone']?>')">
 <?=$result['user']?>
 </a>
 </td>
 <td><?=$result['fullname']?></td>
 <td><?=$result['email']?></td>
-<td><?="xxx"?></td>
-<td><?="000"?></td>
+<td><?=$result['department']?></td>
+<td><?=$result['phone']?></td>
 </tr>
 <?
   }
@@ -90,12 +86,8 @@ href="javascript:setinfo('<?=$result['user']?>','<?=$result['fullname']?>','<?=$
 <td><input name="s_username" type="text"></td>
 </tr>
 <tr>
-<td>First name:</td>
-<td><input name="s_fname" type="text"></td>
-</tr>
-<tr>
-<td>Last name:</td>
-<td><input name="s_lname" type="text"></td>
+<td>Name:</td>
+<td><input name="s_name" type="text"></td>
 </tr>
 <tr>
 <td>Location:</td>
