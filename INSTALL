@@ -20,7 +20,7 @@ mysql karnaf < schema.sql
 
 6) Copy everything from the php directory to /var/www/html (or whatever).
 
-7) Make sure your defines.php isn't accessed from the Internet.. i.e. http://helpdesk.nonstop.co.il/defines.php should return access denied.
+7) Make sure your defines.php isn't accessible from the Internet.. i.e. http://helpdesk.nonstop.co.il/defines.php should return access denied.
 
 8) Go to http://whatever/karnaf/ and login with the following credentials:
 Default username: admin
