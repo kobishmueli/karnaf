@@ -56,7 +56,7 @@ if($result = sql_fetch_array($query)) {
            $nick, time(), $nick, get_session_ip());
     if((int)$result['status'] == 2) {
       squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d AND status=2", time(), $id);
-      send_memo($result['rep_u'], "User has replied to ticket #".$result['id'].". For more information visit: ".OPERS_URL."/karnaf/edit.php?id=".$result['id']);
+      send_memo($result['rep_u'], "User has replied to ticket #".$result['id'].". For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
     }
     echo "<div class=\"status\">Your reply has been saved.</div><br>";
     $result['status'] = 1;
@@ -66,7 +66,7 @@ if($result = sql_fetch_array($query)) {
     if($error == "") {
       if((int)$result['status'] == 2) {
         squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d AND status=2", time(), $id);
-        send_memo($result['rep_u'], "User has added an attachment to ticket #".$result['id'].". For more information visit: ".OPERS_URL."/karnaf/edit.php?id=".$result['id']);
+        send_memo($result['rep_u'], "User has added an attachment to ticket #".$result['id'].". For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
       }
       echo "<div class=\"status\">Your attachment has been saved.</div><br>";
     }

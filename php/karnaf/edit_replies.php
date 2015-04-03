@@ -33,7 +33,7 @@ if($result = sql_fetch_array($query)) {
 ?>
 <tr class="Karnaf_P_Head"><td colspan="2">Reply #<?=$cnt?> from <?=$result2['r_from']?> [<?=USER_FIELD?>: <?=$result2['r_by']?> / IP: <?=IsKarnafAdminSession()?$result2['ip']:"HIDDEN"?>] at <?=showtime($result2['r_time'])?></td></tr>
 <tr>
-<td colspan="2"><?=show_board_body($result2['reply'])?></td>
+<td class="ticket_replies" colspan="2"><?=show_board_body($result2['reply'])?></td>
 </tr>
 <?
   }

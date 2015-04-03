@@ -160,7 +160,7 @@ if(isset($_POST['assign_group'])) {
              $id, $_POST['assign_user'], $nick, $group, (time()+1), $a_type);
       $autostatus = "The ticket has been re-assigned to ".$_POST['assign_user'].".";
       $email_update_str = "The ticket has been re-assigned to a staff member (this means your ticket has been forwarded to a staff member to deal with it and you need to wait for his/her reply).";
-      if($nick != $_POST['assign_user']) send_memo($_POST['assign_user'], "Ticket #".$result['id']." has been assigned to you. For more information visit: ".OPERS_URL."/karnaf/edit.php?id=".$result['id']);
+      if($nick != $_POST['assign_user']) send_memo($_POST['assign_user'], "Ticket #".$result['id']." has been assigned to you. For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
     }
   }
   $autoload = 5;

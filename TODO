@@ -11,3 +11,4 @@ Check LDAP user / Reset password from the ticket
 Send secure message from the tickets
 Send SMS messages from tickets
 grep -R "TODO:" php/*.php
+manage tickets of external providers

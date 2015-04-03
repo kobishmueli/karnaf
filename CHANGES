@@ -3,6 +3,11 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.6
+- Cosmetic: OPERS_URL --> KARNAF_URL.
+- Added ticket_replies style class.
+- Updated TODO.
+
 Karnaf v5.0.5
 - Removed debugging from php/karnaf-scripts/fetch-emails.php.
 - Added autoforward setting to groups to automatically forward opened tickets as emails.
