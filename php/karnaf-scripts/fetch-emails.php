@@ -69,6 +69,10 @@ while($result = sql_fetch_array($query)) {
           $subject = $matches[1];
           if(isset($matches[3])) $tid = $matches[3];
         }
+        else if(preg_match("/^Subject: (.*(#([\d,]+)).*)/", $header, $matches)) {
+          $subject = $matches[1];
+          if(isset($matches[3])) $tid = str_replace(",","",$matches[3]);
+        }
         else if(preg_match("/^Subject: (.*)/", $header, $matches)) {
           $subject = $matches[1];
         }
