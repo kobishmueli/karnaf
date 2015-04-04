@@ -15,6 +15,8 @@ Karnaf v5.0.6
 - Added fetch-users.php script to sync LDAP users and group membership into Karnaf.
 - Added force option to fetch-emails.php.
 - Cosmetic changes to list.php, mylist.php, search.php and view.php (onmouseover+click links instead of a hrefs).
+- Updated fetch-emails.php to catch numbers with commas on the subject (in case people will reply to old SysAid tickets).
+- Cosmetic changes to php/karnaf/list.php and php/karnaf/view.php.
 
 Karnaf v5.0.5
 - Removed debugging from php/karnaf-scripts/fetch-emails.php.
