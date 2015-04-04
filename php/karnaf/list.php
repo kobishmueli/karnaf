@@ -104,7 +104,7 @@ while($result = sql_fetch_array($query)) {
   if($priority > 19) $status_style = "Karnaf_P_High"; // Red
   if($priority > 29) $status_style = "Karnaf_P_Critical";
 ?>
-<tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.parent.main.location.href="edit.php?id=<?=$result['id']?>">
+<tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.location.href="edit.php?id=<?=$result['id']?>">
 <td><span title="<?=str_replace("\"","''",$result['description'])?>" style="cursor:pointer"><?=$result['id']?></span></td>
 <td>
 <?

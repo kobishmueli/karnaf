@@ -306,7 +306,7 @@ else echo $result['rep_g'];
     if($priority > 29) $status_style = "Karnaf_P_Critical";
     if($result2['status'] == 0) $status_style = "Karnaf_P_Closed";
 ?>
-<tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.parent.main.location.href="edit.php?id=<?=$result2['id']?>">
+<tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.location.href="edit.php?id=<?=$result2['id']?>">
 <td><?=$result2['id']?></td>
 <td><?=$result2['unick']?></td>
 <td><?=$result2['uemail']?></td>
