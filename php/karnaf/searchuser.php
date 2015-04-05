@@ -12,7 +12,6 @@ CheckOperSession();
 <head>
 <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1255">
 <link rel="stylesheet" type="text/css" href="default.css">
-<meta http-equiv="refresh" content="60">
 <meta HTTP-EQUIV="Expires" CONTENT="0">
 <title>karnaf</title>
 <script language="JavaScript">
