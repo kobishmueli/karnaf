@@ -59,6 +59,20 @@ function CheckAll()
   if(nummod >= 999)
      alert("Altered only the first " + nummod + " records.\nYou can only flag for up to 999 tickets at a time.");
 }
+
+var time = new Date().getTime();
+$(document.body).bind("mousemove keypress", function(e) {
+    time = new Date().getTime();
+});
+
+function refresh() {
+    if(new Date().getTime() - time >= 60000)
+        window.location.reload(true);
+    else
+        setTimeout(refresh, 10000);
+}
+
+setTimeout(refresh, 10000);
 </script>
 <form name="form1" id="form1" method="get">
 <select name="status" onChange="form1.submit();">
@@ -121,9 +135,16 @@ while($result = sql_fetch_array($query)) {
   if($priority > 29) $status_style = "Karnaf_P_Critical";
 ?>
 <tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:showspan('tspan<?=$result['id']?>')>
-<td><input name="spams[]" type="checkbox" value="<?=$result['id']?>"></td>
-<td><span title="<?=str_replace("\"","''",$result['description'])?>" style="cursor:pointer"><?=$result['id']?></span></td>
-<td><?=($result['unick']=="Guest"?$result['uemail']:$result['unick'])?></td>
+<td align="center"><input name="spams[]" type="checkbox" value="<?=$result['id']?>"></td>
+<td><span title="<?=str_replace("<","&lt;",str_replace("\"","''",$result['description']))?>" style="cursor:pointer"><?=$result['id']?></span></td>
+<td>
+<?
+$userinfo = ($result['unick']=="Guest"?$result['uemail']:$result['unick']);
+if(!defined("IRC_MODE") && !empty($result['ufullname'])) $userinfo = $result['ufullname'];
+if(strlen($userinfo) > 30) $userinfo = substr($userinfo,0,30)."...";
+echo $userinfo;
+?>
+</td>
 <td><?=$result['opened_by']?></td>
 <td>
 <?

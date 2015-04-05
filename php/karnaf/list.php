@@ -12,6 +12,21 @@ if(isset($_GET['status'])) $status = $_GET['status'];
 else $status = 1;
 if(!$status) safe_die("Invalid status!");
 ?>
+<script>
+var time = new Date().getTime();
+$(document.body).bind("mousemove keypress", function(e) {
+    time = new Date().getTime();
+});
+
+function refresh() {
+    if(new Date().getTime() - time >= 60000) 
+        window.location.reload(true);
+    else 
+        setTimeout(refresh, 10000);
+}
+
+setTimeout(refresh, 10000);
+</script>
 <form name="form1" id="form1" method="get">
 <select name="status" onChange="form1.submit();">
 <?
@@ -24,11 +39,14 @@ while($result2 = sql_fetch_array($query2)) {
 sql_free_result($query2);
 ?>
 </select>
-<select name="oper" onChange="form1.submit();">
-<option value="">---</option>
 <?
 if(isset($_GET['oper'])) $rep_u = $_GET['oper'];
 else $rep_u = "";
+?>
+<select name="oper" onChange="form1.submit();">
+<option value="">---</option>
+<option value="none"<? if(strtolower($rep_u) == "none") echo " SELECTED"; ?>>*** Not Assigned ***</option>
+<?
 $query2 = squery("SELECT DISTINCT(rep_u) FROM karnaf_tickets WHERE status!=0 AND rep_u!='' ORDER BY rep_u");
 while($result2 = sql_fetch_array($query2)) {
 ?>
@@ -40,7 +58,7 @@ sql_free_result($query2);
 </select>
 </form>
 <br><br>
-<table border="1" width="90%" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
+<table border="1" width="90%" style="border-collapse: collapse" bordercolor="#111111" cellpadding="1" cellspacing="1">
 <tr class="Karnaf_L_Head">
 <td>ID</td>
 <td>User</td>
@@ -64,7 +82,8 @@ $argv = array();
 array_push($argv, $status);
 if(isset($_GET['oper'])) {
   $qstr .= " AND rep_u='%s'";
-  array_push($argv, $_GET['oper']);
+  if(strtolower($_GET['oper']) == "none") array_push($argv, "");
+  else array_push($argv, $_GET['oper']);
 }
 else if(isset($_GET['rep_u'])) {
   $qstr .= " AND rep_u='%s'";
@@ -99,13 +118,15 @@ while($result = sql_fetch_array($query)) {
   else $reply_cnt = 0;
   sql_free_result($query2);
   $status_style = "Karnaf_P_Normal"; // Lightgreen
+  if(isodd($cnt)) $curcol = "col2";
+  else $curcol = "col1";
   $priority = (int)$result['priority'];
   if($priority < 0) $status_style = "Karnaf_P_Low"; // LightBlue
   if($priority > 19) $status_style = "Karnaf_P_High"; // Red
   if($priority > 29) $status_style = "Karnaf_P_Critical";
 ?>
-<tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.location.href="edit.php?id=<?=$result['id']?>">
-<td><span title="<?=str_replace("\"","''",$result['description'])?>" style="cursor:pointer"><?=$result['id']?></span></td>
+<tr class="<?=$curcol?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.location.href="edit.php?id=<?=$result['id']?>">
+<td class="<?=$status_style?>" align="center"><span title="<?=str_replace("\"","''",$result['description'])?>" style="cursor:pointer"><?=$result['id']?></span></td>
 <td>
 <?
 $userinfo = ($result['unick']=="Guest"?$result['uemail']:$result['unick']);

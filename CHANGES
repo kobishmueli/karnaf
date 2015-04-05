@@ -12,6 +12,12 @@ Karnaf v5.0.7
 - Added title support to php/karnaf/view.php.
 - Updated php/karnaf/edit.php to use the group's assign_msg.
 - Cosmetic changes to php/karnaf/edit.php.
+- Removed the automatic refresh from php/karnaf/searchuser.php.
+- Added automatic refresh to list.php and mylist.php.
+- Added "Not Assigned" to the operator filter on list.php.
+- Cosmetic changes to list.php (wider table, different color to each line, priority color only to the first row).
+- Added escaping to mylist.php.
+- Show full name instead of user on mylist.php (when IRC_MODE is not enabled).
 
 Karnaf v5.0.6
 - Cosmetic: OPERS_URL --> KARNAF_URL.

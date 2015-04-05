@@ -29,31 +29,31 @@ th,.Karnaf_L_Head {
   color: Black;
   text-align: center;
 }
-tr.Karnaf_P_Normal {
+.Karnaf_P_Normal {
   color: Black;
   background-color: #EFEFEF;
   font-family: "Arial";
   font-size: 12pt;
 }
-tr.Karnaf_P_Low {
+.Karnaf_P_Low {
   color: Black;
   background-color: #4DB0F7;
   font-family: "Arial";
   font-size: 12pt;
 }
-tr.Karnaf_P_High {
+.Karnaf_P_High {
   color: White;
   background-color: #FF3300;
   font-family: "Arial";
   font-size: 12pt;
 }
-tr.Karnaf_P_Critical {
+.Karnaf_P_Critical {
   color: Black;
   background-color: Magenta;
   font-family: "Arial";
   font-size: 12pt;
 }
-tr.Karnaf_P_Closed {
+.Karnaf_P_Closed {
   color: Black;
   background-color: Gray;
   font-family: "Arial";
