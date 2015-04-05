@@ -145,7 +145,6 @@ while($result = sql_fetch_array($query)) {
         }
       }
       if(substr($m_body,0,1) == "\n") $m_body = substr($m_body,1);
-      if(!empty($m_subject)) $m_body = "Subject: ".$m_subject."\n".$m_body;
       if(strstr($m_body,"<DEFANGED_DIV>")) $m_body = strip_tags($m_body);
       if(preg_match("/^(.*(<(.*)>))/", $m_from, $matches)) {
         $uname = $matches[1];
@@ -219,8 +218,8 @@ while($result = sql_fetch_array($query)) {
             karnaf_email($reply_to, "Ticket #".$tid, "We are sorry, the ticket is already closed and you can't add new replies to it.");
           }
           else {
-            squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip,message_id) VALUES(%d,'%s','%s',%d,'%s','%s','%s')",
-                   $tid, $m_body, "Guest", time(), $uname, "(EMAIL)", $m_msgid);
+            squery("INSERT INTO karnaf_replies(tid,title,reply,r_by,r_time,r_from,ip,message_id) VALUES(%d,'%s','%s','%s',%d,'%s','%s','%s')",
+                   $tid, $m_subject, $m_body, "Guest", time(), $uname, "(EMAIL)", $m_msgid);
             if((int)$result2['status'] == 2) {
               squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d", time(), $tid);
               send_memo($result['rep_u'], "User has replied to ticket #".$result2['id'].". For more information visit: ".KARNAF_URL."/edit.php?id=".$result2['id']);
@@ -252,8 +251,8 @@ while($result = sql_fetch_array($query)) {
           if(!empty($cc)) $m_body = "CC: ".$cc."\n".$m_body;
           if(!empty($to)) $m_body = "To: ".$to."\n".$m_body;
         }
-        squery("INSERT INTO karnaf_tickets(randcode,status,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id) VALUES('%s',%d,'%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s')",
-           $randstr,$status,$m_body,$cat3_id,$unick,$uname,$reply_to,$uphone,$uip,$upriority,$priority,time(),"(EMAIL)",$rep_u,
+        squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s')",
+           $randstr,$status,$m_subject,$m_body,$cat3_id,$unick,$uname,$reply_to,$uphone,$uip,$upriority,$priority,time(),"(EMAIL)",$rep_u,
            $rep_g,0,0,1,0,$m_msgid);
         $tid = sql_insert_id();
         $reply = "Your ticket has been opened and we will take care of it as soon as possible.\r\n\r\n";

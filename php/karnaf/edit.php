@@ -140,7 +140,11 @@ if(isset($_POST['assign_group'])) {
     squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'%s','%s','%s',%d,2,%d)", 
            $id, $_POST['assign_group'], $nick, $group, (time()+1), $is_private);
     $autostatus = "The ticket has been re-assigned to ".$_POST['assign_group'].".";
-    $email_update_str = "The ticket has been re-assigned to another team (this means your ticket has been forwarded to another team who will deal with it and you need to wait for their reply).";
+    $email_update_str = "";
+    $query2 = squery("SELECT assign_msg FROM groups WHERE name='%s'", $_POST['assign_group']);
+    if(($result2 = sql_fetch_array($query2))) $email_update_str = $result2['assign_msg'];
+    sql_free_result($query2);
+    if($email_update_str == "default") $email_update_str = "The ticket has been re-assigned to another team (this means your ticket has been forwarded to another team who will deal with it and you need to wait for their reply).";
   }
   else if($_POST['assign_user'] != $result['rep_u']) {
     if(empty($_POST['assign_user'])) {
@@ -159,7 +163,10 @@ if(isset($_POST['assign_group'])) {
       squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type) VALUES(%d,'%s','%s','%s',%d,%d)", 
              $id, $_POST['assign_user'], $nick, $group, (time()+1), $a_type);
       $autostatus = "The ticket has been re-assigned to ".$_POST['assign_user'].".";
-      $email_update_str = "The ticket has been re-assigned to a staff member (this means your ticket has been forwarded to a staff member to deal with it and you need to wait for his/her reply).";
+      if(defined("IRC_MODE"))
+       $email_update_str = "The ticket has been re-assigned to a staff member (this means your ticket has been forwarded to a staff member to deal with it and you need to wait for his/her reply).";
+      else if($a_type != 4)
+       $email_update_str = "The ticket has been re-assigned to ".$_POST['assign_user'];
       if($nick != $_POST['assign_user']) send_memo($_POST['assign_user'], "Ticket #".$result['id']." has been assigned to you. For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
     }
   }

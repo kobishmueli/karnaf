@@ -188,9 +188,8 @@ while($result = sql_fetch_array($query)) {
   if(preg_match("/\d+\s-\s([a-zA-Z0-9\s\(\)]+)$/", $cat3, $matches)) $cat3 = $matches[1];
   $curcat = $cat1." - ".$cat2." - ".$cat3;
   if(isset($cats[$curcat])) $cat3_id = $cats[$curcat];
-  if(!empty($title)) $description = "Title: ".$title."\n\n".$description;
-  squery("INSERT INTO karnaf_tickets(id,randcode,status,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id,cc,lastupd_time) VALUES(%d,'%s',%d,'%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s','%s',%d)",
-         $tid,$randstr,$status,$description,$cat3_id,$uuser,$uname,$uemail,$uphone,$uip,$upriority,$priority,$open_time,
+  squery("INSERT INTO karnaf_tickets(id,randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id,cc,lastupd_time) VALUES(%d,'%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s','%s',%d)",
+         $tid,$randstr,$status,$title,$description,$cat3_id,$uuser,$uname,$uemail,$uphone,$uip,$upriority,$priority,$open_time,
          $opened_by." (IMPORTED)",$rep_u,
          $rep_g,0,0,1,0,"",$cc,$result['update_time']);
   echo "Ticket #".$tid." has been imported.\n";
@@ -201,7 +200,8 @@ while($result = sql_fetch_array($query)) {
     $body = $result['notes'];
     $msg_user = "(IMPORTED)";
     $msg_time = 0;
-    squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s')", $tid, $body,
+    squery("INSERT INTO karnaf_replies(tid,title,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s','%s',%d,'%s','%s')", $tid,
+           $title, $body,
            "Guest", $msg_time, $msg_user, "(IMPORTED)");
   }
 
@@ -211,7 +211,8 @@ while($result = sql_fetch_array($query)) {
     $body = "Custom notes: ".$result['cust_notes'];
     $msg_user = "(IMPORTED)";
     $msg_time = 0;
-    squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s')", $tid, $body,
+    squery("INSERT INTO karnaf_replies(tid,title,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s','%s',%d,'%s','%s')", $tid,
+           "Custom Notes", $body,
            "Guest", $msg_time, $msg_user, "(IMPORTED)");
   }
 
@@ -225,11 +226,11 @@ while($result = sql_fetch_array($query)) {
     $msg_user = remove_before_slashes($result2['from_user']);
     $msg_time = $result2['msg_time'];
     $title = trim($result2['subject']);
-    if(!empty($title)) $body = "Title: ".$title."\n\n".$body;
     if($body == $description && $msg_user == $uuser) continue; /* Skip the first reply if it's exactly the same as the ticket description */
     if(!empty($result2['cc_user'])) $body = "CC: ".str_replace(",",", ",$result2['cc_user'])."\n".$body;
     if(!empty($result2['to_user'])) $body = "To: ".str_replace(",",", ",$result2['to_user'])."\n".$body;
-    squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s')", $tid, $body,
+    squery("INSERT INTO karnaf_replies(tid,title,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s','%s',%d,'%s','%s')", $tid,
+           $title, $body,
            "Guest", $msg_time, $msg_user, "(IMPORTED)");
   }
   sql_free_result($query2);
@@ -256,7 +257,8 @@ while($result = sql_fetch_array($query)) {
     $msg_user = "(IMPORTED)";
     $msg_time = (int)$result['close_time'];
     if($msg_time != 0) {
-      squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s')", $tid, $body,
+      squery("INSERT INTO karnaf_replies(tid,title,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s','%s',%d,'%s','%s')", $tid,
+             "Solution", $body,
              "Guest", $msg_time, $msg_user, "(IMPORTED)");
     }
   }

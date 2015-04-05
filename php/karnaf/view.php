@@ -42,7 +42,7 @@ if(!isset($_GET['ajax'])) show_title("Ticket #".$id);
 if(IsKarnafOperSession()) $isoper = 1;
 else $isoper = 0;
 $isadmin = 0;
-$query = squery("SELECT t.id,t.randcode,t.status,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
+$query = squery("SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS 
 cat3_name,s.status_name,up.priority_name AS upriority,sp.priority_name AS priority,c3.extra,t.ext1,t.ext2,t.ext3,t.merged_to,t.cc,
 g.private_actions,t.lastupd_time 
@@ -323,6 +323,13 @@ else echo $result['rep_g'];
 <? } ?>
 <tr class="Karnaf_Head2"><td colspan="2">Ticket Description</td></tr>
 <tr><td class="ticket_body" colspan="2">
+<?
+  if(!empty($result['title'])) {
+    echo "Title: ";
+    show_board_body($result['title']);
+    echo "<hr>\n";
+  }
+?>
 <?=show_board_body($result['description'])?>
 </td></tr>
 <?
@@ -414,14 +421,23 @@ else echo $result['rep_g'];
 <table border="1" width="100%" cellpadding="0" cellspacing="0">
 <tr class="Karnaf_Head2"><td colspan="2">Replies</td></tr>
 <?
-  $query2 = squery("SELECT reply,r_time,r_from FROM karnaf_replies WHERE tid=%d ORDER BY r_time", $id);
+  $query2 = squery("SELECT title,reply,r_time,r_from FROM karnaf_replies WHERE tid=%d ORDER BY r_time", $id);
   $cnt = 0;
   while($result2 = sql_fetch_array($query2)) {
     $cnt++;
 ?>
 <tr class="Karnaf_P_Head"><td colspan="2">Reply #<?=$cnt?> from <?=$result2['r_from']?> at <?=showtime($result2['r_time'])?></td></tr>
 <tr>
-<td class="ticket_replies" colspan="2"><?=show_board_body($result2['reply'])?></td>
+<td class="ticket_replies" colspan="2">
+<?
+    if(!empty($result2['title'])) {
+      echo "Title: ";
+      show_board_body($result2['title']);
+      echo "<hr>\n";
+    }
+?>
+<?=show_board_body($result2['reply'])?>
+</td>
 </tr>
 <?
   }

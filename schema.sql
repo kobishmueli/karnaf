@@ -21,6 +21,7 @@ CREATE TABLE `groups` (
   `private_actions` tinyint(1) NOT NULL DEFAULT '0',
   `iskarnaf` tinyint(1) NOT NULL DEFAULT '0',
   `autoforward` TEXT DEFAULT NULL,
+  `assign_msg` TEXT DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -80,6 +81,7 @@ CREATE TABLE `karnaf_priorities` (
 CREATE TABLE `karnaf_replies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tid` int(11) NOT NULL DEFAULT '0',
+  `title` varchar(250) DEFAULT NULL,
   `reply` text NOT NULL,
   `r_time` bigint(20) NOT NULL DEFAULT '0',
   `r_by` varchar(50) NOT NULL DEFAULT '',
@@ -108,6 +110,7 @@ CREATE TABLE `karnaf_tickets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `randcode` varchar(20) NOT NULL DEFAULT '',
   `status` int(11) NOT NULL DEFAULT '1',
+  `title` varchar(250) DEFAULT NULL,
   `description` text NOT NULL,
   `cat3_id` int(11) NOT NULL DEFAULT '0',
   `unick` varchar(30) NOT NULL DEFAULT '',
@@ -240,6 +243,7 @@ INSERT INTO `karnaf_schema` VALUES ('2');
 INSERT INTO `karnaf_schema` VALUES ('3');
 INSERT INTO `karnaf_schema` VALUES ('4');
 INSERT INTO `karnaf_schema` VALUES ('5');
+INSERT INTO `karnaf_schema` VALUES ('6');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');

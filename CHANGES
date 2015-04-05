@@ -3,6 +3,16 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.7
+- SQL Schema changes:
+  - Added title to karnaf_tickets.
+  - Added title to karnaf_replies.
+  - Added assign_msg to groups.
+- Added title support to php/karnaf-scripts/fetch-emails.php and php/karnaf-scripts/import-from-sysaid.php.
+- Added title support to php/karnaf/view.php.
+- Updated php/karnaf/edit.php to use the group's assign_msg.
+- Cosmetic changes to php/karnaf/edit.php.
+
 Karnaf v5.0.6
 - Cosmetic: OPERS_URL --> KARNAF_URL.
 - Added ticket_replies style class.
