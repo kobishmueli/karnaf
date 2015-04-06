@@ -234,6 +234,25 @@ CREATE TABLE `karnaf_files` (
   PRIMARY KEY  (`id`)
 );
 
+CREATE TABLE `karnaf_mail_rules` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(250) NOT NULL DEFAULT '',
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `priority` int(11) NOT NULL DEFAULT '0',
+  `rcpt_pattern` varchar(250) NOT NULL DEFAULT '',
+  `to_pattern` varchar(250) NOT NULL DEFAULT '',
+  `cc_pattern` varchar(250) NOT NULL DEFAULT '',
+  `subject_pattern` varchar(250) NOT NULL DEFAULT '',
+  `body_pattern` varchar(250) NOT NULL DEFAULT '',
+  `stop_duplicates` tinyint(1) NOT NULL DEFAULT '0',
+  `break` tinyint(1) NOT NULL DEFAULT '0',
+  `set_priority` int(11) NOT NULL DEFAULT '0',
+  `set_group` varchar(30) DEFAULT NULL,
+  `set_extra` varchar(250) DEFAULT NULL,
+  `set_cat3` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `karnaf_schema` (
   `version` varchar(30) NOT NULL DEFAULT ''
 );
@@ -244,6 +263,7 @@ INSERT INTO `karnaf_schema` VALUES ('3');
 INSERT INTO `karnaf_schema` VALUES ('4');
 INSERT INTO `karnaf_schema` VALUES ('5');
 INSERT INTO `karnaf_schema` VALUES ('6');
+INSERT INTO `karnaf_schema` VALUES ('7');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');
