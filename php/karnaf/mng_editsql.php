@@ -48,6 +48,22 @@ $allowed_tables = array(
                           "filter",
                     )),
                     array("users", "id", array("user", "pass", "email")),
+                    array("karnaf_mail_rules","id",array(
+                          array("active","sqlselect","select 1,'Yes' union select 0,'No'"),
+                          "name",
+                          "priority",
+                          "rcpt_pattern",
+                          "to_pattern",
+                          "cc_pattern",
+                          "subject_pattern",
+                          "body_pattern",
+                          array("stop_duplicates","sqlselect","select 0,'No' union select 1,'Yes'"),
+                          array("break","sqlselect","select 0,'No' union select 1,'Yes'"),
+                          array("set_priority","sqlselect","select '' AS priority_id,'---' AS priority_name union select priority_id,priority_name FROM karnaf_priorities ORDER BY priority_id"),
+                          array("set_group","sqlselect","select '','---' union select id,name FROM groups WHERE iskarnaf=1"),
+                          "set_extra",
+                          array("set_cat3","sqlselect","select 0,'---' union select cat3.id,concat(cat1.name,' - ',cat2.name,' - ',cat3.name) from (karnaf_cat3 AS cat3 LEFT JOIN karnaf_cat2 AS cat2 ON cat3.parent=cat2.id LEFT JOIN karnaf_cat1 AS cat1 ON cat1.id=cat2.parent)"),
+                    )),
 );
 $sql_rows = 0;
 foreach($allowed_tables as $x) {
