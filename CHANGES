@@ -3,6 +3,11 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.8
+- Added karnaf_mail_rules table to the SQL schema.
+- Added mail rules support to fetch-emails.php.
+- Let mng_editsql.php manage the karnaf_mail_rules table.
+
 Karnaf v5.0.7
 - SQL Schema changes:
   - Added title to karnaf_tickets.
