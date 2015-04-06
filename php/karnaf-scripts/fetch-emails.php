@@ -26,6 +26,14 @@ $fp = fopen("/tmp/karnaf-fetch-emails.lock", "w");
 fwrite($fp, "locked");
 fclose($fp);
 
+/* Cache all the mail rules... */
+$mail_rules = array();
+$query = squery("SELECT name,priority,rcpt_pattern,to_pattern,cc_pattern,subject_pattern,body_pattern,stop_duplicates,break,set_priority,set_group,set_extra,set_cat3 FROM karnaf_mail_rules WHERE active=1 ORDER BY priority");
+while($result = sql_fetch_array($query)) {
+  $mail_rules[] = $result;
+}
+sql_free_result($query);
+
 $query = squery("SELECT type,host,port,user,pass,cat3_id FROM karnaf_mail_accounts WHERE active=1");
 while($result = sql_fetch_array($query)) {
   echo "Checking ".$result['host'].":".$result['port']."...\n";
@@ -165,6 +173,60 @@ while($result = sql_fetch_array($query)) {
       if(stristr($m_from,"operhelp@dal.net")) continue;
       if(stristr($m_from,"dalhelp@dal.net")) continue;
       if(stristr($m_from,"sabuse@dal.net")) continue;
+      /* Set default values for new tickets here before the mail rules... */
+      $priority = 0;
+      if(!isset($upriority)) $upriority = 0;
+      /* If the user priority is *lower* than the system priority, we'll use the user priority */
+      if($priority > $upriority) $priority = $upriority;
+      $rep_g = KARNAF_DEFAULT_GROUP;
+      $cat3_id = $result['cat3_id'];
+      $extra = "";
+      foreach($mail_rules as $mail_rule) {
+        $special_vars = array();
+        if(!empty($mail_rule['rcpt_pattern']) && !preg_match("/".$mail_rule['rcpt_pattern']."/", $to, $matches) && !preg_match($mail_rule['rcpt_pattern'], $cc, $matches)) continue;
+        foreach($matches as $key => $value) {
+          $special_vars['RCPT'.$key] = $value;
+        }
+        if(!empty($mail_rule['to_pattern']) && !preg_match("/".$mail_rule['to_pattern']."/", $to, $matches)) continue;
+        foreach($matches as $key => $value) {
+          $special_vars['TO'.$key] = $value;
+        }
+        if(!empty($mail_rule['cc_pattern']) && !preg_match("/".$mail_rule['to_pattern']."/", $cc, $matches)) continue;
+        foreach($matches as $key => $value) {
+          $special_vars['CC'.$key] = $value;
+        }
+        if(!empty($mail_rule['subject_pattern']) && !preg_match("/".$mail_rule['subject_pattern']."/", $subject, $matches)) continue;
+        foreach($matches as $key => $value) {
+          $special_vars['SUBJECT'.$key] = $value;
+        }
+        if(!empty($mail_rule['body_pattern']) && !preg_match("/".$mail_rule['body_pattern']."/", $m_body, $matches)) continue;
+        foreach($matches as $key => $value) {
+          $special_vars['BODY'.$key] = $value;
+        }
+        /* If we're still here, we got a match... */
+        if(!empty($mail_rule['set_group'])) $rep_g = $mail_rule['set_group'];
+        if(!empty($mail_rule['set_priority'])) $priority = (int)$mail_rule['set_priority'];
+        if(!empty($mail_rule['set_extra'])) {
+          $extra = $mail_rule['set_extra'];
+          foreach($special_vars as $key => $value) {
+            $extra = str_replace("%".$key."%", $value, $extra);
+          }
+        }
+        if(!empty($mail_rule['set_cat3'])) $cat3_id = $mail_rule['set_cat3'];
+        if((int)$mail_rule['stop_duplicates'] == 1) {
+          $query2 = squery("SELECT tid FROM karnaf_replies WHERE status!=0 title='%s'", $subject);
+          if($result2 = sql_fetch_array($query2)) {
+            $tid = -999;
+          }
+          sql_free_result($query2);
+        }
+        if((int)$mail_rule['break'] == 1) break;
+      }
+      if($tid == -999) {
+        /* Special case to skip duplicates... */
+        imap_delete($mbox, $m_id);
+        continue;
+      }
       if(!$tid && $m_in_reply_to!="") {
         /* If we didn't find the ticket ID so far, let's try to find its email's reply-to message id... */
         $query2 = squery("SELECT id FROM karnaf_tickets WHERE status!=0 AND message_id='%s'", $m_in_reply_to);
@@ -236,14 +298,8 @@ while($result = sql_fetch_array($query)) {
         $unick = "Guest";
         $uphone = "";
         $uip = "";
-        $priority = 0;
-        if(!isset($upriority)) $upriority = 0;
-        /* If the user priority is *lower* than the system priority, we'll use the user priority */
-        if($priority > $upriority) $priority = $upriority;
         $rep_u = "";
         $status = 1;
-        $rep_g = KARNAF_DEFAULT_GROUP;
-        $cat3_id = $result['cat3_id'];
         /* Spam checks */
         if(strstr($m_subject,"[SPAM]")) $status = 4;
         /* End of spam checks */
@@ -251,9 +307,9 @@ while($result = sql_fetch_array($query)) {
           if(!empty($cc)) $m_body = "CC: ".$cc."\n".$m_body;
           if(!empty($to)) $m_body = "To: ".$to."\n".$m_body;
         }
-        squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s')",
+        squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id,extra) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s','%s')",
            $randstr,$status,$m_subject,$m_body,$cat3_id,$unick,$uname,$reply_to,$uphone,$uip,$upriority,$priority,time(),"(EMAIL)",$rep_u,
-           $rep_g,0,0,1,0,$m_msgid);
+           $rep_g,0,0,1,0,$m_msgid,$extra);
         $tid = sql_insert_id();
         $reply = "Your ticket has been opened and we will take care of it as soon as possible.\r\n\r\n";
         $reply .= "Your Ticket ID: ".$tid."\r\nYour Verification Number: ".$randstr."\r\nThe ticket has been assigned to: ".$rep_g."\r\n";
