@@ -7,6 +7,9 @@ Karnaf v5.0.8
 - Added karnaf_mail_rules table to the SQL schema.
 - Added mail rules support to fetch-emails.php.
 - Let mng_editsql.php manage the karnaf_mail_rules table.
+- Added check_user.php - an option to check LDAP user.
+- Cosmetic CSS changes for the div statuses.
+- Added last note to mylist.php and more cosmetic changes (colors, etc).
 
 Karnaf v5.0.7
 - SQL Schema changes:

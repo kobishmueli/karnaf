@@ -34,7 +34,7 @@ if(isset($_POST['spams']) && is_array($_POST['spams'])) {
 <script language="JavaScript">
 function showspan(spanname) {
   if (document.getElementById(spanname).style.display == "none") {
-    document.getElementById(spanname).style.display="inline";
+    document.getElementById(spanname).style.display="table-cell";
   }
   else {
     document.getElementById(spanname).style.display="none";
@@ -89,7 +89,7 @@ sql_free_result($query2);
 </form>
 <form name="checks" id="checks" method="post">
 <br><br>
-<table border="1" width="90%" bgcolor="White" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
+<table border="1" width="90%" bgcolor="White" style="border-collapse: collapse" bordercolor="#111111" cellpadding="1" cellspacing="1">
 <tr class="Karnaf_L_Head">
 <td><input name="allbox" type="checkbox" onClick="javascript:CheckAll()"></td>
 <td>ID</td>
@@ -100,11 +100,12 @@ sql_free_result($query2);
 <td>Open Date</td>
 <td>Actions</td>
 <td>Duration</td>
+<td>Note</td>
 </tr>
 <?
 $qstr = "SELECT t.id,t.randcode,t.status,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS
-cat3_name,s.status_name,up.priority_name AS upriority,t.priority,sp.priority_name AS spriority
+cat3_name,s.status_name,up.priority_name AS upriority,t.priority,sp.priority_name AS spriority, t.last_note 
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent
 INNER JOIN karnaf_cat1 AS c1 ON c1.id=c2.parent INNER JOIN karnaf_statuses AS s ON s.status_id=t.status INNER JOIN karnaf_priorities AS up ON
 up.priority_id=t.upriority INNER JOIN karnaf_priorities AS sp ON
@@ -129,13 +130,15 @@ while($result = sql_fetch_array($query)) {
   else $reply_cnt = 0;
   sql_free_result($query2);
   $status_style = "Karnaf_P_Normal"; // Lightgreen
+  if(isodd($cnt)) $curcol = "col2";
+  else $curcol = "col1";
   $priority = (int)$result['priority'];
   if($priority < 0) $status_style = "Karnaf_P_Low"; // LightBlue
   if($priority > 19) $status_style = "Karnaf_P_High"; // Red
   if($priority > 29) $status_style = "Karnaf_P_Critical";
 ?>
-<tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:showspan('tspan<?=$result['id']?>')>
-<td align="center"><input name="spams[]" type="checkbox" value="<?=$result['id']?>"></td>
+<tr class="<?=$curcol?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:showspan('tspan<?=$result['id']?>')>
+<td class="<?=$status_style?>" align="center"><input name="spams[]" type="checkbox" value="<?=$result['id']?>"></td>
 <td><span title="<?=str_replace("<","&lt;",str_replace("\"","''",$result['description']))?>" style="cursor:pointer"><?=$result['id']?></span></td>
 <td>
 <?
@@ -156,11 +159,11 @@ echo $userinfo;
 <td><?=showtime($result['open_time'])?></td>
 <td><?=$action_cnt+$reply_cnt?></td>
 <td><?=do_duration(time() - $result['open_time'])?></td>
+<td><?=empty($result['last_note'])?"<center>N/A</center>":$result['last_note']?></td>
 </tr>
 <tr>
-<td colspan="9">
-<span id="tspan<?=$result['id']?>" style="display:none">
-<textarea style="width:98%" rows="10" readonly disabled>
+<td id="tspan<?=$result['id']?>" style="display:none" colspan="10" align="center">
+<textarea style="width:98%" rows="10" readonly>
 <?=str_replace("<","&lt;",$result['description'])?>
 </textarea>
 <br>
@@ -169,12 +172,11 @@ echo $userinfo;
 <a href="view.php?id=<?=$result['id']?>">View</a> | 
 <a href="edit.php?id=<?=$result['id']?>&reassign">Re-assign</a>
 </center>
-</span>
 </td>
 </tr>
 <?
 }
-if(!$cnt) echo "<tr><td colspan=\"9\" align=\"center\">*** None ***</td></tr>";
+if(!$cnt) echo "<tr><td colspan=\"10\" align=\"center\">*** None ***</td></tr>";
 ?>
 </table>
 <br>
