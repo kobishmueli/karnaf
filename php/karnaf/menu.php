@@ -11,7 +11,7 @@ check_auth();
 <head>
 <title>Karnaf Menu</title>
 </head>
-<body bgcolor="#DEF0D8">
+<body bgcolor="#22213d" text="White">
 <table cellpadding="4" cellspacing="1" border="0" width="100%">
 <tr>
 <td align="center">
@@ -90,6 +90,7 @@ function Add_Item3($name, $link) {
 <? Add_Item("Ticket Lookup (by ID)","lookup.php"); ?>
 <? Add_Item("New Ticket","new.php"); ?>
 <? Add_Item("Search Ticket","search.php"); ?>
+<? Add_ItemRed("Check User","check_user.php"); ?>
 <? if(IsKarnafAdminSession()) { ?>
 <? Add_Itemx("Edit types","mng_cat.php?table=cat1"); ?>
 <? Add_Itemx("Edit catagories","mng_cat.php?table=cat2"); ?>

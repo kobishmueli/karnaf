@@ -60,8 +60,15 @@ th,.Karnaf_L_Head {
   font-size: 12pt;
 }
 
-div.status { color: Blue; }
-div.status_err { color: Red; }
+div.status {
+  color: White;
+  background-color: Blue;
+}
+
+div.status_err {
+  color: White;
+  background-color: Red;
+}
 
 td.karnaf_my_team {
   color: Black;

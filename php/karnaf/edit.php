@@ -241,6 +241,7 @@ function load_page(id) {
     if (id == 4) url = 'edit_actions.php?id=<?=$id?>&ajax=1';
     if (id == 5) url = 'edit_reassign.php?id=<?=$id?>&ajax=1';
     if (id == 6) url = 'edit_replies.php?id=<?=$id?>&ajax=1';
+    if (id == 7) url = 'check_user.php?tid=<?=$id?>&uuser=<?=$unick?>&ajax=1';
     url = url + "&rand=" + Math.random();
     xmlhttp=null;
     if (window.XMLHttpRequest) {// code for all new browsers
@@ -395,6 +396,7 @@ window.onload = auto_load;
 <input name="edit_actions" type="button" value="Actions" onClick="javascript:load_page(4)">
 <input name="edit_reassign" type="button" value="Re-assign" onClick="javascript:load_page(5)">
 <input name="edit_replies" type="button" value="Replies" onClick="javascript:load_page(6)">
+<input name="check_user" type="button" value="Check User" onClick="javascript:load_page(7)">
 </center>
 <br><br>
 <span id="Edit_Space">
