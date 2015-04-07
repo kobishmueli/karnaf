@@ -11,6 +11,7 @@ Karnaf v5.0.8
 - Cosmetic CSS changes for the div statuses.
 - Added last note to mylist.php and more cosmetic changes (colors, etc).
 - Changed php/karnaf/check_user.php to show an error if the user isn't found.
+- Added the ticket's title to list.php and mylist.php.
 
 Karnaf v5.0.7
 - SQL Schema changes:

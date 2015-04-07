@@ -103,7 +103,7 @@ sql_free_result($query2);
 <td>Note</td>
 </tr>
 <?
-$qstr = "SELECT t.id,t.randcode,t.status,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
+$qstr = "SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS
 cat3_name,s.status_name,up.priority_name AS upriority,t.priority,sp.priority_name AS spriority, t.last_note 
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent
@@ -136,10 +136,15 @@ while($result = sql_fetch_array($query)) {
   if($priority < 0) $status_style = "Karnaf_P_Low"; // LightBlue
   if($priority > 19) $status_style = "Karnaf_P_High"; // Red
   if($priority > 29) $status_style = "Karnaf_P_Critical";
+  $body = "";
+  if(!empty($result['title'])) $body = "Title: ".$result['title']."\n\n";
+  $body .= $result['description'];
+  $body = str_replace("\"","''",$body);
+  $body = str_replace("<","&lt;",$body);
 ?>
 <tr class="<?=$curcol?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:showspan('tspan<?=$result['id']?>')>
 <td class="<?=$status_style?>" align="center"><input name="spams[]" type="checkbox" value="<?=$result['id']?>"></td>
-<td><span title="<?=str_replace("<","&lt;",str_replace("\"","''",$result['description']))?>" style="cursor:pointer"><?=$result['id']?></span></td>
+<td><span title="<?=$body?>" style="cursor:pointer"><?=$result['id']?></span></td>
 <td>
 <?
 $userinfo = ($result['unick']=="Guest"?$result['uemail']:$result['unick']);
@@ -164,7 +169,7 @@ echo $userinfo;
 <tr>
 <td id="tspan<?=$result['id']?>" style="display:none" colspan="10" align="center">
 <textarea style="width:98%" rows="10" readonly>
-<?=str_replace("<","&lt;",$result['description'])?>
+<?=$body?>
 </textarea>
 <br>
 <center>
