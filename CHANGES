@@ -10,6 +10,7 @@ Karnaf v5.0.8
 - Added check_user.php - an option to check LDAP user.
 - Cosmetic CSS changes for the div statuses.
 - Added last note to mylist.php and more cosmetic changes (colors, etc).
+- Changed php/karnaf/check_user.php to show an error if the user isn't found.
 
 Karnaf v5.0.7
 - SQL Schema changes:

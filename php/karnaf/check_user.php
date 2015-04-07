@@ -154,6 +154,7 @@ if(isset($uuser)) {
     ldap_unbind($ldap);
   }
   sql_free_result($query);
+  if(!isset($found_user)) echo "<div class=\"status_err\">Error: couldn't find the user!</div><br>";
 ?>
 <br><br>
 <center><font size="+2">
