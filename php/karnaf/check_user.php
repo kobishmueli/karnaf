@@ -36,6 +36,7 @@ else $tid = "";
 if(isset($_GET['uuser'])) $uuser = $_GET['uuser'];
 if(isset($_POST['uuser'])) $uuser = $_POST['uuser'];
 if(isset($uuser)) {
+  add_log("karnaf_check_user", $uuser);
   $query = squery("SELECT type,host,user,pass,ou,filter FROM karnaf_ldap_accounts WHERE active=1");
   while($result = sql_fetch_array($query)) {
     $type = (int)$result['type'];
@@ -83,13 +84,15 @@ if(isset($uuser)) {
           else $found_company = "N/A";
           $found_groups = "";
           $found_all = 0;
-          foreach($entry['memberof'] as $grps) {
-            if(substr($grps,0,3) == "CN=") {
-              $pos = strpos($grps,",");
-              if(!$pos) continue;
-              $grp = substr($grps,3,$pos-3);
-              $found_groups .= $grp."<br>\n";
-              if($grp == "All Employees") $found_all = 1;
+          if(isset($entry['memberof'])) {
+            foreach($entry['memberof'] as $grps) {
+              if(substr($grps,0,3) == "CN=") {
+                $pos = strpos($grps,",");
+                if(!$pos) continue;
+                $grp = substr($grps,3,$pos-3);
+                $found_groups .= $grp."<br>\n";
+                if($grp == "All Employees") $found_all = 1;
+              }
             }
           }
           if($found_disabled == "Yes") echo "<div class=\"status_err\">Warning: The user is disabled!</div><br>";
@@ -185,12 +188,14 @@ function open_search() {
 </td>
 <td><img src="<?=MY_URL."/".$themepath?>search-icon.png" style="cursor:pointer" onClick="javascript:open_search()"></td>
 </tr>
+<!-- For future use:
 <tr>
 <td>Ticket ID:</td>
 <td>
 <input name="tid" size="30" type="text" value="<?=$tid?>">
 </td>
 </tr>
+-->
 <tr><td colspan="3" align="center">
 <input name="submit" type="submit" value="Continue">
 </td></tr>
