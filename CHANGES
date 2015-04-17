@@ -3,6 +3,12 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.9
+- Added a my-tickets/not-assigned-tickets filter to mylist.php.
+- Added logging to check_user.php, removed the ticket ID for now and only check LDAP memberof if it exists.
+- Removed opened by row from list.php and mylist.php
+- Added title row to list.php.
+
 Karnaf v5.0.8
 - Added karnaf_mail_rules table to the SQL schema.
 - Added mail rules support to fetch-emails.php.
