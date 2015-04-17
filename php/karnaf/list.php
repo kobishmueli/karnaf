@@ -62,7 +62,7 @@ sql_free_result($query2);
 <tr class="Karnaf_L_Head">
 <td>ID</td>
 <td>User</td>
-<td>Opened by</td>
+<td>Title</td>
 <td>Assigned to</td>
 <td>Priority</td>
 <td>Open Date</td>
@@ -139,7 +139,7 @@ if(strlen($userinfo) > 30) $userinfo = substr($userinfo,0,30)."...";
 echo $userinfo;
 ?>
 </td>
-<td><?=$result['opened_by']?></td>
+<td><?=str_replace("<","&lt;",$result['title'])?></td>
 <?
   if($result['rep_u'] == $nick) echo "<td bgcolor=\"green\">".$result['rep_u']."</td>\n";
   else if(!empty($result['rep_u'])) echo "<td><span title=\"".$result['rep_g']."\" style=\"cursor:pointer\">".$result['rep_u']."</span></td>\n";

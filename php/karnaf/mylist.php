@@ -86,6 +86,15 @@ while($result2 = sql_fetch_array($query2)) {
 sql_free_result($query2);
 ?>
 </select>
+<?
+if(isset($_GET['showall'])) $showall = $_GET['showall'];
+else $showall = "";
+?>
+<select name="showall" onChange="form1.submit();">
+<option value="">---</option>
+<option value="none"<? if(strtolower($showall) == "none") echo " SELECTED"; ?>>*** Not Assigned ***</option>
+<option value="onlymy"<? if(strtolower($showall) == "onlymy") echo " SELECTED"; ?>>*** Only My Tickets ***</option>
+</select>
 </form>
 <form name="checks" id="checks" method="post">
 <br><br>
@@ -94,7 +103,7 @@ sql_free_result($query2);
 <td><input name="allbox" type="checkbox" onClick="javascript:CheckAll()"></td>
 <td>ID</td>
 <td>User</td>
-<td>Opened by</td>
+<td>Title</td>
 <td>Assigned to</td>
 <td>Priority</td>
 <td>Open Date</td>
@@ -120,6 +129,8 @@ array_unshift($argv, $qstr);
 $query = squery_args($argv);
 while($result = sql_fetch_array($query)) {
   if(!IsGroupMember($result['rep_g']) && !IsKarnafAdminSession()) continue; /* Skip tickets for other teams */
+  if((strtolower($showall) == "none") && !empty($result['rep_u'])) continue;
+  if((strtolower($showall) == "onlymy") && empty($result['rep_u'])) continue;
   $cnt++;
   $query2 = squery("SELECT count(*) AS count FROM karnaf_actions WHERE tid=%d", $result['id']);
   if($result2 = sql_fetch_array($query2)) $action_cnt = (int)$result2['count'];
@@ -153,7 +164,7 @@ if(strlen($userinfo) > 30) $userinfo = substr($userinfo,0,30)."...";
 echo $userinfo;
 ?>
 </td>
-<td><?=$result['opened_by']?></td>
+<td><?=str_replace("<","&lt;",$result['title'])?></td>
 <td>
 <?
   if(!empty($result['rep_u'])) echo $result['rep_u'];
