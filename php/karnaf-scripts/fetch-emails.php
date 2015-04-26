@@ -307,6 +307,16 @@ while($result = sql_fetch_array($query)) {
           if(!empty($cc)) $m_body = "CC: ".$cc."\n".$m_body;
           if(!empty($to)) $m_body = "To: ".$to."\n".$m_body;
         }
+
+        /* Let's try to find the sender on our user database... */
+        $query2 = squery("SELECT user,fullname,phone FROM users WHERE email='%s'", $reply_to);
+        if($result2 = sql_fetch_array($query2)) {
+          $unick = $result2['user'];
+          $uname = $result2['fullname'];
+          $uphone = $result2['phone'];
+        }
+        sql_free_result($query2);
+
         squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id,ext1) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s','%s')",
            $randstr,$status,$m_subject,$m_body,$cat3_id,$unick,$uname,$reply_to,$uphone,$uip,$upriority,$priority,time(),"(EMAIL)",$rep_u,
            $rep_g,0,0,1,0,$m_msgid,$extra);
