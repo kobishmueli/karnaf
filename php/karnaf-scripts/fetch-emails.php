@@ -183,7 +183,7 @@ while($result = sql_fetch_array($query)) {
       $extra = "";
       foreach($mail_rules as $mail_rule) {
         $special_vars = array();
-        if(!empty($mail_rule['rcpt_pattern']) && !preg_match("/".$mail_rule['rcpt_pattern']."/", $to, $matches) && !preg_match($mail_rule['rcpt_pattern'], $cc, $matches)) continue;
+        if(!empty($mail_rule['rcpt_pattern']) && !preg_match("/".$mail_rule['rcpt_pattern']."/", $to, $matches) && !preg_match("/".$mail_rule['rcpt_pattern']."/", $cc, $matches)) continue;
         foreach($matches as $key => $value) {
           $special_vars['RCPT'.$key] = $value;
         }
@@ -307,7 +307,7 @@ while($result = sql_fetch_array($query)) {
           if(!empty($cc)) $m_body = "CC: ".$cc."\n".$m_body;
           if(!empty($to)) $m_body = "To: ".$to."\n".$m_body;
         }
-        squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id,extra) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s','%s')",
+        squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id,ext1) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s','%s')",
            $randstr,$status,$m_subject,$m_body,$cat3_id,$unick,$uname,$reply_to,$uphone,$uip,$upriority,$priority,time(),"(EMAIL)",$rep_u,
            $rep_g,0,0,1,0,$m_msgid,$extra);
         $tid = sql_insert_id();
