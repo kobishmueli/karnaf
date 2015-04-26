@@ -8,6 +8,9 @@ Karnaf v5.0.9
 - Added logging to check_user.php, removed the ticket ID for now and only check LDAP memberof if it exists.
 - Removed opened by row from list.php and mylist.php
 - Added title row to list.php.
+- Renamed default.css to karnaf.css to make it easier to integrate it with other systems.
+- Fixed two small bugs on fetch-emails.php.
+- Changed fetch-emails.php to try to get fullname+phone information from the database.
 
 Karnaf v5.0.8
 - Added karnaf_mail_rules table to the SQL schema.
