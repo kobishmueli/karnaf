@@ -3,6 +3,15 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.10
+- php/karnaf/search.php: Typo fix (uname --> ufullname).
+- php/karnaf-scripts/fetch-emails.php fixes:
+  - Fixed the \d+ \d,+ checks order.
+  - Try to find common html tags and strip all html tags if found.
+  - Cosmetic changes to new emails to groups.
+  - Added automatic oper/group email for ticket replies.
+- Cosmetic change to php/karnaf/edit.php to show the reply when a ticket is getting closed with a reply.
+
 Karnaf v5.0.9
 - Added a my-tickets/not-assigned-tickets filter to mylist.php.
 - Added logging to check_user.php, removed the ticket ID for now and only check LDAP memberof if it exists.
