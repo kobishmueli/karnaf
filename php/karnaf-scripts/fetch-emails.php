@@ -73,13 +73,13 @@ while($result = sql_fetch_array($query)) {
       $cc = "";
       $tid = 0;
       foreach(explode("\n", $headers) as $header) {
-        if(preg_match("/^Subject: (.*(#(\d+)).*)/", $header, $matches)) {
-          $subject = $matches[1];
-          if(isset($matches[3])) $tid = $matches[3];
-        }
-        else if(preg_match("/^Subject: (.*(#([\d,]+)).*)/", $header, $matches)) {
+        if(preg_match("/^Subject: (.*(#([\d,]+)).*)/", $header, $matches)) {
           $subject = $matches[1];
           if(isset($matches[3])) $tid = str_replace(",","",$matches[3]);
+        }
+        else if(preg_match("/^Subject: (.*(#(\d+)).*)/", $header, $matches)) {
+          $subject = $matches[1];
+          if(isset($matches[3])) $tid = $matches[3];
         }
         else if(preg_match("/^Subject: (.*)/", $header, $matches)) {
           $subject = $matches[1];
@@ -154,6 +154,7 @@ while($result = sql_fetch_array($query)) {
       }
       if(substr($m_body,0,1) == "\n") $m_body = substr($m_body,1);
       if(strstr($m_body,"<DEFANGED_DIV>")) $m_body = strip_tags($m_body);
+      if(strstr($m_body,"<head>") && strstr($m_body,"<body") && strstr($m_body,"</body>") && strstr($m_body,"</html>")) $m_body = strip_tags($m_body);
       if(preg_match("/^(.*(<(.*)>))/", $m_from, $matches)) {
         $uname = $matches[1];
         if(isset($matches[3])) $reply_to = $matches[3];
@@ -274,7 +275,7 @@ while($result = sql_fetch_array($query)) {
       if($tid) {
         /* --- Ticket exists --- */
         /* Let's just verify the ticket really exists and isn't closed... */
-        $query2 = squery("SELECT id,status,rep_u FROM karnaf_tickets WHERE id=%d", $tid);
+        $query2 = squery("SELECT t.id,t.status,t.rep_u,t.uphone,t.rep_g,t.title,o.email AS oemail FROM (karnaf_tickets AS t LEFT JOIN users as o ON t.rep_u=o.user) WHERE t.id=%d", $tid);
         if($result2 = sql_fetch_array($query2)) {
           if((int)$result2['status'] == 0) {
             karnaf_email($reply_to, "Ticket #".$tid, "We are sorry, the ticket is already closed and you can't add new replies to it.");
@@ -287,6 +288,32 @@ while($result = sql_fetch_array($query)) {
               send_memo($result['rep_u'], "User has replied to ticket #".$result2['id'].". For more information visit: ".KARNAF_URL."/edit.php?id=".$result2['id']);
             }
             else squery("UPDATE karnaf_tickets SET lastupd_time=%d WHERE id=%d", time(), $tid);
+            $text = "New reply from: ".$unick."\r\n\r\n";
+            $text .= "To edit the ticket: ".KARNAF_URL."/edit.php?id=".$tid."\r\n";
+            $text .= "---------------------------------------------------------------------------------------------\r\n";
+            $text .= "Sender: ".$uname." <".$reply_to.">\r\n";
+            if(!empty($result['uphone'])) $text .= "Phone: ".$result['uphone']."\r\n";
+            if(!empty($m_subject)) $text .= "Title: ".$m_subject."\r\n";
+            $text .= "---------------------------------------------------------------------------------------------\r\n";
+            $text .= "Body: ".$m_body."\r\n";
+            $text .= "---------------------------------------------------------------------------------------------\r\n";
+            $text .= "To edit the ticket: ".KARNAF_URL."/edit.php?id=".$tid."\r\n";
+            $newsubject = "Re: [".strtoupper($result['rep_g'])."] Ticket #".$tid;
+            if(!empty($result['title'])) $newsubject .= " - ".$result['title'];
+            if(empty($result['rep_u'])) {
+              $query2 = squery("SELECT autoforward FROM groups WHERE name='%s'", $result['rep_g']);
+              if($result2 = sql_fetch_array($query2)) {
+                if(!empty($result2['autoforward'])) {
+                  /* Automatically forward new replies to the team... */
+                  karnaf_email($result2['autoforward'], $newsubject, $text);
+                }
+              }
+              sql_free_result($query2);
+            }
+            else if(!empty($result['oemail'])) {
+              /* Automatically forward new replies to the operator... */
+              karnaf_email($result['oemail'], $newsubject, $text);
+            }
           }
         }
         else $tid = 0; /* We tried to add a reply to a non-existing ticket, let's create a new ticket instead... */
@@ -331,9 +358,17 @@ while($result = sql_fetch_array($query)) {
             /* Automatically forward new tickets to the team... */
             $text = "New ticket from: ".$unick."\r\n\r\n";
             $text .= "To edit the ticket: ".KARNAF_URL."/edit.php?id=".$tid."\r\n";
-            $text = "Body: ".$m_body."\r\n";
+            $text .= "---------------------------------------------------------------------------------------------\r\n";
+            $text .= "Sender: ".$uname." <".$reply_to.">\r\n";
+            if(!empty($uphone)) $text .= "Phone: ".$uphone."\r\n";
+            if(!empty($m_subject)) $text .= "Title: ".$m_subject."\r\n";
+            $text .= "---------------------------------------------------------------------------------------------\r\n";
+            $text .= "Body: ".$m_body."\r\n";
+            $text .= "---------------------------------------------------------------------------------------------\r\n";
             $text .= "To edit the ticket: ".KARNAF_URL."/edit.php?id=".$tid."\r\n";
-            karnaf_email($result2['autoforward'], "[".$rep_g."] New Ticket #".$tid, $text);
+            $newsubject = "[".strtoupper($rep_g)."] New Ticket #".$tid;
+            if(!empty($m_subject)) $newsubject .= " - ".$m_subject;
+            karnaf_email($result2['autoforward'], $newsubject, $text);
           }
         }
         sql_free_result($query2);
