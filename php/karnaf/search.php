@@ -57,7 +57,7 @@ sp.priority_id=t.priority) WHERE 1";
     array_push($argv, $_POST['unick']);
   }
   if(isset($_POST['uname']) && !empty($_POST['uname'])) {
-    $qstr .= " AND uname LIKE '%s'";
+    $qstr .= " AND ufullname LIKE '%s'";
     array_push($argv, $_POST['uname']);
   }
   if(isset($_POST['uemail']) && !empty($_POST['uemail'])) {
