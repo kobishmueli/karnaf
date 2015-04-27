@@ -110,7 +110,8 @@ if(isset($_POST['reply_text'])) {
     }
     else {
       $autostatus = "The ticket has been closed.";
-      $email_update_str = "The ticket has been closed.";
+      if(isset($email_update_str) && strstr($email_update_str,"A new reply was sent to you.\r\nReply message:")) $email_update_str = str_replace("A new reply was sent to you.\r\nReply message:","The ticket has been closed:",$email_update_str);
+      else $email_update_str = "The ticket has been closed.";
       squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'The ticket has been closed.','%s','%s',%d,1,%d)", 
              $id, $nick, $group, (time()+1), $is_private);
       squery("UPDATE karnaf_tickets SET status=0,close_time=%d,lastupd_time=%d WHERE id=%d", time(), time(), $id);
@@ -222,8 +223,9 @@ if(isset($email_update_str) && !empty($email_update_str)) {
       $body = "Your ticket #".$result['id']." has been updated:\r\n".$email_update_str."\r\n";
       $body .= "---\r\nFor more information visit: ".KARNAF_URL."/view.php?id=".$result['id']."&code=".$result['randcode'];
       $body .= "\n*** Please make sure you keep the original subject when replying us by email ***";
-      send_mail($result['uemail'], "Ticket #".$result['id'], $body);
-      send_mail($result['cc'], "Ticket #".$result['id'], $body);
+      $newsubject = "[".strtoupper($group)."] Ticket #".$result['id'];
+      send_mail($result['uemail'], $newsubject, $body);
+      send_mail($result['cc'], $newsubject, $body);
     }
   }
 }
