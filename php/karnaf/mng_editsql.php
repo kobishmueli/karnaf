@@ -24,7 +24,7 @@ $allowed_tables = array(
                       "priority",
                       array("parent","sqlselect","select cat2.id,concat(cat1.name,' - ',cat2.name) from (karnaf_cat2 AS cat2 LEFT JOIN karnaf_cat1 AS cat1 ON cat1.id=cat2.parent)"),
                       array("default_priority","sqlselect","select priority_id,priority_name FROM karnaf_priorities"),
-                      array("default_group","sqlselect","select '','---' union select id,name FROM groups WHERE iskarnaf=1"),
+                      array("default_group","sqlselect","select '','---' union select name,name FROM groups WHERE iskarnaf=1"),
                       "extra",
                       array("allowed_group","sqlselect","select '' AS id,'---' AS name union select id,name FROM groups ORDER BY name"),
                     )),
