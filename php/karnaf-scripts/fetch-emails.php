@@ -331,7 +331,7 @@ while($result = sql_fetch_array($query)) {
         /* Spam checks */
         if(strstr($m_subject,"[SPAM]")) $status = 4;
         /* End of spam checks */
-        if($rep_g == KARNAF_DEFAULT_GROUP) {
+        if(($rep_g == KARNAF_DEFAULT_GROUP) && defined("IRC_MODE")) {
           if(!empty($cc)) $m_body = "CC: ".$cc."\n".$m_body;
           if(!empty($to)) $m_body = "To: ".$to."\n".$m_body;
         }
