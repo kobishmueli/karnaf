@@ -20,6 +20,14 @@ while($result = sql_fetch_array($query)) {
 }
 sql_free_result($query);
 echo "<br>\n";
+echo "<u>Opers:</u><br>\n";
+$query = squery("SELECT t.id,t.rep_u,count(t.rep_u) AS c FROM karnaf_tickets AS t WHERE t.status!=5 AND (t.open_time>=%d OR t.close_time>=%d) GROUP BY rep_u ORDER BY c DESC", $starttime, $starttime);
+while($result = sql_fetch_array($query)) {
+  if(empty($result['rep_u'])) $result['rep_u'] = "None";
+  echo $result['rep_u'].": ".$result['c']."<br>\n";
+}
+sql_free_result($query);
+echo "<br>\n";
 echo "<u>Categories:</u><br>\n";
 $query = squery("SELECT t.id,c3.name AS cat3,c2.name AS cat2,c1.name AS cat1,count(t.cat3_id) AS c FROM (karnaf_tickets AS t LEFT JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id
 LEFT JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent LEFT JOIN karnaf_cat1 AS c1 ON c1.id=c2.parent) WHERE t.open_time>=%d OR t.close_time>=%d GROUP BY
