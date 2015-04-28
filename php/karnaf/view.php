@@ -207,44 +207,7 @@ else echo $result['rep_g'];
 </table>
 </td>
 </tr>
-<?
-  if($isoper && !isset($akillid) && preg_match("/\[AKILL ID:(\d+K-[a-z0-9]+)\]/", $result['description'], $matches)) { $akillid = $matches[1]; $type = "K"; }
-  else if($isoper && !isset($akillid) && preg_match("/\[ID: (DM-\d+)\]/", $result['description'], $matches)) { $akillid = $matches[1]; $type = "DM"; }
-  else if($isoper && !isset($akillid) && preg_match("/\[ID:(\d+([QGA])-[a-z0-9]+)\]/", $result['description'], $matches)) { $akillid = $matches[1]; $type = $matches[2]; }
-  if($isoper && $a_operlev>=50 && isset($akillid)) {
-    /* Show services administrations more information about AKILL IDs... */
-    echo "<tr class=\"Karnaf_Head2\"><td colspan=\"2\">Services ID Information</td></tr>\n";
-    echo "<tr><td colspan=\"2\">\n";
-    if(!is_backup_running()) {
-      if(substr($akillid,0,3) == "DM-") {
-        echo "ID: <a href=\"".MY_URL."/kb/view.php?kb=130\">".$akillid."</a><br>\n";
-        echo "Set By: Drone Module<br>\n";
-      }
-      else {
-        $query2 = squery("SELECT type,object,oper,operhost,time,id,status,length,reason,active FROM reports WHERE type='%s' AND id='%s'", $type, $akillid);
-        if($result2 = sql_fetch_array($query2)) {
-          $akillid = $result2['id'];
-          echo "ID: <a href=\"".OPERS_URL."/oper_reportlookup.php?type=".$type."&id=".$akillid."\">".$akillid."</a><br>\n";
-          echo "Object: ".$result2['object']."<br>\n";
-          echo "Set By: ".$result2['oper']."<br>\n";
-          $reason = $result2['reason'];
-#          if($reason[0]=="[" && ($pos = strpos($reason,"]"))) $reason = substr($reason,0,$pos+1);
-          echo "Reason: ".$reason."<br>\n";
-          echo "Active: ".$result2['active']."<br>\n";
-        }
-        else {
-          echo "ID: ".$akillid."<br>\n";
-          echo "The ID does not exist on the database.<br>\n";
-        }
-        echo "</td></tr>";
-        sql_free_result($query2);
-      }
-    }
-    else {
-      echo "Can't look up AKILL information because the backup process is running.";
-    }
-  }
-?>
+<? custom_view_row_more($result, $isoper); ?>
 <? if($isoper) { ?>
 <?
   $querystr = "SELECT id,status,unick,uemail,rep_g,priority FROM karnaf_tickets WHERE id!=%d AND (";
