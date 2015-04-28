@@ -46,6 +46,8 @@ if(isset($_POST['cat3'])) {
   else $email_upd = 0;
   if(isset($_POST['memo_upd']) && ($_POST['memo_upd'] == "on")) $memo_upd = 1;
   else $memo_upd = 0;
+  $title = $_POST['title'];
+  if(empty($title)) $error = "You must write a ticket title!";
   $description = $_POST['description'];
   if(empty($description)) $error = "You must write a ticket description!";
   if($uemail == "a@b.c") $error = "You must use a real email address!";
@@ -82,8 +84,8 @@ if(isset($_POST['cat3'])) {
     echo "Error!<br><br>".$error;
   }
   else {
-    squery("INSERT INTO karnaf_tickets(randcode,status,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd) VALUES('%s',%d,'%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d)",
-           $randstr,1,$description,$cat3_id,$unick,fix_html($_POST['uname']),$uemail,$uphone,$uip,$upriority,$priority,time(),$nick,$rep_u,
+    squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d)",
+           $randstr,1,$title,$description,$cat3_id,$unick,fix_html($_POST['uname']),$uemail,$uphone,$uip,$upriority,$priority,time(),$nick,$rep_u,
            $rep_g,$is_real,$is_private,$email_upd,$memo_upd);
     $id = sql_insert_id();
     if(isset($ext1)) squery("UPDATE karnaf_tickets SET ext1='%s' WHERE id=%d", $ext1, $id);
@@ -250,6 +252,10 @@ function open_search() {
 <? custom_new_ticket_welcome(); ?>
 <form name="form1" id="form1" method="post">
 <table border="1">
+<tr class="Karnaf_Head2"><td colspan="2">Ticket Title</td></tr>
+<tr><td colspan="2">
+<input name="title" id="title" type="text">
+</td></tr>
 <tr class="Karnaf_Head2"><td colspan="2">Ticket Description</td></tr>
 <tr><td colspan="2">
 <textarea name="description" id="description" wrap=soft rows="10" style="width:100%"></textarea>
