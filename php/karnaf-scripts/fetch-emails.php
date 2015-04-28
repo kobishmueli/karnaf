@@ -152,6 +152,7 @@ while($result = sql_fetch_array($query)) {
           }
         }
       }
+      if(strstr($subject, "=?UTF-8?")) $subject = imap_utf8($subject);
       if(substr($m_body,0,1) == "\n") $m_body = substr($m_body,1);
       if(strstr($m_body,"<DEFANGED_DIV>")) $m_body = strip_tags($m_body);
       if(strstr($m_body,"<head>") && strstr($m_body,"<body") && strstr($m_body,"</body>") && strstr($m_body,"</html>")) $m_body = strip_tags($m_body);
