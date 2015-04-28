@@ -11,6 +11,15 @@ Karnaf v5.0.10
   - Cosmetic changes to new emails to groups.
   - Added automatic oper/group email for ticket replies.
 - Cosmetic change to php/karnaf/edit.php to show the reply when a ticket is getting closed with a reply.
+- Added title support to new.php.
+- Added custom_view_row_more() support to view.php & ktools.php.
+- Code cleanup.
+- Version increase.
+- Fixed php/karnaf-scripts/fetch-emails.php to support utf8 subject headers.
+- Changed php/karnaf-scripts/fetch-emails.php to only put TO+CC headers on the body when running in IRC_MODE.
+- Changed php/karnaf/mylist.php to skip tickets for other teams even for root admins (when not running in IRC_MODE).
+- Added oper stats.
+- Fixed a small karnaf_mail_rules bug on php/karnaf/mng_editsql.php.
 
 Karnaf v5.0.9
 - Added a my-tickets/not-assigned-tickets filter to mylist.php.
