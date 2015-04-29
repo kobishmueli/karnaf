@@ -168,7 +168,13 @@ if(isset($_POST['assign_group'])) {
        $email_update_str = "The ticket has been re-assigned to a staff member (this means your ticket has been forwarded to a staff member to deal with it and you need to wait for his/her reply).";
       else if($a_type != 4)
        $email_update_str = "The ticket has been re-assigned to ".$_POST['assign_user'];
-      if($nick != $_POST['assign_user']) send_memo($_POST['assign_user'], "Ticket #".$result['id']." has been assigned to you. For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
+      if($nick != $_POST['assign_user']) {
+        send_memo($_POST['assign_user'], "Ticket #".$result['id']." has been assigned to you. For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
+        $newsubject = "[".strtoupper($group)."] Ticket #".$result['id'];
+        $query2 = squery("SELECT email FROM users WHERE user='%s'", $_POST['assign_user']);
+        if(($result2 = sql_fetch_array($query2))) send_mail($result2['email'], $newsubject, "Ticket #".$result['id']." has been assigned to you. For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
+        sql_free_result($query2);
+      }
     }
   }
   $autoload = 5;
