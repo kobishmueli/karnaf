@@ -22,6 +22,11 @@ Karnaf v5.0.10
 - Fixed a small karnaf_mail_rules bug on php/karnaf/mng_editsql.php.
 - Updated edit.php to email opers when a ticket is (re-)assign to them.
 - Fixed fetch-emails.php typos (result2 --> result3 & result --> result2).
+- Cosmetic changes to php/karnaf/new.php.
+- Added Elad's styling changes (php/karnaf/view.php).
+- Fixed a typo error (custom_view_row_more --> custom_view_more) on php/karnaf/view.php.
+- Fixed a bug on php/karnaf/list.php where the oper none filter didn't work correctly in some cases.
+- Fixed php/karnaf-scripts/fetch-emails.php to save the CC on the ticket.
 
 Karnaf v5.0.9
 - Added a my-tickets/not-assigned-tickets filter to mylist.php.
