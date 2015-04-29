@@ -20,6 +20,8 @@ Karnaf v5.0.10
 - Changed php/karnaf/mylist.php to skip tickets for other teams even for root admins (when not running in IRC_MODE).
 - Added oper stats.
 - Fixed a small karnaf_mail_rules bug on php/karnaf/mng_editsql.php.
+- Updated edit.php to email opers when a ticket is (re-)assign to them.
+- Fixed fetch-emails.php typos (result2 --> result3 & result --> result2).
 
 Karnaf v5.0.9
 - Added a my-tickets/not-assigned-tickets filter to mylist.php.
