@@ -254,11 +254,11 @@ function open_search() {
 <table border="1">
 <tr class="Karnaf_Head2"><td colspan="2">Ticket Title</td></tr>
 <tr><td colspan="2">
-<input name="title" id="title" type="text">
+<input name="title" id="title" type="text" style="width:99%">
 </td></tr>
 <tr class="Karnaf_Head2"><td colspan="2">Ticket Description</td></tr>
 <tr><td colspan="2">
-<textarea name="description" id="description" wrap=soft rows="10" style="width:100%"></textarea>
+<textarea name="description" id="description" wrap=soft rows="10" style="width:99%"></textarea>
 </td></tr>
 <tr>
 <td valign="top" width="50%">
