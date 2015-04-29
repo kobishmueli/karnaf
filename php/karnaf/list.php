@@ -80,12 +80,12 @@ up.priority_id=t.upriority INNER JOIN karnaf_priorities AS sp ON
 sp.priority_id=t.priority) WHERE t.status=%d";
 $argv = array();
 array_push($argv, $status);
-if(isset($_GET['oper'])) {
+if(isset($_GET['oper']) && !empty($_GET['oper'])) {
   $qstr .= " AND rep_u='%s'";
   if(strtolower($_GET['oper']) == "none") array_push($argv, "");
   else array_push($argv, $_GET['oper']);
 }
-else if(isset($_GET['rep_u'])) {
+else if(isset($_GET['rep_u']) && !empty($_GET['rep_u'])) {
   $qstr .= " AND rep_u='%s'";
   array_push($argv, $_GET['rep_u']);
 }
