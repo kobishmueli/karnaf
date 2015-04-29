@@ -81,7 +81,7 @@ if($result = sql_fetch_array($query)) {
   }
   if($isoper && defined("IRC_MODE")) echo "<center>*** You are an IRC Operator and see things users don't ***</center><br>\r\n";
 ?>
-<table width="100%">
+<table width="100%" class="view_ticket_table">
 <tr>
 <td valign="top" width="50%">
 <table width="100%">
@@ -207,7 +207,7 @@ else echo $result['rep_g'];
 </table>
 </td>
 </tr>
-<? custom_view_row_more($result, $isoper); ?>
+<? custom_view_more($result, $isoper); ?>
 <? if($isoper) { ?>
 <?
   $querystr = "SELECT id,status,unick,uemail,rep_g,priority FROM karnaf_tickets WHERE id!=%d AND (";
@@ -432,7 +432,7 @@ Add attachment: <input type="file" style="width:100%" name="attachment-file" id=
 </table>
 <? if(!isset($_GET['ajax']) && (in_array($result['rep_g'], $a_groups) || IsKarnafAdminSession())) { ?>
 <br>
-<center><a href="edit.php?id=<?=$id?>">Edit this ticket</a></center>
+<center><a href="edit.php?id=<?=$id?>" class="edit_ticket">Edit this ticket</a></center>
 <?
   }
 }

@@ -92,3 +92,12 @@ td.ticket_replies {
   color: Black;
 }
 
+table.view_ticket_table {
+  background: white;
+  color: black;
+}
+
+.edit_ticket {
+    color: white;
+    font-size: 25px;
+}
