@@ -293,27 +293,27 @@ while($result = sql_fetch_array($query)) {
             $text .= "To edit the ticket: ".KARNAF_URL."/edit.php?id=".$tid."\r\n";
             $text .= "---------------------------------------------------------------------------------------------\r\n";
             $text .= "Sender: ".$uname." <".$reply_to.">\r\n";
-            if(!empty($result['uphone'])) $text .= "Phone: ".$result['uphone']."\r\n";
+            if(!empty($result2['uphone'])) $text .= "Phone: ".$result2['uphone']."\r\n";
             if(!empty($m_subject)) $text .= "Title: ".$m_subject."\r\n";
             $text .= "---------------------------------------------------------------------------------------------\r\n";
             $text .= "Body: ".$m_body."\r\n";
             $text .= "---------------------------------------------------------------------------------------------\r\n";
             $text .= "To edit the ticket: ".KARNAF_URL."/edit.php?id=".$tid."\r\n";
-            $newsubject = "Re: [".strtoupper($result['rep_g'])."] Ticket #".$tid;
-            if(!empty($result['title'])) $newsubject .= " - ".$result['title'];
-            if(empty($result['rep_u'])) {
-              $query2 = squery("SELECT autoforward FROM groups WHERE name='%s'", $result['rep_g']);
-              if($result2 = sql_fetch_array($query2)) {
-                if(!empty($result2['autoforward'])) {
+            $newsubject = "Re: [".strtoupper($result2['rep_g'])."] Ticket #".$tid;
+            if(!empty($result2['title'])) $newsubject .= " - ".$result2['title'];
+            if(empty($result2['rep_u'])) {
+              $query3 = squery("SELECT autoforward FROM groups WHERE name='%s'", $result['rep_g']);
+              if($result3 = sql_fetch_array($query2)) {
+                if(!empty($result3['autoforward'])) {
                   /* Automatically forward new replies to the team... */
-                  karnaf_email($result2['autoforward'], $newsubject, $text);
+                  karnaf_email($result3['autoforward'], $newsubject, $text);
                 }
               }
-              sql_free_result($query2);
+              sql_free_result($query3);
             }
-            else if(!empty($result['oemail'])) {
+            else if(!empty($result2['oemail'])) {
               /* Automatically forward new replies to the operator... */
-              karnaf_email($result['oemail'], $newsubject, $text);
+              karnaf_email($result2['oemail'], $newsubject, $text);
             }
           }
         }
