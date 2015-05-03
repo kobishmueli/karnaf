@@ -177,6 +177,8 @@ if(isset($_POST['assign_group'])) {
       }
     }
   }
+  /* Remove waiting for user reply status from tickets that are re-assigned */
+  squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d AND status=2", time(), $id);
   $autoload = 5;
 }
 /* Add action */
