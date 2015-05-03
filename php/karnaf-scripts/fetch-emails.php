@@ -102,7 +102,7 @@ while($result = sql_fetch_array($query)) {
           $to = $matches[1];
           continue;
         }
-        if(preg_match("/^CC: (.*)/", $header, $matches)) {
+        if(preg_match("/^[Cc]{2}: (.*)/", $header, $matches)) {
           $cc = $matches[1];
           continue;
         }
@@ -118,6 +118,8 @@ while($result = sql_fetch_array($query)) {
         $m_body = imap_fetchbody($mbox, $m_id, "1.1");
         if($m_body == "") $m_body = imap_fetchbody($mbox, $m_id, "1");
         $m_body = quoted_printable_decode($m_body);
+        #Remove double spacing:
+        $m_body = str_replace("\r\n\r\n","\r\n",$m_body);
         #For debugging:
         #$m_body = "Type: multi-part\n".$m_body;
       }
@@ -153,6 +155,10 @@ while($result = sql_fetch_array($query)) {
         }
       }
       if(strstr($subject, "=?UTF-8?")) $subject = imap_utf8($subject);
+      if(strstr($m_subject, "=?UTF-8?")) {
+        $m_subject = imap_utf8($m_subject);
+        $m_body = base64_decode($m_body);
+      }
       if(substr($m_body,0,1) == "\n") $m_body = substr($m_body,1);
       if(strstr($m_body,"<DEFANGED_DIV>")) $m_body = strip_tags($m_body);
       if(strstr($m_body,"<head>") && strstr($m_body,"<body") && strstr($m_body,"</body>") && strstr($m_body,"</html>")) $m_body = strip_tags($m_body);
@@ -289,7 +295,7 @@ while($result = sql_fetch_array($query)) {
               send_memo($result['rep_u'], "User has replied to ticket #".$result2['id'].". For more information visit: ".KARNAF_URL."/edit.php?id=".$result2['id']);
             }
             else squery("UPDATE karnaf_tickets SET lastupd_time=%d WHERE id=%d", time(), $tid);
-            $text = "New reply from: ".$unick."\r\n\r\n";
+            $text = "New reply from: ".$uname."\r\n\r\n";
             $text .= "To edit the ticket: ".KARNAF_URL."/edit.php?id=".$tid."\r\n";
             $text .= "---------------------------------------------------------------------------------------------\r\n";
             $text .= "Sender: ".$uname." <".$reply_to.">\r\n";
@@ -302,7 +308,7 @@ while($result = sql_fetch_array($query)) {
             $newsubject = "Re: [".strtoupper($result2['rep_g'])."] Ticket #".$tid;
             if(!empty($result2['title'])) $newsubject .= " - ".$result2['title'];
             if(empty($result2['rep_u'])) {
-              $query3 = squery("SELECT autoforward FROM groups WHERE name='%s'", $result['rep_g']);
+              $query3 = squery("SELECT autoforward FROM groups WHERE name='%s'", $result2['rep_g']);
               if($result3 = sql_fetch_array($query2)) {
                 if(!empty($result3['autoforward'])) {
                   /* Automatically forward new replies to the team... */
