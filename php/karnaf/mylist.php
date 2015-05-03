@@ -150,6 +150,7 @@ while($result = sql_fetch_array($query)) {
   $body = "";
   if(!empty($result['title'])) $body = "Title: ".$result['title']."\n\n";
   $body .= $result['description'];
+  $body = preg_replace("/(\*)?\[image\:\sironSource\](\*)?.*Thank\syou\./s", "*** Signature ***", $body);
   $body = str_replace("\"","''",$body);
   $body = str_replace("<","&lt;",$body);
 ?>

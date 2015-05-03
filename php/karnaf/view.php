@@ -105,7 +105,7 @@ if($result = sql_fetch_array($query)) {
 <? if($result['cc']) { ?>
 <tr>
 <td>CC:</td>
-<td><? foreach(explode(",", $result['cc']) as $curcc) echo $curcc."<br>"; ?></td>
+<td><? foreach(explode(",", $result['cc']) as $curcc) echo str_replace("<","&lt;",$curcc)."<br>"; ?></td>
 </tr>
 <? } ?>
 <? if(!defined("IRC_MODE")) { ?>
@@ -292,8 +292,10 @@ else echo $result['rep_g'];
     show_board_body($result['title']);
     echo "<hr>\n";
   }
+  $description = $result['description'];
+  $description = preg_replace("/(\*)?\[image\:\sironSource\](\*)?.*Thank\syou\./s", "*** Signature ***", $description);
 ?>
-<?=show_board_body($result['description'])?>
+<?=show_board_body($description)?>
 </td></tr>
 <?
   $query2 = squery("SELECT id,file_name,file_desc,file_size FROM karnaf_files WHERE tid=%d ORDER BY id", $id);
