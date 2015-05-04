@@ -11,27 +11,83 @@ make_menus("Karnaf (HelpDesk)");
 if(isset($_GET['status'])) $status = $_GET['status'];
 else $status = 1;
 if(!$status) safe_die("Invalid status!");
-if(isset($_POST['spams']) && is_array($_POST['spams'])) {
-  foreach($_POST['spams'] as $spam) {
-     $query = squery("SELECT status,rep_g FROM karnaf_tickets WHERE id=%d", $spam);
+if(isset($_POST['ids'])) {
+  if(!is_array($_POST['ids'])) $_POST['ids'] = array($_POST['ids']);
+  foreach($_POST['ids'] as $id) {
+     $query = squery("SELECT id,status,rep_u,rep_g,memo_upd,email_upd,unick,uemail,cc,randcode FROM karnaf_tickets WHERE id=%d", $id);
      if($result = sql_fetch_array($query)) {
-       if(!IsGroupMember($result['rep_g']) && !IsKarnafAdminSession()) echo "Ticket #".$spam." is assigned to another team.<br>\n";
-       else if($result['status'] == 0) echo "Ticket #".$spam." is already closed.<br>\n";
-       else if($result['status'] == 5) echo "Ticket #".$spam." is already flagged as spam.<br>\n";
-       else {
-         squery("UPDATE karnaf_tickets SET status=5,lastupd_time=%d WHERE id=%d", time(), $spam);
-         squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'The ticket has been flagged as spam.','%s','%s',%d,1,%d)",
-                $spam, $nick, $result['rep_g'], time(), 0);
-         echo "Ticket #".$spam." has been flagged as spam.<br>\n";
+       if(!IsGroupMember($result['rep_g']) && !IsKarnafAdminSession()) echo "Ticket #".$id." is assigned to another team.<br>\n";
+       if(isset($_POST['reassign']) && (int)$_POST['reassign']==1) {
+         if(isset($_POST['reassign_oper']) && !empty($_POST['reassign_oper'])) $assign_user = $_POST['reassign_oper'];
+         else $assign_user = $nick;
+         if($result['status'] == 0) echo "Ticket #".$id." is closed, you must reopen it in order to re-assign it.<br>\n";
+         else if($result['rep_u'] == $assign_user) echo "Ticket #".$id." is already assigned to ".$assign_user.".<br>\n";
+         else {
+           # Re-assign code (mostly from edit.php):
+           $group = $result['rep_g'];
+           $a_type = 3;
+           $query2 = squery("SELECT private_actions FROM groups WHERE name='%s'", $result['rep_g']);
+           if(($result2 = sql_fetch_array($query2)) && $result2['private_actions']) $a_type = 4;
+           sql_free_result($query2);
+           squery("UPDATE karnaf_tickets SET rep_u='%s',lastupd_time=%d WHERE id=%d", $assign_user, time(), $id);
+           squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type) VALUES(%d,'%s','%s','%s',%d,%d)",
+                 $id, $assign_user, $nick, $group, (time()+1), $a_type);
+           $autostatus = "The ticket has been re-assigned to ".$assign_user.".";
+           if(defined("IRC_MODE"))
+            $email_update_str = "The ticket has been re-assigned to a staff member (this means your ticket has been forwarded to a staff member to deal with it and you need to wait for his/her reply).";
+           else if($a_type != 4)
+            $email_update_str = "The ticket has been re-assigned to ".$assign_user;
+           if($nick != $assign_user) {
+             send_memo($assign_user, "Ticket #".$result['id']." has been assigned to you. For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
+             $newsubject = "[".strtoupper($group)."] Ticket #".$result['id'];
+             $query2 = squery("SELECT email FROM users WHERE user='%s'", $assign_user);
+             if(($result2 = sql_fetch_array($query2))) send_mail($result2['email'], $newsubject, "Ticket #".$result['id']." has been assigned to you. For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
+             sql_free_result($query2);
+           }
+           # End of re-assign code.
+           if($result['memo_upd']=="1") send_memo($result['unick'], "Your ticket #".$result['id']." has been updated. For more information visit: ".KARNAF_URL."/view.php?id=".$result['id']."&code=".$result['randcode']);
+           if($result['email_upd']=="1") {
+             $body = "Your ticket #".$result['id']." has been updated:\r\n".$email_update_str."\r\n";
+             $body .= "---\r\nFor more information visit: ".KARNAF_URL."/view.php?id=".$result['id']."&code=".$result['randcode'];
+             $body .= "\n*** Please make sure you keep the original subject when replying us by email ***";
+             $newsubject = "[".strtoupper($group)."] Ticket #".$result['id'];
+             send_mail($result['uemail'], $newsubject, $body);
+             send_mail($result['cc'], $newsubject, $body);
+           }
+         }
+       }
+       else if(isset($_POST['flagspam']) && (int)$_POST['flagspam']==1) {
+         if($result['status'] == 0) echo "Ticket #".$id." is already closed.<br>\n";
+         else if($result['status'] == 5) echo "Ticket #".$id." is already flagged as spam.<br>\n";
+         else {
+           squery("UPDATE karnaf_tickets SET status=5,lastupd_time=%d WHERE id=%d", time(), $id);
+           squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'The ticket has been flagged as spam.','%s','%s',%d,1,%d)",
+                  $id, $nick, $result['rep_g'], time(), 0);
+           echo "Ticket #".$id." has been flagged as spam.<br>\n";
+         }
        }
      }
-     else echo "Couldn't find ticket #".$spam."<br>\n";
+     else echo "Couldn't find ticket #".$id."<br>\n";
      sql_free_result($query);
   }
   echo "<br>\n";
 }
 ?>
 <script language="JavaScript">
+function flagspam_onclick() {
+  document.form1.method = "post";
+  document.form1.flagspam.value = "1";
+  document.form1.reassign.value = "0";
+  document.form1.submit();
+}
+
+function reassign_onclick() {
+  document.form1.method = "post";
+  document.form1.reassign.value = "1";
+  document.form1.flagspam.value = "0";
+  document.form1.submit();
+}
+
 function showspan(spanname) {
   if (document.getElementById(spanname).style.display == "none") {
     document.getElementById(spanname).style.display="table-cell";
@@ -75,6 +131,8 @@ function refresh() {
 setTimeout(refresh, 10000);
 </script>
 <form name="form1" id="form1" method="get">
+<input type="hidden" name="flagspam" id="flagspam" value="0">
+<input type="hidden" name="reassign" id="reassign" value="0">
 <select name="status" onChange="form1.submit();">
 <?
 $query2 = squery("SELECT status_id,status_name FROM karnaf_statuses WHERE status_id!=0 AND status_id!=5 ORDER BY status_id");
@@ -95,7 +153,6 @@ else $showall = "";
 <option value="none"<? if(strtolower($showall) == "none") echo " SELECTED"; ?>>*** Not Assigned ***</option>
 <option value="onlymy"<? if(strtolower($showall) == "onlymy") echo " SELECTED"; ?>>*** Only My Tickets ***</option>
 </select>
-</form>
 <form name="checks" id="checks" method="post">
 <br><br>
 <table border="1" width="90%" bgcolor="White" style="border-collapse: collapse" bordercolor="#111111" cellpadding="1" cellspacing="1">
@@ -155,7 +212,7 @@ while($result = sql_fetch_array($query)) {
   $body = str_replace("<","&lt;",$body);
 ?>
 <tr class="<?=$curcol?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:showspan('tspan<?=$result['id']?>')>
-<td class="<?=$status_style?>" align="center"><input name="spams[]" type="checkbox" value="<?=$result['id']?>"></td>
+<td class="<?=$status_style?>" align="center"><input name="ids[]" type="checkbox" value="<?=$result['id']?>"></td>
 <td><span title="<?=$body?>" style="cursor:pointer"><?=$result['id']?></span></td>
 <td>
 <?
@@ -197,7 +254,22 @@ if(!$cnt) echo "<tr><td colspan=\"10\" align=\"center\">*** None ***</td></tr>";
 ?>
 </table>
 <br>
-<center><input type="submit" value="Flag selected tickets as spam"></center>
+<center>
+<input type="button" value="Flag selected tickets as spam" onClick="javascript:flagspam_onclick()">
+<input type="button" value="Re-assign selected tickets to:" onClick="javascript:reassign_onclick()">
+<select name="reassign_oper">
+<option value=""><?=$nick?></option>
+<?
+$query2 = squery("SELECT DISTINCT(rep_u) FROM karnaf_tickets WHERE status!=0 AND rep_u!='' and rep_u!='%s' ORDER BY rep_u", $nick);
+while($result2 = sql_fetch_array($query2)) {
+?>
+<option value="<?=$result2['rep_u']?>"><?=$result2['rep_u']?></option>
+<?
+}
+sql_free_result($query2);
+?>
+</select>
+</center>
 </form>
 <br>
 Total: <?=$cnt?> ticket(s).
