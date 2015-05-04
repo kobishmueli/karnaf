@@ -27,6 +27,11 @@ Karnaf v5.0.10
 - Fixed a typo error (custom_view_row_more --> custom_view_more) on php/karnaf/view.php.
 - Fixed a bug on php/karnaf/list.php where the oper none filter didn't work correctly in some cases.
 - Fixed php/karnaf-scripts/fetch-emails.php to save the CC on the ticket.
+- Strip ironSource signatures on mylist.php and list.php & escape < on view.php.
+- Fixed CC matching, UTF-8 body and other minor issues on php/karnaf-scripts/fetch-emails.php.
+- Remove waiting for user reply status from tickets that are re-assigned (php/karnaf/edit.php).
+- Added reassign option to php/karnaf/mylist.php.
+- Fixed a duplicate form closure on php/karnaf/mylist.php.
 
 Karnaf v5.0.9
 - Added a my-tickets/not-assigned-tickets filter to mylist.php.
