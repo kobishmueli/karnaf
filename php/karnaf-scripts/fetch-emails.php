@@ -154,10 +154,20 @@ while($result = sql_fetch_array($query)) {
           }
         }
       }
-      if(strstr($subject, "=?UTF-8?")) $subject = imap_utf8($subject);
+      if(strstr($subject, "=?UTF-8?")) {
+        $subject = imap_utf8($subject);
+        if($tid == 0) {
+          /* Let's try to catch the ticket ID again... */
+          if(preg_match("/^.*(#([\d,]+)).*/", $subject, $matches)) {
+            if(isset($matches[2])) $tid = str_replace(",","",$matches[2]);
+          }
+          else if(preg_match("/^.*(#(\d+).*)/", $subject, $matches)) {
+            if(isset($matches[2])) $tid = $matches[2];
+          }
+        }
+      }
       if(strstr($m_subject, "=?UTF-8?")) {
         $m_subject = imap_utf8($m_subject);
-        $m_body = base64_decode($m_body);
       }
       if(substr($m_body,0,1) == "\n") $m_body = substr($m_body,1);
       if(strstr($m_body,"<DEFANGED_DIV>")) $m_body = strip_tags($m_body);
