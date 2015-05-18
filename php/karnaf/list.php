@@ -29,6 +29,7 @@ setTimeout(refresh, 10000);
 </script>
 <form name="form1" id="form1" method="get">
 <select name="status" onChange="form1.submit();">
+<option value="999"<? if($status == 999) echo " SELECTED"; ?>>Opened - All non-closed tickets</option>
 <?
 $query2 = squery("SELECT status_id,status_name FROM karnaf_statuses WHERE status_id!=0 AND status_id!=5 ORDER BY status_id");
 while($result2 = sql_fetch_array($query2)) {
@@ -77,9 +78,15 @@ cat3_name,s.status_name,up.priority_name AS upriority,t.priority,sp.priority_nam
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent
 INNER JOIN karnaf_cat1 AS c1 ON c1.id=c2.parent INNER JOIN karnaf_statuses AS s ON s.status_id=t.status INNER JOIN karnaf_priorities AS up ON
 up.priority_id=t.upriority INNER JOIN karnaf_priorities AS sp ON
-sp.priority_id=t.priority) WHERE t.status=%d";
+sp.priority_id=t.priority) WHERE";
 $argv = array();
-array_push($argv, $status);
+if($status == 999) {
+  $qstr .= " (t.status!=0 and t.status!=5)";
+}
+else {
+  $qstr .= " t.status=%d";
+  array_push($argv, $status);
+}
 if(isset($_GET['oper']) && !empty($_GET['oper'])) {
   $qstr .= " AND rep_u='%s'";
   if(strtolower($_GET['oper']) == "none") array_push($argv, "");
