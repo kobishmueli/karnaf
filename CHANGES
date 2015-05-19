@@ -3,6 +3,13 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.11
+- Added "Opened - All non-closed tickets" pseudo status to list.php and mylist.php.
+- Fixed a small bug where ticket number wasn't recognized in an encoded subject.
+- Removed base64 decoding from the body (php/karnaf-scripts/fetch-emails.php).
+- Added the ability to reply without loading all the replies and to temporary CC other users via replies.
+- Hide ironsource signatures from replies on view.php (Nir's patch).
+
 Karnaf v5.0.10
 - php/karnaf/search.php: Typo fix (uname --> ufullname).
 - php/karnaf-scripts/fetch-emails.php fixes:
