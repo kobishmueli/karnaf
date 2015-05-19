@@ -97,9 +97,26 @@ if(isset($_POST['reply_text'])) {
   }
   if(!empty($_POST['reply_text'])) {
     $reply_text = str_replace("%OPERNICK%",$nick,$_POST['reply_text']);
-    squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s')",
-           $id, $reply_text, $nick, time(), $r_by, get_session_ip());
-    $email_update_str = "A new reply was sent to you.\r\nReply message:\r\n".$reply_text;
+    if(isset($_POST['reply_to']) && !empty($_POST['reply_to']) && $_POST['reply_to']!=$result['uemail']) {
+      $body = "Message from ".$nick.":\r\n";
+      $body .= $reply_text."\r\n";
+      $body .= "---\r\n";
+      $body .= "*** Please make sure you keep the original subject when replying us by email ***";
+      if($_POST['reply_cc']!=$result['cc']) $reply_text = "CC: ".$_POST['reply_cc']."\r\n".$reply_text;
+      $reply_text = "To: ".$_POST['reply_to']."\r\n".$reply_text;
+      squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s')",
+             $id, $reply_text, $nick, time(), $r_by, get_session_ip());
+      $newsubject = "[".strtoupper($group)."] Ticket #".$result['id'];
+      send_mail($_POST['reply_to'], $newsubject, $body);
+      send_mail($_POST['reply_cc'], $newsubject, $body);
+      /* Don't update the user unless he was on the To or CC fields */
+      $email_update_str = "";
+    }
+    else {
+      squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s')",
+             $id, $reply_text, $nick, time(), $r_by, get_session_ip());
+      $email_update_str = "A new reply was sent to you.\r\nReply message:\r\n".$reply_text;
+    }
   }
   $autostatus = "The ticket has been updated.";
   if($result['private_actions']) $is_private = 2;
@@ -130,7 +147,8 @@ if(isset($_POST['reply_text'])) {
     }
   }
   if($is_waiting) squery("UPDATE karnaf_tickets SET status=2,lastupd_time=%d WHERE id=%d AND status=1", time(), $id);
-  $autoload = 6;
+  if(isset($_POST['short'])) $autoload = 8;
+  else $autoload = 6;
 }
 /* Re-assign to... */
 if(isset($_POST['assign_group'])) {
@@ -230,10 +248,11 @@ if(isset($email_update_str) && !empty($email_update_str)) {
     if($result['email_upd']=="1") {
       $body = "Your ticket #".$result['id']." has been updated:\r\n".$email_update_str."\r\n";
       $body .= "---\r\nFor more information visit: ".KARNAF_URL."/view.php?id=".$result['id']."&code=".$result['randcode'];
-      $body .= "\n*** Please make sure you keep the original subject when replying us by email ***";
+      $body .= "\r\n*** Please make sure you keep the original subject when replying us by email ***";
       $newsubject = "[".strtoupper($group)."] Ticket #".$result['id'];
       send_mail($result['uemail'], $newsubject, $body);
-      send_mail($result['cc'], $newsubject, $body);
+      if(isset($_POST['reply_cc']) && $_POST['reply_cc']!=$result['cc']) send_mail($result['cc'], $newsubject, $body);
+      else send_mail($result['cc'], $newsubject, $body);
     }
   }
 }
@@ -252,6 +271,7 @@ function load_page(id) {
     if (id == 5) url = 'edit_reassign.php?id=<?=$id?>&ajax=1';
     if (id == 6) url = 'edit_replies.php?id=<?=$id?>&ajax=1';
     if (id == 7) url = 'check_user.php?tid=<?=$id?>&uuser=<?=$unick?>&ajax=1';
+    if (id == 8) url = 'edit_replies.php?id=<?=$id?>&ajax=1&short=1';
     url = url + "&rand=" + Math.random();
     xmlhttp=null;
     if (window.XMLHttpRequest) {// code for all new browsers
@@ -406,6 +426,7 @@ window.onload = auto_load;
 <input name="edit_actions" type="button" value="Actions" onClick="javascript:load_page(4)">
 <input name="edit_reassign" type="button" value="Re-assign" onClick="javascript:load_page(5)">
 <input name="edit_replies" type="button" value="Replies" onClick="javascript:load_page(6)">
+<input name="new_reply" type="button" value="New Reply" onClick="javascript:load_page(8)">
 <input name="check_user" type="button" value="Check User" onClick="javascript:load_page(7)">
 </center>
 <br><br>
