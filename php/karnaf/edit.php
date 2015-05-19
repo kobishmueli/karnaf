@@ -146,7 +146,7 @@ if(isset($_POST['reply_text'])) {
       squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d", time(), $id);
     }
   }
-  if($is_waiting) squery("UPDATE karnaf_tickets SET status=2,lastupd_time=%d WHERE id=%d AND status=1", time(), $id);
+  if($is_waiting) squery("UPDATE karnaf_tickets SET status=2,lastupd_time=%d WHERE id=%d AND status!=0", time(), $id);
   if(isset($_POST['short'])) $autoload = 8;
   else $autoload = 6;
 }
