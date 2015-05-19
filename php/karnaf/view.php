@@ -401,7 +401,7 @@ else echo $result['rep_g'];
       echo "<hr>\n";
     }
 ?>
-<?=show_board_body($result2['reply'])?>
+<?=show_board_body(preg_replace("/(\*)?\[image\:\sironSource\](\*)?.*Thank\syou\./s", "*** Signature ***", $result2['reply']))?>
 </td>
 </tr>
 <?
