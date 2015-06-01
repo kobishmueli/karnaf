@@ -6,7 +6,7 @@
 /* KTools v1.3 */
 
 require_once("defines.php");
-define("KARNAF_VERSION", "5.0.11");
+define("KARNAF_VERSION", "5.0.12");
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 set_magic_quotes_runtime(0);
 if(!isset($override_magicquotes) && get_magic_quotes_gpc() == 1) die("Error: Incorrect magic_quotes_gpc setting!");
@@ -582,6 +582,25 @@ function make_menus($menu_id) {
 
 /* send_memo - unused function (reserved for DALnet) */
 function send_memo($to,$body) {
+}
+
+/* API function to create new tickets */
+function api_create_ticket($unick, $uname, $uemail, $title, $description, $uip, $rep_g, $cat3_id=71, $ext1="") {
+  $randstr = RandomNumber(10);
+  $email_upd = 1;
+  $memo_upd = 1;
+  $uphone = "";
+  $rep_u = "";
+  $is_real = 0;
+  $is_private = 0;
+  $upriority = 0;
+  $priority = 0;
+  squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d)",
+         $randstr,1,$title,$description,$cat3_id,$unick,fix_html($uname),$uemail,$uphone,$uip,$upriority,$priority,time(),"(API)",$rep_u,
+         $rep_g,$is_real,$is_private,$email_upd,$memo_upd);
+  $id = sql_insert_id();
+  if(!empty($ext1)) squery("UPDATE karnaf_tickets SET ext1='%s' WHERE id=%d", $ext1, $id);
+  return $id;
 }
 
 if(!function_exists("custom_new_ticket_welcome")) { function custom_new_ticket_welcome() { } }
