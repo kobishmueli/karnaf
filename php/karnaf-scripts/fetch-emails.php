@@ -302,7 +302,7 @@ while($result = sql_fetch_array($query)) {
                    $tid, $m_subject, $m_body, "Guest", time(), $uname, "(EMAIL)", $m_msgid);
             if((int)$result2['status'] == 2) {
               squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d", time(), $tid);
-              send_memo($result['rep_u'], "User has replied to ticket #".$result2['id'].". For more information visit: ".KARNAF_URL."/edit.php?id=".$result2['id']);
+              send_memo($result2['rep_u'], "User has replied to ticket #".$result2['id'].". For more information visit: ".KARNAF_URL."/edit.php?id=".$result2['id']);
             }
             else squery("UPDATE karnaf_tickets SET lastupd_time=%d WHERE id=%d", time(), $tid);
             $text = "New reply from: ".$uname."\r\n\r\n";
@@ -398,11 +398,12 @@ while($result = sql_fetch_array($query)) {
           $file_desc = "Attachment by ".$uname;
           $file_size = mb_strlen($attachment['data']);
           $file_ext = strtolower(substr($file_name,-4));
+          if($file_ext[0] != ".") $file_ext = strtolower(substr($file_name,-5));
           if($file_ext == ".jpg") $file_type = "image/jpeg";
           else if($file_ext == ".png") $file_type = "image/png";
           else if($file_ext == ".gif") $file_type = "image/gif";
           else $file_type = "application/octet-stream";
-          if($file_ext!=".jpg" && $file_ext!=".png" && $file_ext!=".pdf" && $file_ext!=".log" && $file_ext!=".txt") continue; /* Skip invalid file extensions */
+          if($file_ext!=".jpg" && $file_ext!=".png" && $file_ext!=".pdf" && $file_ext!=".log" && $file_ext!=".txt" && $file_ext!=".xls" && $file_ext!=".xlsx") continue; /* Skip invalid file extensions */
           squery("INSERT INTO karnaf_files(tid,file_name,file_type,file_desc,file_size,lastupd_time) VALUES(%d,'%s','%s','%s',%d,%d)",
                  $tid, $file_name, $file_type, $file_desc, $file_size, time());
           $id = sql_insert_id();
