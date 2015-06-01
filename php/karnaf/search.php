@@ -158,7 +158,12 @@ sp.priority_id=t.priority) WHERE 1";
 <td><?=$result['id']?></td>
 <td><?=$result['unick']?></td>
 <td><?=$result['opened_by']?></td>
-<td><?=$result['rep_g']?></td>
+<td>
+<?
+    if(!empty($result['rep_u'])) echo $result['rep_u']." (".$result['rep_g'].")";
+    else echo $result['rep_g'];
+?>
+</td>
 <td><?=$result['spriority']?></td>
 <td><?=showtime($result['open_time'])?></td>
 <td><?=$action_cnt+$reply_cnt?></td>
