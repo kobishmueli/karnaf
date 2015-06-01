@@ -9,6 +9,11 @@ Karnaf v5.0.11
 - Removed base64 decoding from the body (php/karnaf-scripts/fetch-emails.php).
 - Added the ability to reply without loading all the replies and to temporary CC other users via replies.
 - Hide ironsource signatures from replies on view.php (Nir's patch).
+- Fixed a small design-bug on the "Hold the ticket until the user reply" feature.
+- Added api_create_ticket() function to create new tickets.
+- Fixed a typo bug on php/karnaf-scripts/fetch-emails.php.
+- Added support for .xls and .xlsx extensions on php/karnaf-scripts/fetch-emails.php.
+- php/karnaf/search.php cosmetic change.
 
 Karnaf v5.0.10
 - php/karnaf/search.php: Typo fix (uname --> ufullname).
