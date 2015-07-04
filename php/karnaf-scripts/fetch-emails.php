@@ -310,7 +310,10 @@ while($result = sql_fetch_array($query)) {
             $text .= "---------------------------------------------------------------------------------------------\r\n";
             $text .= "Sender: ".$uname." <".$reply_to.">\r\n";
             if(!empty($result2['uphone'])) $text .= "Phone: ".$result2['uphone']."\r\n";
-            if(!empty($m_subject)) $text .= "Title: ".$m_subject."\r\n";
+            if(!empty($m_subject)) {
+              $text .= "---------------------------------------------------------------------------------------------\r\n";
+              $text .= "Title: ".$m_subject."\r\n";
+            }
             $text .= "---------------------------------------------------------------------------------------------\r\n";
             $text .= "Body: ".$m_body."\r\n";
             $text .= "---------------------------------------------------------------------------------------------\r\n";
@@ -341,6 +344,9 @@ while($result = sql_fetch_array($query)) {
         $randstr = RandomNumber(10);
         $unick = "Guest";
         $uphone = "";
+        $udepartment = "";
+        $uteam = "";
+        $uroom = "";
         $uip = "";
         $rep_u = "";
         $status = 1;
@@ -353,13 +359,18 @@ while($result = sql_fetch_array($query)) {
         }
 
         /* Let's try to find the sender on our user database... */
-        $query2 = squery("SELECT user,fullname,phone FROM users WHERE email='%s'", $reply_to);
-        if($result2 = sql_fetch_array($query2)) {
-          $unick = $result2['user'];
-          $uname = $result2['fullname'];
-          $uphone = $result2['phone'];
+        if(!empty($reply_to)) {
+          $query2 = squery("SELECT user,fullname,phone,department,team,room FROM users WHERE email='%s'", $reply_to);
+          if($result2 = sql_fetch_array($query2)) {
+            $unick = $result2['user'];
+            $uname = $result2['fullname'];
+            $uphone = $result2['phone'];
+            $udepartment = $result2['department'];
+            $uteam = $result2['team'];
+            $uroom = $result2['room'];
+          }
+          sql_free_result($query2);
         }
-        sql_free_result($query2);
 
         squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id,ext1,cc) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s','%s','%s')",
            $randstr,$status,$m_subject,$m_body,$cat3_id,$unick,$uname,$reply_to,$uphone,$uip,$upriority,$priority,time(),"(EMAIL)",$rep_u,
@@ -378,6 +389,9 @@ while($result = sql_fetch_array($query)) {
             $text .= "---------------------------------------------------------------------------------------------\r\n";
             $text .= "Sender: ".$uname." <".$reply_to.">\r\n";
             if(!empty($uphone)) $text .= "Phone: ".$uphone."\r\n";
+            if(!empty($uteam) && $uteam!=$udepartment) $text .= "Team: ".$uteam."\r\n";
+            if(!empty($udepartment)) $text .= "Department: ".$udepartment."\r\n";
+            if(!empty($uroom)) $text .= "Room: ".$uroom."\r\n";
             if(!empty($m_subject)) $text .= "Title: ".$m_subject."\r\n";
             $text .= "---------------------------------------------------------------------------------------------\r\n";
             $text .= "Body: ".$m_body."\r\n";
