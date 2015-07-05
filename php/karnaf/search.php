@@ -76,6 +76,10 @@ sp.priority_id=t.priority) WHERE 1";
     $qstr .= " AND t.ext1 LIKE '%s'";
     array_push($argv, $_POST['ext1']);
   }
+  if(isset($_POST['title']) && !empty($_POST['title'])) {
+    $qstr .= " AND t.title LIKE '%s'";
+    array_push($argv, $_POST['title']);
+  }
   if(isset($_POST['description']) && !empty($_POST['description'])) {
     $qstr .= " AND t.description LIKE '%s'";
     array_push($argv, $_POST['description']);
@@ -331,6 +335,12 @@ sql_free_result($query2);
 <td>Extended attribute (AKILL ID, etc):</td>
 <td>
 <input name="ext1" size="30" type="text">
+</td>
+</tr>
+<tr>
+<td>Title:</td>
+<td>
+<input name="title" size="30" type="text">
 </td>
 </tr>
 <tr>
