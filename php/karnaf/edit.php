@@ -13,7 +13,7 @@ make_menus("Karnaf (HelpDesk)");
 $query = squery("SELECT t.id,t.randcode,t.status,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS
 cat3_name,s.status_name,up.priority_name AS upriority,sp.priority_name AS priority,g.private_actions,t.merged_to,t.cc,up.priority_id 
-AS upriority_id, sp.priority_id,t.ext1,t.ext2,t.ext3 
+AS upriority_id, sp.priority_id,t.ext1,t.ext2,t.ext3,t.title 
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent
 INNER JOIN karnaf_cat1 AS c1 ON c1.id=c2.parent INNER JOIN karnaf_statuses AS s ON s.status_id=t.status INNER JOIN karnaf_priorities AS up ON
 up.priority_id=t.upriority INNER JOIN karnaf_priorities AS sp ON sp.priority_id=t.priority LEFT JOIN groups AS g ON g.name=t.rep_g) WHERE t.id=%d", $id);
@@ -98,7 +98,8 @@ if(isset($_POST['reply_text'])) {
   if(!empty($_POST['reply_text'])) {
     $reply_text = str_replace("%OPERNICK%",$nick,$_POST['reply_text']);
     if(isset($_POST['reply_to']) && !empty($_POST['reply_to']) && $_POST['reply_to']!=$result['uemail']) {
-      $body = "Message from ".$nick.":\r\n";
+      if(!defined("IRC_MODE") && isset($a_fullname) && !empty($a_fullname)) $body = "Message from ".$a_fullname.":\r\n";
+      else $body = "Message from ".$nick.":\r\n";
       $body .= $reply_text."\r\n";
       $body .= "---\r\n";
       $body .= "*** Please make sure you keep the original subject when replying us by email ***";
@@ -107,6 +108,7 @@ if(isset($_POST['reply_text'])) {
       squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s')",
              $id, $reply_text, $nick, time(), $r_by, get_session_ip());
       $newsubject = "[".strtoupper($group)."] Ticket #".$result['id'];
+      if(!empty($result['title'])) $newsubject .= " - ".$result['title'];
       send_mail($_POST['reply_to'], $newsubject, $body);
       send_mail($_POST['reply_cc'], $newsubject, $body);
       /* Don't update the user unless he was on the To or CC fields */
@@ -189,6 +191,7 @@ if(isset($_POST['assign_group'])) {
       if($nick != $_POST['assign_user']) {
         send_memo($_POST['assign_user'], "Ticket #".$result['id']." has been assigned to you. For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
         $newsubject = "[".strtoupper($group)."] Ticket #".$result['id'];
+        if(!empty($result['title'])) $newsubject .= " - ".$result['title'];
         $query2 = squery("SELECT email FROM users WHERE user='%s'", $_POST['assign_user']);
         if(($result2 = sql_fetch_array($query2))) send_mail($result2['email'], $newsubject, "Ticket #".$result['id']." has been assigned to you. For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
         sql_free_result($query2);
@@ -246,10 +249,12 @@ if(isset($email_update_str) && !empty($email_update_str)) {
   if((!isset($is_private) || $is_private!="1") && (!isset($_POST['no_userupd']) || $_POST['no_userupd']!="on")) {
     if($result['memo_upd']=="1") send_memo($result['unick'], "Your ticket #".$result['id']." has been updated. For more information visit: ".KARNAF_URL."/view.php?id=".$result['id']."&code=".$result['randcode']);
     if($result['email_upd']=="1") {
-      $body = "Your ticket #".$result['id']." has been updated:\r\n".$email_update_str."\r\n";
+      if(!defined("IRC_MODE") && isset($a_fullname) && !empty($a_fullname)) $body = "Your ticket #".$result['id']." has been updated by ".$a_fullname.":\r\n".$email_update_str."\r\n";
+      else $body = "Your ticket #".$result['id']." has been updated:\r\n".$email_update_str."\r\n";
       $body .= "---\r\nFor more information visit: ".KARNAF_URL."/view.php?id=".$result['id']."&code=".$result['randcode'];
       $body .= "\r\n*** Please make sure you keep the original subject when replying us by email ***";
       $newsubject = "[".strtoupper($group)."] Ticket #".$result['id'];
+      if(!empty($result['title'])) $newsubject .= " - ".$result['title'];
       send_mail($result['uemail'], $newsubject, $body);
       if(isset($_POST['reply_cc']) && $_POST['reply_cc']!=$result['cc']) send_mail($result['cc'], $newsubject, $body);
       else send_mail($result['cc'], $newsubject, $body);
