@@ -14,6 +14,9 @@ Karnaf v5.0.11
 - Fixed a typo bug on php/karnaf-scripts/fetch-emails.php.
 - Added support for .xls and .xlsx extensions on php/karnaf-scripts/fetch-emails.php.
 - php/karnaf/search.php cosmetic change.
+- Added ability to search for text in titles (to php/karnaf/search.php).
+- Updated php/karnaf/edit.php to use fullname rather than user when possible.
+- Updated php/karnaf/edit.php to include the ticket's title in replies.
 
 Karnaf v5.0.10
 - php/karnaf/search.php: Typo fix (uname --> ufullname).
