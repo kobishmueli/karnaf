@@ -76,8 +76,9 @@ if(isset($_POST['save']) && ($_POST['save'] == "3")) {
   else $email_upd = 0;
   if(isset($_POST['memo_upd']) && ($_POST['memo_upd'] == "on")) $memo_upd = 1;
   else $memo_upd = 0;
-  squery("UPDATE karnaf_tickets SET unick='%s',ufullname='%s',uemail='%s',cc='%s',uip='%s',is_real=%d,email_upd=%d,memo_upd=%d,lastupd_time=%d WHERE id=%d",
-         $_POST['unick'], $_POST['ufullname'], $_POST['uemail'], $_POST['cc'], $_POST['uip'], $is_real, $email_upd, $memo_upd, time(), $id);
+  if(!isset($_POST['uphone'])) $_POST['uphone'] = "";
+  squery("UPDATE karnaf_tickets SET unick='%s',ufullname='%s',uemail='%s',cc='%s',uip='%s',uphone='%s',is_real=%d,email_upd=%d,memo_upd=%d,lastupd_time=%d WHERE id=%d",
+         $_POST['unick'], $_POST['ufullname'], $_POST['uemail'], $_POST['cc'], $_POST['uip'], $_POST['uphone'], $is_real, $email_upd, $memo_upd, time(), $id);
   squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'User information changed','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
   $autostatus = "The ticket has been updated.";
   $email_update_str = "User information has been edited.";
