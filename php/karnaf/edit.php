@@ -401,6 +401,17 @@ function do_template_change() {
     }
 }
 
+function setinfo(username,name,email,phone) {
+  form1.unick.value = username;
+  form1.ufullname.value = name;
+  form1.uemail.value = email;
+  form1.uphone.value = phone;
+}
+
+function open_search() {
+  window.open("searchuser.php","searchwin","status=0,toolbar=0,location=0,scrollbars=1,width=500,height=200");
+}
+
 function do_closewarning() {
     if (ischanged && document.getElementById('reply_text') && document.getElementById('reply_text').value != '') {
       return "Your changes will *NOT* be saved.";

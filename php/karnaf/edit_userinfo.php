@@ -25,7 +25,7 @@ if($result = sql_fetch_array($query)) {
 <tr class="Karnaf_Head2"><td colspan="2">User Information</td></tr>
 <tr>
 <td><?=USER_FIELD?>:</td>
-<td><input name="unick" type="text" value="<?=$result['unick']?>"></td>
+<td><input name="unick" type="text" value="<?=$result['unick']?>"><input type="button" value="Search" onClick="javascript:open_search()"></td>
 </tr>
 <tr>
 <td>Identified:</td>
