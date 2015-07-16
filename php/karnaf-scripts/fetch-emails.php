@@ -292,12 +292,20 @@ while($result = sql_fetch_array($query)) {
       if($tid) {
         /* --- Ticket exists --- */
         /* Let's just verify the ticket really exists and isn't closed... */
-        $query2 = squery("SELECT t.id,t.status,t.rep_u,t.uphone,t.rep_g,t.title,o.email AS oemail FROM (karnaf_tickets AS t LEFT JOIN users as o ON t.rep_u=o.user) WHERE t.id=%d", $tid);
+        $query2 = squery("SELECT t.id,t.status,t.rep_u,t.uphone,t.rep_g,t.title,o.email AS oemail,t.merged_to FROM (karnaf_tickets AS t LEFT JOIN users as o ON t.rep_u=o.user) WHERE t.id=%d", $tid);
         if($result2 = sql_fetch_array($query2)) {
-          if((int)$result2['status'] == 0) {
-            karnaf_email($reply_to, "Ticket #".$tid, "We are sorry, the ticket is already closed and you can't add new replies to it.");
+          if(!empty($result2['merged_to'])) {
+            $tid = (int)$result2['merged_to'];
+            sql_free_result($query2);
+            $query2 = squery("SELECT t.id,t.status,t.rep_u,t.uphone,t.rep_g,t.title,o.email AS oemail,t.merged_to FROM (karnaf_tickets AS t LEFT JOIN users as o ON t.rep_u=o.user) WHERE t.id=%d", $tid);
+            if(!($result2 = sql_fetch_array($query2))) $tid = 0;
           }
-          else {
+          if($tid) {
+            if((int)$result2['status'] == 0) {
+              squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'The ticket has been re-opened.','%s','%s',%d,1,%d)",
+                     $tid, "System", $result2['rep_g'], time(), 0);
+               squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d", time(), $tid);
+            }
             squery("INSERT INTO karnaf_replies(tid,title,reply,r_by,r_time,r_from,ip,message_id) VALUES(%d,'%s','%s','%s',%d,'%s','%s','%s')",
                    $tid, $m_subject, $m_body, "Guest", time(), $uname, "(EMAIL)", $m_msgid);
             if((int)$result2['status'] == 2) {
