@@ -8,7 +8,7 @@ check_auth();
 CheckOperSession();
 $id = $_GET['id'];
 if(empty($id) || !is_numeric($id)) safe_die("Invalid Ticket ID!");
-$query = squery("SELECT t.id,t.randcode,t.status,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
+$query = squery("SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS
 cat3_name,c3.id AS cat3_id,s.status_name,t.upriority,t.priority,t.merged_to,c3.extra,t.ext1,t.ext2,t.ext3 
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent
@@ -111,6 +111,20 @@ sql_free_result($query2);
 <tr>
 <td>Merge to another ticket:</td>
 <td><input name="merged_to" type="text" value="<? if($result['merged_to']) echo $result['merged_to']; ?>"></td>
+</tr>
+<tr>
+<td>Title:</td>
+<td><input name="title" type="text" value="<?=htmlspecialchars2($result['title'])?>" style="width:99%"></td>
+</tr>
+<tr>
+<td>Description:</td>
+</tr>
+<tr>
+<td colspan="2">
+<textarea name="description" style="width:98%" rows="10">
+<?=$result['description']?>
+</textarea>
+</td>
 </tr>
 </table>
 <input type="checkbox" name="no_userupd" id="no_userupd">&nbsp;Do not email/memo user about this update.

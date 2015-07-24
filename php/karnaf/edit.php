@@ -30,8 +30,8 @@ $group = $result['rep_g'];
 $unick = $result['unick'];
 /* Edit ticket information */
 if(isset($_POST['save']) && ($_POST['save'] == "2")) {
-  squery("UPDATE karnaf_tickets SET status=%d,cat3_id=%d,upriority=%d,priority=%d,is_private=%d,lastupd_time=%d WHERE id=%d",
-         $_POST['status'], $_POST['cat3'], $_POST['upriority'], $_POST['priority'], $is_private, time(), $id);
+  squery("UPDATE karnaf_tickets SET status=%d,cat3_id=%d,upriority=%d,priority=%d,is_private=%d,lastupd_time=%d,title='%s',description='%s' WHERE id=%d",
+         $_POST['status'], $_POST['cat3'], $_POST['upriority'], $_POST['priority'], $is_private, time(), $_POST['title'], $_POST['description'], $id);
   if($result['private_actions']) $is_private = 2;
   else $is_private = 0;
   if($result['status'] != $_POST['status']) {
@@ -44,6 +44,8 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
   }
   if($result['priority_id'] != $_POST['priority']) squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'System priority changed','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
   if($result['upriority_id'] != $_POST['upriority']) squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'User priority changed','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
+  if($result['title'] != $_POST['title']) squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'Ticket title changed','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
+  if($result['description'] != $_POST['description']) squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'Ticket description changed','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
   if(isset($_POST['ext1']) && ($result['ext1'] != $_POST['ext1'])) squery("UPDATE karnaf_tickets SET ext1='%s' WHERE id=%d", $_POST['ext1'], $id);
   if(isset($_POST['ext2']) && ($result['ext2'] != $_POST['ext2'])) squery("UPDATE karnaf_tickets SET ext2='%s' WHERE id=%d", $_POST['ext2'], $id);
   if(isset($_POST['ext3']) && ($result['ext3'] != $_POST['ext3'])) squery("UPDATE karnaf_tickets SET ext3='%s' WHERE id=%d", $_POST['ext3'], $id);
