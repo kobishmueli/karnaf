@@ -23,7 +23,7 @@ if($result = sql_fetch_array($query)) {
 <input type="hidden" name="save" id="save" value="0">
 <input type="hidden" name="close" id="close" value="0">
 <input type="hidden" name="reopen" id="reopen" value="0">
-<table width="100%">
+<table width="100%" class="view_ticket_table">
 <tr class="Karnaf_Head2"><td colspan="2">Previous Actions</td></tr>
 <tr><td colspan="2">
 <table border="0" width="100%">
@@ -81,7 +81,7 @@ if($result = sql_fetch_array($query)) {
 </tr>
 <tr>
 <td colspan="2">
-<textarea rows="8" style="width:100%" name="action_text" id="action_text"></textarea><br>
+<textarea rows="8" style="width:99%" name="action_text" id="action_text"></textarea><br>
 <? if(IsGroupMember("dalnet-aob") || IsKarnafAdminSession()) { ?>
 Action on behalf of:
 <select name="onbehalf_g">
@@ -91,7 +91,7 @@ Action on behalf of:
   while($result2 = sql_fetch_array($query2)) {
     if(!IsGroupMember($result2['name']) || ($result2['name']!=KARNAF_ADMINS_GROUP && $result2['name']!="dalnet-aob" && $result2['name']!="dalnet-sra" && $result2['name']!=$result['rep_g'])) continue;
 ?>
-<option value="<?=$result2['name']?>"<? if(($result2['name'] == $result['rep_g'])) echo " SELECTED"; ?>><?=$result2['name']?></option>
+<option value="<?=$result2['name']?>"><?=$result2['name']?></option>
 <?
   }
   sql_free_result($query2);
