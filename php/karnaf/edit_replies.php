@@ -9,7 +9,7 @@ check_auth();
 CheckOperSession();
 $id = $_GET['id'];
 if(empty($id) || !is_numeric($id)) safe_die("Invalid Ticket ID!");
-$query = squery("SELECT t.id,t.randcode,t.status,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
+$query = squery("SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS
 cat3_name,s.status_name,up.priority_name AS upriority,sp.priority_name AS priority,g.private_actions,t.cc 
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent
@@ -25,7 +25,25 @@ if($result = sql_fetch_array($query)) {
 <input type="hidden" name="short" id="short" value="1">
 <? } ?>
 <table width="100%">
-<? if(!isset($_GET['short'])) { ?>
+<? if(isset($_GET['short'])) { ?>
+<tr><td colspan="2">
+<table border="1" width="100%" cellpadding="0" cellspacing="0">
+<tr class="Karnaf_Head2"><td colspan="2">Ticket Description</td></tr>
+<tr><td class="ticket_body" colspan="2">
+<?
+  if(!empty($result['title'])) {
+    echo "Title: ";
+    show_board_body($result['title']);
+    echo "<hr>\n";
+  }
+  $description = $result['description'];
+  $description = preg_replace("/(\*)?\[image\:\sironSource\](\*)?.*Thank\syou\./s", "*** Signature ***", $description);
+?>
+<?=show_board_body($description)?>
+</td></tr>
+</table>
+</td></tr>
+<? } else { ?>
 <tr><td colspan="2">
 <table border="1" width="100%" cellpadding="0" cellspacing="0">
 <tr class="Karnaf_Head2"><td colspan="2">Replies</td></tr>
