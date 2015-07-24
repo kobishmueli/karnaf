@@ -72,6 +72,8 @@ while($result = sql_fetch_array($query)) {
       $to = "";
       $cc = "";
       $tid = 0;
+      $debug_body = "";
+      $debug_only = 0;
       foreach(explode("\n", $headers) as $header) {
         if(preg_match("/^Subject: (.*(#([\d,]+)).*)/", $header, $matches)) {
           $subject = $matches[1];
@@ -111,27 +113,43 @@ while($result = sql_fetch_array($query)) {
           else if($matches[1] == "5") $upriority = -1; /* low priority */
           continue;
         }
+        if(preg_match("/^X-Karnaf-Debug: 1/", $header, $matches)) {
+          $debug_only = 1;
+          continue;
+        }
       }
       $structure = imap_fetchstructure($mbox, $m_id);
+      $debug_body .= "structure->type=".$structure->type."\n";
+      $debug_body .= "structure->encoding=".$structure->encoding."\n";
+      if($structure->ifdescription) $debug_body .= "structure->description=".$structure->description."\n";
       if($structure->type == 1) {
         # multi-part email
         $m_body = imap_fetchbody($mbox, $m_id, "1.1");
-        if($m_body == "") $m_body = imap_fetchbody($mbox, $m_id, "1");
-        $m_body = quoted_printable_decode($m_body);
+        if($m_body == "") {
+          $m_body = imap_fetchbody($mbox, $m_id, "1");
+          $debug_body .= "After imap_fetchbody 1 (encoding=".$structure->parts[1]->encoding.")\n";
+          if($structure->parts[1]->encoding == 3) $m_body = base64_decode($m_body);
+          if($structure->parts[1]->encoding == 4) $m_body = quoted_printable_decode($m_body);
+        }
+        $debug_body .= "Body=".$m_body."\n";
         #Remove double spacing:
         $m_body = str_replace("\r\n\r\n","\r\n",$m_body);
         #For debugging:
-        #$m_body = "Type: multi-part\n".$m_body;
+        $debug_body .= "Type: multi-part\n";
       }
       else {
         # not multi-part email
         $m_body = imap_body($mbox, $m_id);
+        if($structure->encoding == 3) $m_body = base64_decode($m_body);
+        if($structure->encoding == 4) $m_body = quoted_printable_decode($m_body);
         #For debugging:
-        #$m_body = "Type: not-multi-part\n".$m_body;
+        $debug_body .= "Type: not-multi-part\n";
+        $debug_body .= "Body=".$m_body."\n";
       }
       $attachments = array();
       if(isset($structure->parts)) {
         for($i = 0; $i < count($structure->parts); $i++) {
+          $debug_body .= "parts[".$i."].encoding=".$structure->parts[$i]->encoding."\n";
           $attachments[$i] = array();
           if($structure->parts[$i]->ifdparameters) {
             foreach($structure->parts[$i]->dparameters as $object) {
@@ -155,7 +173,9 @@ while($result = sql_fetch_array($query)) {
         }
       }
       if(strstr($subject, "=?UTF-8?")) {
+        $debug_body .= "Subject before imap_utf8(1)=".$subject."\n";
         $subject = imap_utf8($subject);
+        $debug_body .= "Subject after imap_utf8(1)=".$subject."\n";
         if($tid == 0) {
           /* Let's try to catch the ticket ID again... */
           if(preg_match("/^.*(#([\d,]+)).*/", $subject, $matches)) {
@@ -167,7 +187,9 @@ while($result = sql_fetch_array($query)) {
         }
       }
       if(strstr($m_subject, "=?UTF-8?")) {
+        $debug_body .= "M_Subject before imap_utf8(2)=".$m_subject."\n";
         $m_subject = imap_utf8($m_subject);
+        $debug_body .= "M_Subject after imap_utf8(2)=".$m_subject."\n";
       }
       if(substr($m_body,0,1) == "\n") $m_body = substr($m_body,1);
       if(strstr($m_body,"<DEFANGED_DIV>")) $m_body = strip_tags($m_body);
@@ -288,6 +310,12 @@ while($result = sql_fetch_array($query)) {
           $tid = (int)$result2['id'];
         }
         sql_free_result($query2);
+      }
+      if($debug_only == 1) {
+        echo "*** Debugging TID=".$tid." ***\n";
+        echo $debug_body;
+        echo "*** End of debugging ***\n";
+        continue;
       }
       if($tid) {
         /* --- Ticket exists --- */
@@ -411,6 +439,10 @@ while($result = sql_fetch_array($query)) {
           }
         }
         sql_free_result($query2);
+      }
+      if(defined("KARNAF_DEBUG") && KARNAF_DEBUG==1 && !empty($debug_body)) {
+        # Note to self: Yes, tid can be 0 here...
+        squery("INSERT INTO karnaf_debug(tid,body) VALUES(%d,'%s')", $tid, $debug_body);
       }
       if($tid && isset($attachments) && count($attachments)>0) {
         /* We have attachment(s), let's add them to the ticket... */
