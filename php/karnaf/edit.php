@@ -52,6 +52,27 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
     $query2 = squery("SELECT id,status,uemail FROM karnaf_tickets WHERE id=%d AND status!=0 AND merged_to=0", $merged_to);
     if(($result2 = sql_fetch_array($query2))) {
       squery("UPDATE karnaf_tickets SET merged_to=%d,status=0,close_time=%d,lastupd_time=%d WHERE id=%d", $merged_to, time(), time(), $id);
+      # Merge actions...
+      $query3 = squery("SELECT is_private,a_type,action,a_time,a_by_u,a_by_g FROM karnaf_actions WHERE tid=%d", $id);
+      while(($result3 = sql_fetch_array($query3))) {
+        squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,%d,%d,'%s',%d,'%s','%s')",
+               $merged_to, $result3['is_private'], $result3['a_type'], $result3['action'], $result3['a_time'], $result3['a_by_u'], $result3['a_by_g']);
+      }
+      sql_free_result($query3);
+      # Merge replies...
+      $query3 = squery("SELECT title,reply,r_time,r_by,r_from,ip,message_id FROM karnaf_replies WHERE tid=%d", $id);
+      while(($result3 = sql_fetch_array($query3))) {
+        squery("INSERT INTO karnaf_replies(tid,title,reply,r_time,r_by,r_from,ip,message_id) VALUES(%d,'%s','%s',%d,'%s','%s','%s','%s')",
+               $merged_to, $result3['title'], $result3['reply'], $result3['r_time'], $result3['r_by'], $result3['r_from'], $result3['ip'], $result3['message_id']);
+      }
+      sql_free_result($query3);
+      # Merge attachments...
+      $query3 = squery("SELECT file_name,file_type,file_desc,file_path,file_size,lastupd_time FROM karnaf_files WHERE tid=%d", $id);
+      while(($result3 = sql_fetch_array($query3))) {
+        squery("INSERT INTO karnaf_files(tid,file_name,file_type,file_desc,file_path,file_size,lastupd_time) VALUES(%d,'%s','%s','%s','%s',%d,%d)",
+               $merged_to, $result3['file_name'], $result3['file_type'], $result3['file_desc'], $result3['file_path'], $result3['file_size'], $result3['lastupd_time']);
+      }
+      sql_free_result($query3);
       squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,%d,'%s','%s',%d,5,%d)",
              $merged_to, $id, $nick, $group, (time()+1), $is_private);
       squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,%d,'%s','%s',%d,6,%d)",
