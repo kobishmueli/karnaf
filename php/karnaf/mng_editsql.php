@@ -11,7 +11,11 @@ $sql_table = "none";
 if(isset($_GET['table'])) $sql_table = $_GET['table'];
 $allowed_tables = array(
                     array("karnaf_priorities","priority_id",array("priority_id","priority_name")),
-                    array("karnaf_statuses","status_id",array("status_id","status_name")),
+                    array("karnaf_statuses","status_id",array(
+                      "status_id",
+                      "status_name",
+                      array("is_closed","sqlselect","select 0,'No' union select 1,'Yes'"),
+                    )),
                     array("karnaf_cat1","id",array("name","priority")),
                     array("karnaf_cat2","id",array(
                       "name",
@@ -63,6 +67,13 @@ $allowed_tables = array(
                           array("set_group","sqlselect","select '','---' union select id,name FROM groups WHERE iskarnaf=1"),
                           "set_extra",
                           array("set_cat3","sqlselect","select 0,'---' union select cat3.id,concat(cat1.name,' - ',cat2.name,' - ',cat3.name) from (karnaf_cat3 AS cat3 LEFT JOIN karnaf_cat2 AS cat2 ON cat3.parent=cat2.id LEFT JOIN karnaf_cat1 AS cat1 ON cat1.id=cat2.parent)"),
+                    )),
+                    array("karnaf_sms_accounts","id",array(
+                          array("active","sqlselect","select 1,'Yes' union select 0,'No'"),
+                          array("type","sqlselect","select 0,'Twilio'"),
+                          "account_id",
+                          "account_token",
+                          "from_number",
                     )),
 );
 $sql_rows = 0;

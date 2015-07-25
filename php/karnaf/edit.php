@@ -269,6 +269,18 @@ if(isset($_POST['action_text'])) {
   }
   $autoload = 4;
 }
+/* Send SMS */
+if(isset($_POST['sms_account'])) {
+  if(send_sms($_POST['sms_account'], $_POST['sms_to'], $_POST['sms_body'])) {
+    squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'%s','%s','%s',%d,1,%d)", $id, "Sent SMS to ".$_POST['sms_to'],
+           $nick, $group, time(), $is_private);
+    squery("UPDATE karnaf_tickets SET lastupd_time=%d WHERE id=%d", time(), $id);
+    $autostatus = "The SMS has been sent.";
+    if($is_private != 1) $email_update_str = "An SMS has been sent to you.";
+  }
+  else $autostatus = "Could not send SMS!";
+  $autoload = 9;
+}
 if(isset($email_update_str) && !empty($email_update_str)) {
   if((!isset($is_private) || $is_private!="1") && (!isset($_POST['no_userupd']) || $_POST['no_userupd']!="on")) {
     if($result['memo_upd']=="1") send_memo($result['unick'], "Your ticket #".$result['id']." has been updated. For more information visit: ".KARNAF_URL."/view.php?id=".$result['id']."&code=".$result['randcode']);
@@ -301,6 +313,7 @@ function load_page(id) {
     if (id == 6) url = 'edit_replies.php?id=<?=$id?>&ajax=1';
     if (id == 7) url = 'check_user.php?tid=<?=$id?>&uuser=<?=$unick?>&ajax=1';
     if (id == 8) url = 'edit_replies.php?id=<?=$id?>&ajax=1&short=1';
+    if (id == 9) url = 'edit_sms.php?id=<?=$id?>&ajax=1';
     url = url + "&rand=" + Math.random();
     xmlhttp=null;
     if (window.XMLHttpRequest) {// code for all new browsers
@@ -468,6 +481,7 @@ window.onload = auto_load;
 <input name="edit_replies" type="button" value="Replies" onClick="javascript:load_page(6)">
 <input name="new_reply" type="button" value="New Reply" onClick="javascript:load_page(8)">
 <input name="check_user" type="button" value="Check User" onClick="javascript:load_page(7)">
+<input name="send_sms" type="button" value="SMS" onClick="javascript:load_page(9)">
 </center>
 <br><br>
 <span id="Edit_Space">

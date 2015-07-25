@@ -3,10 +3,10 @@
 # Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
-/* KTools v1.3 */
+/* KTools v1.4 */
 
 require_once("defines.php");
-define("KARNAF_VERSION", "5.0.11");
+define("KARNAF_VERSION", "5.0.12");
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 set_magic_quotes_runtime(0);
 if(!isset($override_magicquotes) && get_magic_quotes_gpc() == 1) die("Error: Incorrect magic_quotes_gpc setting!");
@@ -601,6 +601,42 @@ function api_create_ticket($unick, $uname, $uemail, $title, $description, $uip, 
   $id = sql_insert_id();
   if(!empty($ext1)) squery("UPDATE karnaf_tickets SET ext1='%s' WHERE id=%d", $ext1, $id);
   return $id;
+}
+
+function send_sms($sms_account, $sms_to, $sms_body) {
+  $res = 0;
+  $sms_to = trim($sms_to);
+  $sms_body = trim($sms_body);
+  if(empty($sms_to)) return 0;
+  if(empty($sms_body)) return 0;
+  $query = squery("SELECT type,account_id,account_token,from_number FROM karnaf_sms_accounts WHERE id=%d AND active=1", $sms_account);
+  if($result = sql_fetch_array($query)) {
+    if((int)$result['type'] != 0) safe_die("Unknown SMS account type!");
+    $post_data = array(
+                       "To" => $sms_to,
+                       "From" => $result['from_number'],
+                       "Body" => $sms_body,
+                 );
+    $post_string = http_build_query($post_data);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
+    curl_setopt($ch, CURLOPT_USERPWD, $result['account_id'].":".$result['account_token']);
+    curl_setopt($ch, CURLOPT_URL,"https://api.twilio.com/2010-04-01/Accounts/".$result['account_id']."/Messages.json");
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $result = curl_exec($ch);
+    if(isset($result)) {
+      $result_json = json_decode($result, true);
+      if($result_json['status'] == "queued") $res = 1;
+    }
+    else if(curl_errno($ch)) $res = 0;
+    curl_close($ch);
+  }
+  sql_free_result($query);
+
+  return $res;
 }
 
 if(!function_exists("custom_new_ticket_welcome")) { function custom_new_ticket_welcome() { } }
