@@ -198,7 +198,7 @@ else echo $result['rep_g'];
 <? if($result['merged_to']) { ?>
 <tr>
 <td>Merged To:</td>
-<td><a href="view.php?id=<?=$result['merged_to']?>"><?=$result['merged_to']?></a></td>
+<td><a href="?id=<?=$result['merged_to']?>"><?=$result['merged_to']?></a></td>
 </tr>
 <? } ?>
 <tr>
@@ -352,8 +352,8 @@ else echo $result['rep_g'];
       $is_private = 1;
     }
     else if($a_type == 4) $action = "The ticket has been re-assigned to Oper.";
-    else if($a_type == 5) $action = "Merged from Ticket #".$result2['action'].".";
-    else if($a_type == 6) $action = "Merged to Ticket #".$result2['action'].".";
+    else if($a_type == 5) $action = "Merged from <a href=\"?id=".$result2['action']."\">Ticket #".$result2['action']."</a>.";
+    else if($a_type == 6) $action = "Merged to <a href=\"?id=".$result2['action']."\">Ticket #".$result2['action']."</a>.";
     else $action = $result2['action'];
     if($is_private==1 && !$isoper) continue;
 ?>
