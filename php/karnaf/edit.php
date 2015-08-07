@@ -276,9 +276,9 @@ if(isset($_POST['sms_account'])) {
            $nick, $group, time(), $is_private);
     squery("UPDATE karnaf_tickets SET lastupd_time=%d WHERE id=%d", time(), $id);
     $autostatus = "The SMS has been sent.";
-    if($is_private != 1) $email_update_str = "An SMS has been sent to you.";
+    if($is_private != 1) $email_update_str = "Sent SMS to ".$_POST['sms_to'];
   }
-  else $autostatus = "Could not send SMS!";
+  else $autostatus = "Error! Could not send SMS!";
   $autoload = 9;
 }
 if(isset($email_update_str) && !empty($email_update_str)) {
@@ -473,9 +473,9 @@ window.onload = auto_load;
 <a href="list.php?group=<?=$result['rep_g']?>">Group (<?=$result['rep_g']?>) Tickets</a>
 </center>
 <center>
-<input name="edit_view" type="button" value="View Ticket" onClick="javascript:load_page(1)">
-<input name="edit_info" type="button" value="Edit Ticket Information" onClick="javascript:load_page(2)">
-<input name="edit_user" type="button" value="Edit User Information" onClick="javascript:load_page(3)">
+<input name="edit_view" type="button" value="View" onClick="javascript:load_page(1)">
+<input name="edit_info" type="button" value="Edit Ticket Info" onClick="javascript:load_page(2)">
+<input name="edit_user" type="button" value="Edit User Info" onClick="javascript:load_page(3)">
 <input name="edit_actions" type="button" value="Actions" onClick="javascript:load_page(4)">
 <input name="edit_reassign" type="button" value="Re-assign" onClick="javascript:load_page(5)">
 <input name="edit_replies" type="button" value="Replies" onClick="javascript:load_page(6)">
