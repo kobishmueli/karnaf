@@ -3,6 +3,25 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.12
+- Show the ticket description & title on the "new reply" tab when editing tickets.
+- Show ticket title & description on search results (php/karnaf/search.php).
+- Changed the merge feature to copy replies, actions and attachments from the original (merged-from) ticket.
+- Cosmetic changes to php/karnaf/edit_actions.php.
+- Let opers change ticket title & description.
+- Added debugging mode to php/karnaf-scripts/fetch-emails.php.
+- Added more encoding fixes to php/karnaf-scripts/fetch-emails.php.
+- Added SMS support.
+- Added merged-to/from ticket links to php/karnaf/view.php (cosmetic change).
+- Added last password field to php/karnaf/check_user.php.
+- Cosmetic changes to php/karnaf/edit.php.
+- Added karnaf_sms_accounts and karnaf_debug to the SQL schema.
+- Added is_closed row to karnaf_statuses (SQL schema).
+- php/karnaf-scripts/fetch-emails.php changes:
+  - Try to get the encoding from the first part's first sub-part.
+  - Try to get the ticket ID from encoded subjects as well.
+  - Fixed a small sql typo bug.
+
 Karnaf v5.0.11
 - Added "Opened - All non-closed tickets" pseudo status to list.php and mylist.php.
 - Fixed a small bug where ticket number wasn't recognized in an encoded subject.
