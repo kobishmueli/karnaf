@@ -47,7 +47,7 @@ if(isset($uuser)) {
     ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
     if($bind = @ldap_bind($ldap, $result['user'], $result['pass'])) {
-      $attr = array("company","mail","title","department","givenname","sn","telephonenumber","mobile","physicaldeliveryofficename","samaccountname","manager","distinguishedName","memberof","accountExpires","lastLogon","lockouttime","userAccountControl");
+      $attr = array("company","mail","title","department","givenname","sn","telephonenumber","mobile","physicaldeliveryofficename","samaccountname","manager","distinguishedName","memberof","accountExpires","lastLogon","lockouttime","userAccountControl","pwdlastset");
       if($result = ldap_search($ldap, $result['ou'], "samaccountname=".$uuser, $attr)) {
         ldap_sort($ldap, $result, "sn");
         $entries = ldap_get_entries($ldap, $result);
@@ -74,6 +74,8 @@ if(isset($uuser)) {
           else $found_mobile = "";
           if(isset($entry['lastlogon'][0])) $found_lastlogin = ldapTimeToNormalTime($entry['lastlogon'][0]);
           else $found_lastlogin = "";
+          if(isset($entry['pwdlastset'][0])) $found_lastpwdset = ldapTimeToNormalTime($entry['pwdlastset'][0]);
+          else $found_lastpwdset = "N/A";
           if(isset($entry['useraccountcontrol'][0])) $found_flags = (int)$entry['useraccountcontrol'][0];
           else $found_flags = 0;
           if($found_flags & 0x2) $found_disabled = "Yes";
@@ -132,6 +134,10 @@ if(isset($uuser)) {
 <tr>
 <td>Last Login:</td>
 <td><?=$found_lastlogin?></td>
+</tr>
+<tr>
+<td>Last Password Set:</td>
+<td><?=$found_lastpwdset?></td>
 </tr>
 <tr>
 <td>Expiration:</td>
