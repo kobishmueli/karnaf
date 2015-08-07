@@ -95,6 +95,7 @@ CREATE TABLE `karnaf_replies` (
 CREATE TABLE `karnaf_statuses` (
   `status_id` int(11) NOT NULL DEFAULT '0',
   `status_name` text NOT NULL,
+  `is_closed` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`status_id`)
 );
 
@@ -253,6 +254,24 @@ CREATE TABLE `karnaf_mail_rules` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `karnaf_debug` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tid` int(11) NOT NULL DEFAULT '0',
+  `body` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tid` (`tid`)
+);
+
+CREATE TABLE `karnaf_sms_accounts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `type` tinyint(1) NOT NULL DEFAULT '0',
+  `account_id` varchar(250) NOT NULL DEFAULT '',
+  `account_token` varchar(250) NOT NULL DEFAULT '',
+  `from_number` varchar(250) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `karnaf_schema` (
   `version` varchar(30) NOT NULL DEFAULT ''
 );
@@ -264,6 +283,7 @@ INSERT INTO `karnaf_schema` VALUES ('4');
 INSERT INTO `karnaf_schema` VALUES ('5');
 INSERT INTO `karnaf_schema` VALUES ('6');
 INSERT INTO `karnaf_schema` VALUES ('7');
+INSERT INTO `karnaf_schema` VALUES ('8');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');
@@ -271,11 +291,11 @@ INSERT INTO `karnaf_priorities` VALUES (10,'Above Normal');
 INSERT INTO `karnaf_priorities` VALUES (20,'High');
 INSERT INTO `karnaf_priorities` VALUES (30,'Critical');
 
-INSERT INTO `karnaf_statuses` VALUES (0,'Closed');
-INSERT INTO `karnaf_statuses` VALUES (1,'Opened');
-INSERT INTO `karnaf_statuses` VALUES (2,'Opened - Waiting for user reply');
-INSERT INTO `karnaf_statuses` VALUES (3,'Held');
-INSERT INTO `karnaf_statuses` VALUES (4,'Held - Possible spam');
-INSERT INTO `karnaf_statuses` VALUES (5,'Spam');
+INSERT INTO `karnaf_statuses` VALUES (0,'Closed',1);
+INSERT INTO `karnaf_statuses` VALUES (1,'Opened',0);
+INSERT INTO `karnaf_statuses` VALUES (2,'Opened - Waiting for user reply',0);
+INSERT INTO `karnaf_statuses` VALUES (3,'Held',0);
+INSERT INTO `karnaf_statuses` VALUES (4,'Held - Possible spam',0);
+INSERT INTO `karnaf_statuses` VALUES (5,'Spam',1);
 
 INSERT INTO `users` VALUES (1,'admin','098f6bcd4621d373cade4e832627b4f6','admin@nonstop.co.il','',1426820239,1427066785,'',80,0,0,'127.0.0.1',0,'','','','System Administrator');
