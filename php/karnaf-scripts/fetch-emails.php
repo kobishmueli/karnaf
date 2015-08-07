@@ -131,6 +131,11 @@ while($result = sql_fetch_array($query)) {
           if($structure->parts[1]->encoding == 3) $m_body = base64_decode($m_body);
           if($structure->parts[1]->encoding == 4) $m_body = quoted_printable_decode($m_body);
         }
+        else if(isset($structure->parts[0]->parts[0])) {
+          $debug_body .= "structure->parts[0]->parts[0]->encoding=".$structure->parts[0]->parts[0]->encoding."\n";
+          if($structure->parts[0]->parts[0]->encoding == 3) $m_body = base64_decode($m_body);
+          if($structure->parts[0]->parts[0]->encoding == 4) $m_body = quoted_printable_decode($m_body);
+        }
         $debug_body .= "Body=".$m_body."\n";
         #Remove double spacing:
         $m_body = str_replace("\r\n\r\n","\r\n",$m_body);
@@ -190,6 +195,15 @@ while($result = sql_fetch_array($query)) {
         $debug_body .= "M_Subject before imap_utf8(2)=".$m_subject."\n";
         $m_subject = imap_utf8($m_subject);
         $debug_body .= "M_Subject after imap_utf8(2)=".$m_subject."\n";
+        if($tid == 0) {
+          /* Let's try to catch the ticket ID again... */
+          if(preg_match("/^.*(#([\d,]+)).*/", $m_subject, $matches)) {
+            if(isset($matches[2])) $tid = str_replace(",","",$matches[2]);
+          }
+          else if(preg_match("/^.*(#(\d+).*)/", $m_subject, $matches)) {
+            if(isset($matches[2])) $tid = $matches[2];
+          }
+        }
       }
       if(substr($m_body,0,1) == "\n") $m_body = substr($m_body,1);
       if(strstr($m_body,"<DEFANGED_DIV>")) $m_body = strip_tags($m_body);
@@ -254,7 +268,7 @@ while($result = sql_fetch_array($query)) {
         }
         if(!empty($mail_rule['set_cat3'])) $cat3_id = $mail_rule['set_cat3'];
         if((int)$mail_rule['stop_duplicates'] == 1) {
-          $query2 = squery("SELECT tid FROM karnaf_replies WHERE status!=0 title='%s'", $subject);
+          $query2 = squery("SELECT tid FROM karnaf_replies WHERE status!=0 AND title='%s'", $subject);
           if($result2 = sql_fetch_array($query2)) {
             $tid = -999;
           }
