@@ -192,7 +192,7 @@ $cnt = 0;
 array_unshift($argv, $qstr);
 $query = squery_args($argv);
 while($result = sql_fetch_array($query)) {
-  if(!IsGroupMember($result['rep_g']) && (!defined("IRC_MODE") || !IsKarnafAdminSession())) continue; /* Skip tickets for other teams */
+  if($a_user != $result['rep_u'] && !IsGroupMember($result['rep_g']) && (!defined("IRC_MODE") || !IsKarnafAdminSession())) continue; /* Skip tickets for other teams */
   if((strtolower($showall) == "none") && !empty($result['rep_u'])) continue;
   if((strtolower($showall) == "onlymy") && empty($result['rep_u'])) continue;
   $cnt++;
