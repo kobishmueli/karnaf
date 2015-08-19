@@ -52,10 +52,11 @@ if($result = sql_fetch_array($query)) {
   $cnt = 0;
   while($result2 = sql_fetch_array($query2)) {
     $cnt++;
+    $reply = preg_replace("/(\*)?\[image\:\sironSource\](\*)?.*Thank\syou\./s", "*** Signature ***", $result2['reply']);
 ?>
 <tr class="Karnaf_P_Head"><td colspan="2">Reply #<?=$cnt?> from <?=$result2['r_from']?> [<?=USER_FIELD?>: <?=$result2['r_by']?> / IP: <?=IsKarnafAdminSession()?$result2['ip']:"HIDDEN"?>] at <?=showtime($result2['r_time'])?></td></tr>
 <tr>
-<td class="ticket_replies" colspan="2"><?=show_board_body($result2['reply'])?></td>
+<td class="ticket_replies" colspan="2"><?=show_board_body($reply)?></td>
 </tr>
 <?
   }
