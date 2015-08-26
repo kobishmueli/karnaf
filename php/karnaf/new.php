@@ -100,7 +100,10 @@ Verification Number: <?=$randstr?>
 <br>
 Assigned to: <?=$rep_g?>
 <br>
-Ticket status: <a href="<?=KARNAF_URL?>/view.php?id=<?=$id?>&code=<?=$randstr?>"><?=KARNAF_URL?>/view.php?id=<?=$id?>&code=<?=$randstr?></a>
+Ticket status: <a href="<?=KARNAF_URL?>/view.php?id=<?=$id?>&code=<?=$randstr?>"><?=KARNAF_URL?>/view.php?id=<?=$id?>&code=<?=$randstr?></a><br>
+<? if($isoper) { ?>
+Edit ticket: <a href="<?=KARNAF_URL?>/edit.php?id=<?=$id?>"><?=KARNAF_URL?>/edit.php?id=<?=$id?></a><br>
+<? } ?>
 <? custom_new_ticket_thankyou(); ?>
 <?
   }
