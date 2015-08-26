@@ -64,7 +64,7 @@ $allowed_tables = array(
                           array("stop_duplicates","sqlselect","select 0,'No' union select 1,'Yes'"),
                           array("break","sqlselect","select 0,'No' union select 1,'Yes'"),
                           array("set_priority","sqlselect","select '' AS priority_id,'---' AS priority_name union select priority_id,priority_name FROM karnaf_priorities ORDER BY priority_id"),
-                          array("set_group","sqlselect","select '','---' union select id,name FROM groups WHERE iskarnaf=1"),
+                          array("set_group","sqlselect","select '','---' union select name,name FROM groups WHERE iskarnaf=1"),
                           "set_extra",
                           array("set_cat3","sqlselect","select 0,'---' union select cat3.id,concat(cat1.name,' - ',cat2.name,' - ',cat3.name) from (karnaf_cat3 AS cat3 LEFT JOIN karnaf_cat2 AS cat2 ON cat3.parent=cat2.id LEFT JOIN karnaf_cat1 AS cat1 ON cat1.id=cat2.parent)"),
                     )),
