@@ -429,7 +429,11 @@ while($result = sql_fetch_array($query)) {
         $reply = "Your ticket has been opened and we will take care of it as soon as possible.\r\n\r\n";
         $reply .= "Your Ticket ID: ".$tid."\r\nYour Verification Number: ".$randstr."\r\nThe ticket has been assigned to: ".$rep_g."\r\n";
         $reply .= "To view the ticket status: ".KARNAF_URL."/view.php?id=".$tid."&code=".$randstr."\r\n";
-        if($status != 4) karnaf_email($reply_to, "Ticket #".$tid, $reply);
+        if($status != 4) {
+          $reply_subject = "Ticket #".$tid;
+          if(!empty($m_subject)) $reply_subject .= " - ".$m_subject;
+          karnaf_email($reply_to, $reply_subject, $reply);
+        }
         $query2 = squery("SELECT autoforward FROM groups WHERE name='%s'", $rep_g);
         if($result2 = sql_fetch_array($query2)) {
           if(!empty($result2['autoforward'])) {
