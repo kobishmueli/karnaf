@@ -21,6 +21,11 @@ Karnaf v5.0.12
   - Try to get the encoding from the first part's first sub-part.
   - Try to get the ticket ID from encoded subjects as well.
   - Fixed a small sql typo bug.
+- Added Nir's patch to fix signatures in replies.
+- Added Nir's patch to fix a bug when users can't see some of their assigned tickets on mylist.php if they got removed from a group.
+- Bug fix on editsql.
+- Added a edit link to php/karnaf/new.php for operators.
+- Changed fetch-emails.php to include the original subject on the new ticket reply email.
 
 Karnaf v5.0.11
 - Added "Opened - All non-closed tickets" pseudo status to list.php and mylist.php.
