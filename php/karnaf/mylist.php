@@ -232,8 +232,10 @@ echo $userinfo;
 <td><?=str_replace("<","&lt;",$result['title'])?></td>
 <td>
 <?
-  if(!empty($result['rep_u'])) echo $result['rep_u'];
-  else echo $result['rep_g'];
+  if($result['rep_u'] == $nick) echo "<td style=\"border: 1px solid black; background-color: green;\">".$result['rep_u']."</td>\n";
+  else if(!empty($result['rep_u'])) echo "<td><span title=\"".$result['rep_g']."\" style=\"cursor:pointer\">".$result['rep_u']."</span></td>\n";
+  else if(IsGroupMember($result['rep_g'])) echo "<td class=\"karnaf_my_team\">".$result['rep_g']."</td>\n";
+  else echo "<td class=\"karnaf_not_my_team\">".$result['rep_g']."</td>\n";
 ?>
 </td>
 <td><?=$result['spriority']?></td>
