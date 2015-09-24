@@ -122,13 +122,13 @@ if(isset($_POST['reply_text'])) {
   if(!empty($_POST['reply_text'])) {
     $reply_text = str_replace("%OPERNICK%",$nick,$_POST['reply_text']);
     if(isset($_POST['reply_to']) && !empty($_POST['reply_to']) && $_POST['reply_to']!=$result['uemail']) {
+      if($_POST['reply_cc']!=$result['cc']) $reply_text = "CC: ".$_POST['reply_cc']."\r\n".$reply_text;
+      $reply_text = "To: ".$_POST['reply_to']."\r\n".$reply_text;
       if(!defined("IRC_MODE") && isset($a_fullname) && !empty($a_fullname)) $body = "Message from ".$a_fullname.":\r\n";
       else $body = "Message from ".$nick.":\r\n";
       $body .= $reply_text."\r\n";
       $body .= "---\r\n";
       $body .= "*** Please make sure you keep the original subject when replying us by email ***";
-      if($_POST['reply_cc']!=$result['cc']) $reply_text = "CC: ".$_POST['reply_cc']."\r\n".$reply_text;
-      $reply_text = "To: ".$_POST['reply_to']."\r\n".$reply_text;
       squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s')",
              $id, $reply_text, $nick, time(), $r_by, get_session_ip());
       $newsubject = "[".strtoupper($group)."] Ticket #".$result['id'];
