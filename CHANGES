@@ -26,6 +26,9 @@ Karnaf v5.0.12
 - Bug fix on editsql.
 - Added a edit link to php/karnaf/new.php for operators.
 - Changed fetch-emails.php to include the original subject on the new ticket reply email.
+- Fixed a bug that caused the To/CC fields not to appear on ticket replies.
+- Cosmetic changes to php/karnaf/mylist.php.
+- Changed the search page to order by open time rather than priority.
 
 Karnaf v5.0.11
 - Added "Opened - All non-closed tickets" pseudo status to list.php and mylist.php.
