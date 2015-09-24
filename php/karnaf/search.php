@@ -132,7 +132,7 @@ sp.priority_id=t.priority) WHERE 1";
       array_push($argv, $time_end);
     }
   }
-  $qstr .= " ORDER BY t.priority DESC,t.open_time LIMIT ".$next.",".($next+$limit+1);
+  $qstr .= " ORDER BY t.open_time LIMIT ".$next.",".($next+$limit+1);
   array_unshift($argv, $qstr);
   $query = squery_args($argv);
   $cnt = 0;
