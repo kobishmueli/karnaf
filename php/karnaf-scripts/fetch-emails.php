@@ -128,8 +128,8 @@ while($result = sql_fetch_array($query)) {
         if($m_body == "") {
           $m_body = imap_fetchbody($mbox, $m_id, "1");
           $debug_body .= "After imap_fetchbody 1 (encoding=".$structure->parts[1]->encoding.")\n";
-          if($structure->parts[1]->encoding == 3) $m_body = base64_decode($m_body);
-          if($structure->parts[1]->encoding == 4) $m_body = quoted_printable_decode($m_body);
+          if($structure->parts[0]->encoding == 3 || $structure->parts[1]->encoding == 3) $m_body = base64_decode($m_body);
+          else if($structure->parts[0]->encoding == 4 || $structure->parts[1]->encoding == 4) $m_body = quoted_printable_decode($m_body);
         }
         else if(isset($structure->parts[0]->parts[0])) {
           $debug_body .= "structure->parts[0]->parts[0]->encoding=".$structure->parts[0]->parts[0]->encoding."\n";
