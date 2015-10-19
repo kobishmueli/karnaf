@@ -123,6 +123,7 @@ while($result = sql_fetch_array($query)) {
       $debug_body .= "structure->type=".$structure->type."\n";
       $debug_body .= "structure->encoding=".$structure->encoding."\n";
       if($structure->ifdescription) $debug_body .= "structure->description=".$structure->description."\n";
+      if($structure->ifdisposition) $debug_body .= "structure->disposition=".$structure->disposition."\n";
       if($structure->type == 1) {
         # multi-part email
         $m_body = imap_fetchbody($mbox, $m_id, "1.1");
@@ -208,7 +209,10 @@ while($result = sql_fetch_array($query)) {
       }
       if(substr($m_body,0,1) == "\n") $m_body = substr($m_body,1);
       if(strstr($m_body,"<DEFANGED_DIV>")) $m_body = strip_tags($m_body);
-      if(strstr($m_body,"<head>") && strstr($m_body,"<body") && strstr($m_body,"</body>") && strstr($m_body,"</html>")) $m_body = strip_tags($m_body);
+      if(strstr($m_body,"<head>") && strstr($m_body,"<body") && strstr($m_body,"</body>") && strstr($m_body,"</html>")) {
+        $m_body = strip_tags($m_body);
+        $debug_body .= "Body after strip_tags=".$m_body."\n";
+      }
       if(preg_match("/^(.*(<(.*)>))/", $m_from, $matches)) {
         $uname = $matches[1];
         if(isset($matches[3])) $reply_to = $matches[3];
