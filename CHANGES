@@ -3,6 +3,10 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.13
+- Encoding fixes to php/karnaf-scripts/fetch-emails.php.
+- Fixed a bug on php/karnaf/edit_replies.php that prevented opers from being able to reopen tickets from the replies tab.
+
 Karnaf v5.0.12
 - Show the ticket description & title on the "new reply" tab when editing tickets.
 - Show ticket title & description on search results (php/karnaf/search.php).

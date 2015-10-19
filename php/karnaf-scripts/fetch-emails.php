@@ -53,6 +53,7 @@ while($result = sql_fetch_array($query)) {
   }
   if($mbox = imap_open($authhost."INBOX",$result['user'],$result['pass'])) {
     $MC = imap_check($mbox);
+    if($MC->Nmsgs == 0) continue; /* Skip empty mailboxes... */
     $iresult = imap_fetch_overview($mbox,"1:{$MC->Nmsgs}",0);
     foreach ($iresult as $overview) {
       $m_id = $overview->msgno;
