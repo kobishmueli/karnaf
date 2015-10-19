@@ -105,6 +105,7 @@ Template:
 <br>
 <center>
 <? if($result['status']==0) { ?>
+<input type=button name="edit_button" id="edit_button" value="Update Ticket" onClick="javascript:submit3_onclick()">
 <input type=button name="close_button" id="close_button" value="Reopen Ticket" onClick="javascript:submit3_onclick()">
 <? } else { ?>
 <input type=button name="edit_button" id="edit_button" value="Update Ticket" onClick="javascript:submit1_onclick()">
