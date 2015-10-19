@@ -419,12 +419,13 @@ while($result = sql_fetch_array($query)) {
             $udepartment = $result2['department'];
             $uteam = $result2['team'];
             $uroom = $result2['room'];
+            if(empty($uteam) && !empty($udepartment)) $uteam = $udepartment;
           }
           sql_free_result($query2);
         }
 
-        squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id,ext1,cc) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s','%s','%s')",
-           $randstr,$status,$m_subject,$m_body,$cat3_id,$unick,$uname,$reply_to,$uphone,$uip,$upriority,$priority,time(),"(EMAIL)",$rep_u,
+        squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,ulocation,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id,ext1,cc) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s','%s','%s')",
+           $randstr,$status,$m_subject,$m_body,$cat3_id,$unick,$uname,$reply_to,$uphone,$uteam,$uip,$upriority,$priority,time(),"(EMAIL)",$rep_u,
            $rep_g,0,0,1,0,$m_msgid,$extra,$cc);
         $tid = sql_insert_id();
         $reply = "Your ticket has been opened and we will take care of it as soon as possible.\r\n\r\n";
