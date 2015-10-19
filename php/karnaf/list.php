@@ -133,9 +133,9 @@ while($result = sql_fetch_array($query)) {
   if($priority > 29) $status_style = "Karnaf_P_Critical";
   if($priority < 20) {
     # Mark USA, China and Ukraine as special.
-    if(strstr($result['ulocation']),"China")) $status_style = "Karnaf_P_Special";
-    if(strstr($result['ulocation']),"USA")) $status_style = "Karnaf_P_Special";
-    if(strstr($result['ulocation']),"Ukraine")) $status_style = "Karnaf_P_Special";
+    if(strstr($result['ulocation'],"China")) $status_style = "Karnaf_P_Special";
+    if(strstr($result['ulocation'],"USA")) $status_style = "Karnaf_P_Special";
+    if(strstr($result['ulocation'],"Ukraine")) $status_style = "Karnaf_P_Special";
   }
   $body = "";
   if(!empty($result['title'])) $body = "Title: ".$result['title']."\n\n";
