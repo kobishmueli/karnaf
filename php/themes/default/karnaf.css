@@ -53,6 +53,12 @@ th,.Karnaf_L_Head {
   font-family: "Arial";
   font-size: 12pt;
 }
+.Karnaf_P_Special {
+  color: Black;
+  background-color: Magenta;
+  font-family: "Arial";
+  font-size: 12pt;
+}
 .Karnaf_P_Closed {
   color: Black;
   background-color: Gray;
