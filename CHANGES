@@ -10,6 +10,8 @@ Karnaf v5.0.13
 - Added SQL schema upgrading support for php/karnaf-scripts/scheduler.php.
 - Added ulocation support to php/karnaf-scripts/fetch-emails.php.
 - Changed php/karnaf/list.php to mark USA, China and Ukraine as special.
+- Added more debugging to php/karnaf-scripts/fetch-emails.php.
+- Let opers create new tickets with CC addresses.
 
 Karnaf v5.0.12
 - Show the ticket description & title on the "new reply" tab when editing tickets.
