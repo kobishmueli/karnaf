@@ -46,6 +46,8 @@ if(isset($_POST['cat3'])) {
   else $email_upd = 0;
   if(isset($_POST['memo_upd']) && ($_POST['memo_upd'] == "on")) $memo_upd = 1;
   else $memo_upd = 0;
+  if($isoper && isset($_POST['cc'])) $cc = fix_html($_POST['cc']);
+  else $cc = "";
   $title = $_POST['title'];
   if(empty($title)) $error = "You must write a ticket title!";
   $description = $_POST['description'];
@@ -84,9 +86,9 @@ if(isset($_POST['cat3'])) {
     echo "Error!<br><br>".$error;
   }
   else {
-    squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d)",
+    squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,cc) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s')",
            $randstr,1,$title,$description,$cat3_id,$unick,fix_html($_POST['uname']),$uemail,$uphone,$uip,$upriority,$priority,time(),$nick,$rep_u,
-           $rep_g,$is_real,$is_private,$email_upd,$memo_upd);
+           $rep_g,$is_real,$is_private,$email_upd,$memo_upd,$cc);
     $id = sql_insert_id();
     if(isset($ext1)) squery("UPDATE karnaf_tickets SET ext1='%s' WHERE id=%d", $ext1, $id);
     if(isset($_POST['ext2']) && !empty($_POST['ext2'])) squery("UPDATE karnaf_tickets SET ext2='%s' WHERE id=%d", $_POST['ext2'], $id);
@@ -311,6 +313,11 @@ function open_search() {
 <? } ?>
 </td>
 </tr>
+<? if($isoper) { ?>
+<td>CC:</td>
+<td><input name="cc" id="cc" type="text" value=""></td>
+</tr>
+<? } ?>
 <tr>
 <td>Update by Mail:</td>
 <td><input name="email_upd" type="checkbox" checked></td>
