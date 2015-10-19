@@ -6,6 +6,8 @@
 Karnaf v5.0.13
 - Encoding fixes to php/karnaf-scripts/fetch-emails.php.
 - Fixed a bug on php/karnaf/edit_replies.php that prevented opers from being able to reopen tickets from the replies tab.
+- Added ulocation on karnaf_tickets to the SQL schema.
+- Added SQL schema upgrading support for php/karnaf-scripts/scheduler.php.
 
 Karnaf v5.0.12
 - Show the ticket description & title on the "new reply" tab when editing tickets.

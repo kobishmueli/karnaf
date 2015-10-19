@@ -7,6 +7,16 @@
 
 require("../ktools.php");
 
+$query = squery("SELECT MAX(version) FROM karnaf_schema")
+if($result = sql_fetch_array($query)) {
+  $cur_version = (int)$result[0];
+  if($cur_version < 9) {
+    squery("alter table karnaf_tickets add `ulocation` varchar(250) NOT NULL DEFAULT '' after uphone");
+    squery("INSERT INTO karnaf_schema(version) VALUES(8)");
+  }
+}
+sql_free_result($query);
+
 squery("UPDATE karnaf_tickets SET cat3_id=95 WHERE status=1 AND cat3_id=1 AND description like 'Subject: New User Request Form - %%'");
 
 /* Check for open tickets... (only once per two hours) */

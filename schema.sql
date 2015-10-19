@@ -118,6 +118,7 @@ CREATE TABLE `karnaf_tickets` (
   `ufullname` varchar(250) NOT NULL DEFAULT '',
   `uemail` varchar(250) NOT NULL DEFAULT '',
   `uphone` varchar(250) NOT NULL DEFAULT '',
+  `ulocation` varchar(250) NOT NULL DEFAULT '',
   `uip` varchar(16) NOT NULL DEFAULT '',
   `upriority` int(11) NOT NULL DEFAULT '0',
   `priority` int(11) NOT NULL DEFAULT '0',
@@ -284,6 +285,7 @@ INSERT INTO `karnaf_schema` VALUES ('5');
 INSERT INTO `karnaf_schema` VALUES ('6');
 INSERT INTO `karnaf_schema` VALUES ('7');
 INSERT INTO `karnaf_schema` VALUES ('8');
+INSERT INTO `karnaf_schema` VALUES ('9');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');
