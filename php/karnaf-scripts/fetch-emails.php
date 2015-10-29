@@ -207,6 +207,24 @@ while($result = sql_fetch_array($query)) {
           }
         }
       }
+      if(strstr($m_subject, "=?WINDOWS-1252?")) {
+        $debug_body .= "M_Subject before imap_mime_header_decode=".$m_subject."\n";
+        $arr = imap_mime_header_decode($m_subject);
+        $m_subject = "";
+        foreach($arr as $obj) {
+          $m_subject .= $obj->text;
+        }
+        $debug_body .= "M_Subject after imap_mime_header_decode=".$m_subject."\n";
+        if($tid == 0) {
+          /* Let's try to catch the ticket ID again... */
+          if(preg_match("/^.*(#([\d,]+)).*/", $m_subject, $matches)) {
+            if(isset($matches[2])) $tid = str_replace(",","",$matches[2]);
+          }
+          else if(preg_match("/^.*(#(\d+).*)/", $m_subject, $matches)) {
+            if(isset($matches[2])) $tid = $matches[2];
+          }
+        }
+      }
       if(substr($m_body,0,1) == "\n") $m_body = substr($m_body,1);
       if(strstr($m_body,"<DEFANGED_DIV>")) $m_body = strip_tags($m_body);
       if(strstr($m_body,"<head>") && strstr($m_body,"<body") && strstr($m_body,"</body>") && strstr($m_body,"</html>")) {
