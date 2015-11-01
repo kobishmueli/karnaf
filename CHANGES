@@ -12,6 +12,10 @@ Karnaf v5.0.13
 - Changed php/karnaf/list.php to mark USA, China and Ukraine as special.
 - Added more debugging to php/karnaf-scripts/fetch-emails.php.
 - Let opers create new tickets with CC addresses.
+- Changed php/karnaf/list.php to mark USA, China and Ukraine as special.
+- Fixed php/karnaf-scripts/fetch-emails.php to decode WINDOWS-1252 correctly.
+- Added %OPERFULLNAME% support to php/karnaf/edit.php.
+- Changed php/karnaf-scripts/fetch-users.php to delete old users.
 
 Karnaf v5.0.12
 - Show the ticket description & title on the "new reply" tab when editing tickets.
