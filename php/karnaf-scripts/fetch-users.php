@@ -42,6 +42,7 @@ while($result = sql_fetch_array($query)) {
 sql_free_result($query);
 
 /* Start to check our LDAP accounts... */
+$updated_users = array();
 $query = squery("SELECT type,host,user,pass,ou,filter FROM karnaf_ldap_accounts WHERE active=1");
 while($result = sql_fetch_array($query)) {
   echo "Checking ".$result['host']."...\n";
@@ -102,6 +103,7 @@ while($result = sql_fetch_array($query)) {
                  $found_email, $found_fullname, $found_fname, $found_lname, $found_department, $found_team,
                  $found_title, $found_mobile, $found_room,
                  $lastsync, $found_user);
+          $updated_users[] = strtolower($found_user);
         }
         else {
           echo "New user: ".$found_user."\n";
@@ -132,6 +134,15 @@ while($result = sql_fetch_array($query)) {
   ldap_unbind($ldap);
 }
 sql_free_result($query);
+/* Search for deleted users... */
+foreach($cached_users as $u) {
+  if(!in_array($u,$updated_users)) {
+    echo "Found deleted user: ".$u."... ";
+    squery("DELETE FROM group_members WHERE user_id=(SELECT id FROM users WHERE user='%s')", $u);
+    squery("DELETE FROM users WHERE user='%s'", $u);
+    echo "Deleted.\n";
+  }
+}
 unlink("/tmp/karnaf-fetch-users.lock");
 require_once("../contentpage_ftr.php");
 ?>
