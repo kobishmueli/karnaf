@@ -12,7 +12,7 @@ if($result = sql_fetch_array($query)) {
   $cur_version = (int)$result[0];
   if($cur_version < 9) {
     squery("alter table karnaf_tickets add `ulocation` varchar(250) NOT NULL DEFAULT '' after uphone");
-    squery("INSERT INTO karnaf_schema(version) VALUES(8)");
+    squery("INSERT INTO karnaf_schema(version) VALUES(9)");
   }
 }
 sql_free_result($query);
