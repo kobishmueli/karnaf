@@ -50,7 +50,7 @@ if($result = sql_fetch_array($query)) {
 <td>Re-assign to user:</td>
 <td>
 <select name="assign_user">
-<option value="">---</option>
+<option value="">---------------</option>
 <?
   $query2 = squery("SELECT id,name,gdesc FROM groups WHERE iskarnaf=1 AND name='%s'", $result['rep_g']);
   if($result2 = sql_fetch_array($query2)) {
