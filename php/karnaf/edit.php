@@ -111,7 +111,7 @@ if(isset($_POST['save']) && ($_POST['save'] == "3")) {
 if(isset($_POST['reply_text'])) {
   if($is_private) $r_by = $group;
   else $r_by = $nick;
-  if(empty($result['rep_u']) && isset($_POST['auto_assign']) && $_POST['auto_assign']=="on") {
+  if(empty($result['rep_u']) && isset($_POST['auto_assign']) && $_POST['auto_assign']=="on" && $group!=PSEUDO_GROUP) {
     /* Auto-assign is checked */
     if($result['private_actions'] || $is_private) $a_type = 4;
     else $a_type = 3;

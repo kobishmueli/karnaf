@@ -90,7 +90,7 @@ Template:
 <select name="template" onChange="javascript:load_template(this.value);">
 <option value="0">---</option>
 <?
-  $query2 = squery("SELECT id,subject FROM karnaf_templates WHERE group_id=(SELECT id FROM groups WHERE name='%s')", $result['rep_g']);
+  $query2 = squery("SELECT id,subject FROM karnaf_templates WHERE group_id=(SELECT id FROM groups WHERE name='%s') OR group_id=(SELECT id FROM groups WHERE name='%s')", $result['rep_g'], PSEUDO_GROUP);
   while($result2 = sql_fetch_array($query2)) {
 ?>
 <option value="<?=$result2['id']?>"><?=$result2['subject']?></option>
