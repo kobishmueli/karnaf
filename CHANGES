@@ -16,6 +16,11 @@ Karnaf v5.0.13
 - Fixed php/karnaf-scripts/fetch-emails.php to decode WINDOWS-1252 correctly.
 - Added %OPERFULLNAME% support to php/karnaf/edit.php.
 - Changed php/karnaf-scripts/fetch-users.php to delete old users.
+- Cosmetic change to php/karnaf/edit_reassign.php.
+- Added a PSEUDO_GROUP define to mark "fake" groups:
+  - Don't let users assign the tickets to themselves.
+  - Make templates of the PSEUDO_GROUP as global templates for all groups.
+- Added pre-defined reports to php/karnaf/stats.php + cosmetics.
 
 Karnaf v5.0.12
 - Show the ticket description & title on the "new reply" tab when editing tickets.
