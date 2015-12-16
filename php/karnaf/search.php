@@ -161,6 +161,7 @@ sp.priority_id=t.priority) WHERE 1";
     if(!empty($result['title'])) $body = "Title: ".$result['title']."\n\n";
     $body .= $result['description'];
     $body = str_replace("\"","''",$body);
+    $body = str_replace("<","&lt;",$body);
 ?>
 <tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.parent.main.location.href="edit.php?id=<?=$result['id']?>">
 <td><span title="<?=$body?>" style="cursor:pointer"><?=$result['id']?></span></td>

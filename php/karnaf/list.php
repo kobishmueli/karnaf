@@ -141,6 +141,7 @@ while($result = sql_fetch_array($query)) {
   if(!empty($result['title'])) $body = "Title: ".$result['title']."\n\n";
   $body .= $result['description'];
   $body = str_replace("\"","''",$body);
+  $body = str_replace("<","&lt;",$body);
 ?>
 <tr class="<?=$curcol?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.location.href="edit.php?id=<?=$result['id']?>">
 <td class="<?=$status_style?>" align="center"><span title="<?=$body?>" style="cursor:pointer"><?=$result['id']?></span></td>
