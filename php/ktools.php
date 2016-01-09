@@ -1,9 +1,9 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
-/* KTools v1.4 */
+/* KTools v1.5 */
 
 require_once("defines.php");
 define("KARNAF_VERSION", "5.0.13");
@@ -37,11 +37,13 @@ if(!function_exists("safe_die")) {
 }
 
 /* get_session_ip - get the user's (real) IP */
-function get_session_ip() {
-  if(!isset($_SERVER['HTTP_X_REAL_IP'])) return $_SERVER['REMOTE_ADDR'];
-  if($_SERVER['REMOTE_ADDR'] == "127.0.0.1") return $_SERVER['HTTP_X_REAL_IP'];
+if(!function_exists("get_session_ip")) {
+  function get_session_ip() {
+    if(!isset($_SERVER['HTTP_X_REAL_IP'])) return $_SERVER['REMOTE_ADDR'];
+    if($_SERVER['REMOTE_ADDR'] == "127.0.0.1") return $_SERVER['HTTP_X_REAL_IP'];
 
-  return $_SERVER['REMOTE_ADDR'];
+    return $_SERVER['REMOTE_ADDR'];
+  }
 }
 
 /* Hack for PHP4, yay :( -Kobi. */
@@ -52,11 +54,13 @@ if(!function_exists("str_ireplace")) {
 }
 
 /* fix_html - remove < & > tags */
-function fix_html($text) {
-  $text = str_replace("<","&lt;",$text);
-  $text = str_replace(">","&gt;",$text);
+if(!function_exists("fix_html")) {
+  function fix_html($text) {
+    $text = str_replace("<","&lt;",$text);
+    $text = str_replace(">","&gt;",$text);
 
-  return $text;
+    return $text;
+  }
 }
 
 /* add_log - add logging event into the ws_logs table */
@@ -80,11 +84,13 @@ if(!function_exists("isodd")) {
 }
 
 /* send_mail - send a mail to a user (actually adds it to the mailing queue for sending later) */
-function send_mail($to,$subject,$body) {
-  if(empty($to)) return 0;
-  if(!strstr($to,'@')) return 0;
-  squery("INSERT INTO mail_queue(mail_to,mail_subject,mail_body) VALUES('%s','%s','%s')", $to, $subject, $body);
-  return 1;
+if(!function_exists("send_mail")) {
+  function send_mail($to,$subject,$body) {
+    if(empty($to)) return 0;
+    if(!strstr($to,'@')) return 0;
+    squery("INSERT INTO mail_queue(mail_to,mail_subject,mail_body) VALUES('%s','%s','%s')", $to, $subject, $body);
+    return 1;
+  }
 }
 
 /* showyesno - return a textual Yes/No response to 1/0 */
@@ -96,22 +102,26 @@ if(!function_exists("showyesno")) {
 }
 
 /* RandomNumber - generate a random number */
-function RandomNumber($length=32) {
-  $randstr='';
-  srand((double)microtime()*100-553);
-  //our array add all letters and numbers if you wish
-  $chars = array ('0','1','2','3','4','5','6','7','9');
-  for($rand = 0; $rand <= $length; $rand++) {
-    $random = rand(0, count($chars) -1);
-    $randstr .= $chars[$random];
-  }
+if(!function_exists("RandomNumber")) {
+  function RandomNumber($length=32) {
+    $randstr='';
+    srand((double)microtime()*100-553);
+    //our array add all letters and numbers if you wish
+    $chars = array ('0','1','2','3','4','5','6','7','9');
+    for($rand = 0; $rand <= $length; $rand++) {
+      $random = rand(0, count($chars) -1);
+      $randstr .= $chars[$random];
+    }
 
-  return $randstr;
+    return $randstr;
+  }
 }
 
 /* is_backup_running - check if a backup process is running */
-function is_backup_running() {
-  return file_exists("/tmp/doing-backup");
+if(!function_exists("is_backup_running")) {
+  function is_backup_running() {
+    return file_exists("/tmp/doing-backup");
+  }
 }
 
 /* IsKarnafAdminSession - check if the user has Karnaf Admin access */
@@ -131,14 +141,16 @@ function IsKarnafOperSession() {
 }
 
 /* CheckOperSession - check if the user has Karnaf Operator access and exit otherwise */
-function CheckOperSession($requiredacc = 0) {
-  global $a_groups,$a_operlev;
-  $res = 0;
-  if(in_array(KARNAF_ADMINS_GROUP, $a_groups) || in_array(KARNAF_OPERS_GROUP, $a_groups)) $res = 1;
-  if($res != 1) AccessDenied("This page is limited to Server Operators.");
-  if($a_operlev < $requiredacc) AccessDenied("This page is limited to $requiredacc.");
+if(!function_exists("CheckOperSession")) {
+  function CheckOperSession($requiredacc = 0) {
+    global $a_groups,$a_operlev;
+    $res = 0;
+    if(in_array(KARNAF_ADMINS_GROUP, $a_groups) || in_array(KARNAF_OPERS_GROUP, $a_groups)) $res = 1;
+    if($res != 1) AccessDenied("This page is limited to Server Operators.");
+    if($a_operlev < $requiredacc) AccessDenied("This page is limited to $requiredacc.");
 
-  return $res;
+    return $res;
+  }
 }
 
 /* IsGroupMember - check if the user is a member of a group */
@@ -238,7 +250,6 @@ function real_squery($argv) {
 
   return $query;
 }
-}
 
 function sql_fetch_array(&$x) {
   if(is_array($x)) {
@@ -299,6 +310,7 @@ function sqldiff_compare() {
 
 } # end of function_exists("squery")
 
+if(!function_exists("check_auth")) {
 function check_auth($xhost="") {
   global $nick,$a_user,$a_id,$a_operlev,$a_groups,$a_flags,$a_email,$a_timezone,$a_fullname,$error,$no_cache,$nologin;
 
@@ -388,6 +400,7 @@ function check_auth($xhost="") {
 
   return 0;
 }
+} # end of function_exists("check_auth")
 
 if(!function_exists("load_template")) {
   function load_template($file) {
@@ -443,10 +456,12 @@ if(!function_exists("AccessDenied")) {
   }
 }
 
-function datetounixtime($date) {
-  global $a_timezone;
-  list($day, $month, $year) = split('[/.-]', $date);
-  return mktime(0, 0, 0, $month, $day, $year) - $a_timezone;
+if(!function_exists("datetounixtime")) {
+  function datetounixtime($date) {
+    global $a_timezone;
+    list($day, $month, $year) = split('[/.-]', $date);
+    return mktime(0, 0, 0, $month, $day, $year) - $a_timezone;
+  }
 }
 
 if(!function_exists("showtime")) {
@@ -463,84 +478,90 @@ if(!function_exists("showdate")) {
   }
 }
 
-function do_duration($orgvar) {
-  $y = 0;
-  $d = 0;
-  $h = 0;
-  $m = 0;
-  $res = "";
-  while($orgvar >= 31536000) {
-    $orgvar = $orgvar - 31536000;
-    $y = $y++;
+if(!function_exists("do_duration")) {
+  function do_duration($orgvar) {
+    $y = 0;
+    $d = 0;
+    $h = 0;
+    $m = 0;
+    $res = "";
+    while($orgvar >= 31536000) {
+      $orgvar = $orgvar - 31536000;
+      $y = $y++;
+    }
+    while($orgvar >= 86400) {
+      $orgvar = $orgvar - 86400;
+      $d++;
+    }
+    while($orgvar >= 3600) {
+      $orgvar = $orgvar - 3600;
+      $h++;
+    }
+    while($orgvar >= 60) {
+      $orgvar = $orgvar - 60;
+      $m++;
+    }
+    $s = $orgvar;
+    if($y > 0) $res = $y."y";
+    if($d > 0) $res = $res.$d."d";
+    if($h > 0) $res = $res.$h."h";
+    if($m > 0) $res = $res.$m."m";
+    if($s > 0) $res = $res.$s."s";
+    return $res;
   }
-  while($orgvar >= 86400) {
-    $orgvar = $orgvar - 86400;
-    $d++;
-  }
-  while($orgvar >= 3600) {
-    $orgvar = $orgvar - 3600;
-    $h++;
-  }
-  while($orgvar >= 60) {
-    $orgvar = $orgvar - 60;
-    $m++;
-  }
-  $s = $orgvar;
-  if($y > 0) $res = $y."y";
-  if($d > 0) $res = $res.$d."d";
-  if($h > 0) $res = $res.$h."h";
-  if($m > 0) $res = $res.$m."m";
-  if($s > 0) $res = $res.$s."s";
-  return $res;
 }
 
-function gethttplink($x) {
-  return "<a href=\"".$x[0]."\">".$x[0]."</a>";
+if(!function_exists("gethttplink")) {
+  function gethttplink($x) {
+    return "<a href=\"".$x[0]."\">".$x[0]."</a>";
+  }
 }
 
-function show_board_body($body) {
-  $body = str_replace("<","&lt;",$body);
-  $body = str_replace(">","&gt;",$body);
-  $body = str_replace("[b]","<b>",$body);
-  $body = str_replace("[/b]","</b>",$body);
-  $body = str_replace("[i]","<i>",$body);
-  $body = str_replace("[/i]","</i>",$body);
-  $body = str_replace("[u]","<u>",$body);
-  $body = str_replace("[/u]","</u>",$body);
-  $body = str_replace("[system]","<div class=\"system\">",$body);
-  $body = str_replace("[/system]","</div>",$body);
-  $body = str_replace("[table]\r\n","<table>",$body);
-  $body = str_replace("[/table]\r\n","</table>",$body);
-  $body = str_replace("[/table]","</table>",$body);
-  $body = str_replace("[tr]\r\n","<tr>",$body);
-  $body = str_replace("[/tr]\r\n","</tr>",$body);
-  $body = str_replace("[td]\r\n","<td class=\"kb_td\">",$body);
-  $body = str_replace("[td]","<td class=\"kb_td\">",$body);
-  $body = str_replace("[td]\r\n","<td class=\"kb_td\">",$body);
-  $body = str_replace("[/td]\r\n","</td>",$body);
-  $body = str_replace("[th]\r\n","<th class=\"kb_th\">",$body);
-  $body = str_replace("[th]","<th class=\"kb_th\">",$body);
-  $body = str_replace("[th]","<th class=\"kb_th\">",$body);
-  $body = str_replace("[/th]\r\n","</th>",$body);
-  $body = str_ireplace("[ol]\r\n","<ol>",$body);
-  $body = str_ireplace("[/ol]\r\n","</ol>",$body);
-  $body = str_ireplace("[ol]","<ol>",$body);
-  $body = str_ireplace("[/ol]","</ol>",$body);
-  $body = str_ireplace("[li]","<li>",$body);
-  $body = str_ireplace("[/li]","</li>",$body);
-  $body = str_ireplace("[ul]","<ul>",$body);
-  $body = str_ireplace("[/ul]","</ul>",$body);
-  $body = str_ireplace("[pre]","<pre>",$body);
-  $body = str_ireplace("[/pre]","</pre>",$body);
-  $body = str_ireplace("[small]","<small>",$body);
-  $body = str_ireplace("[/small]","</small>",$body);
-  $body = str_replace("\n","<br>\n",$body);
-  $body = preg_replace_callback(
-      '|(http(s)?://[a-zA-Z0-9./_\:\-?=#~+]{1,100}(\?[a-zA-Z0-9./_\:\-=#~&+]{1,100})?)([\w/])|',
-      "gethttplink",
-      $body
-  );
-  echo $body;
+if(!function_exists("show_board_body")) {
+  function show_board_body($body) {
+    $body = str_replace("<","&lt;",$body);
+    $body = str_replace(">","&gt;",$body);
+    $body = str_replace("[b]","<b>",$body);
+    $body = str_replace("[/b]","</b>",$body);
+    $body = str_replace("[i]","<i>",$body);
+    $body = str_replace("[/i]","</i>",$body);
+    $body = str_replace("[u]","<u>",$body);
+    $body = str_replace("[/u]","</u>",$body);
+    $body = str_replace("[system]","<div class=\"system\">",$body);
+    $body = str_replace("[/system]","</div>",$body);
+    $body = str_replace("[table]\r\n","<table>",$body);
+    $body = str_replace("[/table]\r\n","</table>",$body);
+    $body = str_replace("[/table]","</table>",$body);
+    $body = str_replace("[tr]\r\n","<tr>",$body);
+    $body = str_replace("[/tr]\r\n","</tr>",$body);
+    $body = str_replace("[td]\r\n","<td class=\"kb_td\">",$body);
+    $body = str_replace("[td]","<td class=\"kb_td\">",$body);
+    $body = str_replace("[td]\r\n","<td class=\"kb_td\">",$body);
+    $body = str_replace("[/td]\r\n","</td>",$body);
+    $body = str_replace("[th]\r\n","<th class=\"kb_th\">",$body);
+    $body = str_replace("[th]","<th class=\"kb_th\">",$body);
+    $body = str_replace("[th]","<th class=\"kb_th\">",$body);
+    $body = str_replace("[/th]\r\n","</th>",$body);
+    $body = str_ireplace("[ol]\r\n","<ol>",$body);
+    $body = str_ireplace("[/ol]\r\n","</ol>",$body);
+    $body = str_ireplace("[ol]","<ol>",$body);
+    $body = str_ireplace("[/ol]","</ol>",$body);
+    $body = str_ireplace("[li]","<li>",$body);
+    $body = str_ireplace("[/li]","</li>",$body);
+    $body = str_ireplace("[ul]","<ul>",$body);
+    $body = str_ireplace("[/ul]","</ul>",$body);
+    $body = str_ireplace("[pre]","<pre>",$body);
+    $body = str_ireplace("[/pre]","</pre>",$body);
+    $body = str_ireplace("[small]","<small>",$body);
+    $body = str_ireplace("[/small]","</small>",$body);
+    $body = str_replace("\n","<br>\n",$body);
+    $body = preg_replace_callback(
+        '|(http(s)?://[a-zA-Z0-9./_\:\-?=#~+]{1,100}(\?[a-zA-Z0-9./_\:\-=#~&+]{1,100})?)([\w/])|',
+        "gethttplink",
+        $body
+    );
+    echo $body;
+  }
 }
 
 if(!function_exists("merge_array")) {
@@ -577,12 +598,10 @@ if(!function_exists("coolsize")) {
 }
 
 /* make_menus - unused function (reserved for DALnet) */
-function make_menus($menu_id) {
-}
+if(!function_exists("make_menus")) { function make_menus($menu_id) { } }
 
 /* send_memo - unused function (reserved for DALnet) */
-function send_memo($to,$body) {
-}
+if(!function_exists("send_memo")) { function send_memo($to,$body) { } }
 
 /* API function to create new tickets */
 function api_create_ticket($unick, $uname, $uemail, $title, $description, $uip, $rep_g, $cat3_id=71, $ext1="") {
