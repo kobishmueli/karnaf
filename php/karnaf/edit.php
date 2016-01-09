@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -481,8 +481,10 @@ window.onload = auto_load;
 <input name="edit_reassign" type="button" value="Re-assign" onClick="javascript:load_page(5)">
 <input name="edit_replies" type="button" value="Replies" onClick="javascript:load_page(6)">
 <input name="new_reply" type="button" value="New Reply" onClick="javascript:load_page(8)">
+<? if(!defined("IRC_MODE")) { ?>
 <input name="check_user" type="button" value="Check User" onClick="javascript:load_page(7)">
 <input name="send_sms" type="button" value="SMS" onClick="javascript:load_page(9)">
+<? } ?>
 </center>
 <br><br>
 <span id="Edit_Space">
