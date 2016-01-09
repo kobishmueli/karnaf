@@ -10,6 +10,58 @@ require("../ktools.php");
 $query = squery("SELECT MAX(version) FROM karnaf_schema")
 if($result = sql_fetch_array($query)) {
   $cur_version = (int)$result[0];
+  if($cur_version < 1) {
+    squery("alter table karnaf_tickets add `message_id` varchar(250) DEFAULT NULL after lastupd_time");
+    squery("alter table karnaf_replies add `message_id` varchar(250) DEFAULT NULL after ip");
+    squery("INSERT INTO karnaf_schema(version) VALUES(1)");
+  }
+  if($cur_version < 2) {
+    squery("CREATE TABLE `karnaf_files` (
+      `id` int(11) NOT NULL auto_increment,
+      `tid` int(11) NOT NULL default '0',
+      `file_name` varchar(250) NOT NULL,
+      `file_type` varchar(50) NOT NULL,
+      `file_desc` varchar(250) NOT NULL,
+      `file_path` varchar(250) NOT NULL,
+      `file_size` int(11) NOT NULL,
+      `lastupd_time` int(11) default NULL,
+      PRIMARY KEY  (`id`))");
+    squery("INSERT INTO karnaf_schema(version) VALUES(2)");
+  }
+  if($cur_version < 3) {
+    squery("alter table karnaf_tickets add `last_note` text DEFAULT NULL after message_id");
+    squery("INSERT INTO karnaf_schema(version) VALUES(3)");
+  }
+  if($cur_version < 4) {
+    squery("alter table groups add `autoforward` TEXT DEFAULT NULL after iskarnaf");
+    squery("INSERT INTO karnaf_schema(version) VALUES(4)");
+  }
+  if($cur_version < 6) {
+    squery("alter table karnaf_tickets add `title` varchar(250) DEFAULT NULL after status");
+    squery("alter table karnaf_replies add `title` varchar(250) DEFAULT NULL after tid");
+    squery("alter table groups add `assign_msg` TEXT DEFAULT NULL after autoforward");
+    squery("INSERT INTO karnaf_schema(version) VALUES(6)");
+  }
+  if($cur_version < 7) {
+    squery("CREATE TABLE `karnaf_mail_rules` (  
+     `id` int(11) NOT NULL AUTO_INCREMENT,  
+     `name` varchar(250) NOT NULL DEFAULT '',  
+     `active` tinyint(1) NOT NULL DEFAULT '0',  
+     `priority` int(11) NOT NULL DEFAULT '0',  
+     `rcpt_pattern` varchar(250) NOT NULL DEFAULT '',  
+     `to_pattern` varchar(250) NOT NULL DEFAULT '',  
+     `cc_pattern` varchar(250) NOT NULL DEFAULT '',  
+     `subject_pattern` varchar(250) NOT NULL DEFAULT '',  
+     `body_pattern` varchar(250) NOT NULL DEFAULT '',  
+     `stop_duplicates` tinyint(1) NOT NULL DEFAULT '0',  
+     `break` tinyint(1) NOT NULL DEFAULT '0',  
+     `set_priority` int(11) NOT NULL DEFAULT '0',  
+     `set_group` varchar(30) DEFAULT NULL,  
+     `set_extra` varchar(250) DEFAULT NULL,  
+     `set_cat3` int(11) NOT NULL DEFAULT '0',  
+     PRIMARY KEY (`id`))");
+    squery("INSERT INTO karnaf_schema(version) VALUES(7)");
+  }
   if($cur_version < 9) {
     squery("alter table karnaf_tickets add `ulocation` varchar(250) NOT NULL DEFAULT '' after uphone");
     squery("INSERT INTO karnaf_schema(version) VALUES(9)");
