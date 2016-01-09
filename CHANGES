@@ -1,5 +1,5 @@
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -21,6 +21,10 @@ Karnaf v5.0.13
   - Don't let users assign the tickets to themselves.
   - Make templates of the PSEUDO_GROUP as global templates for all groups.
 - Added pre-defined reports to php/karnaf/stats.php + cosmetics.
+- Added escaping to fix a newrelic display bug.
+- Changed scheduler to do more SQL schema upgrades.
+- ktools fixes (mostly function_exists checks for DALnet).
+- IRC_MODE: Removed check user and send sms buttons from edit.php.
 
 Karnaf v5.0.12
 - Show the ticket description & title on the "new reply" tab when editing tickets.
