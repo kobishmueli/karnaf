@@ -6,7 +6,7 @@
 
 require_once("karnaf_header.php");
 CheckOperSession();
-$id = $_GET['id'];
+$id = trim($_GET['id']);
 if(empty($id) || !is_numeric($id)) safe_die("Invalid Ticket ID!");
 show_title("Ticket #".$id);
 make_menus("Karnaf (HelpDesk)");

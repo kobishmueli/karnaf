@@ -49,13 +49,19 @@ th,.Karnaf_L_Head {
 }
 .Karnaf_P_Critical {
   color: Black;
-  background-color: Magenta;
+  background-color: Purple;
   font-family: "Arial";
   font-size: 12pt;
 }
 .Karnaf_P_Special {
   color: Black;
   background-color: Magenta;
+  font-family: "Arial";
+  font-size: 12pt;
+}
+.Karnaf_P_Special2 {
+  color: Black;
+  background-color: Yellow;
   font-family: "Arial";
   font-size: 12pt;
 }
