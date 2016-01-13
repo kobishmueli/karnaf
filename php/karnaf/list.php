@@ -136,6 +136,7 @@ while($result = sql_fetch_array($query)) {
     if(strstr($result['ulocation'],"China")) $status_style = "Karnaf_P_Special";
     if(strstr($result['ulocation'],"USA") || strstr($result['ulocation'],"US-")) $status_style = "Karnaf_P_Special";
     if(strstr($result['ulocation'],"Ukrain")) $status_style = "Karnaf_P_Special";
+    if(endsWith($result['uemail'], 'supersonic.com')) $status_style = "Karnaf_P_Special2";
   }
   $body = "";
   if(!empty($result['title'])) $body = "Title: ".$result['title']."\n\n";

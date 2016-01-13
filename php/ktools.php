@@ -658,10 +658,15 @@ function send_sms($sms_account, $sms_to, $sms_body) {
   return $res;
 }
 
+function endsWith($haystack, $needle) {
+  return substr($haystack, -strlen($needle))===$needle;
+}
+
 if(!function_exists("custom_new_ticket_welcome")) { function custom_new_ticket_welcome() { } }
 if(!function_exists("custom_new_ticket_thankyou")) { function custom_new_ticket_thankyou() { } }
 if(!function_exists("custom_new_ticket_ext1_check")) { function custom_new_ticket_ext1_check($ext1) { } }
 if(!defined("USER_FIELD")) define("USER_FIELD", "Username");
 if(!function_exists("custom_view_row_info")) { function custom_view_row_info($row, $value, $isoper) { echo $value; } }
 if(!function_exists("custom_view_more")) { function custom_view_more($result, $isoper) { } }
+
 ?>
