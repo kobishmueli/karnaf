@@ -68,10 +68,11 @@ while($result = sql_fetch_array($query)) {
       else $m_references = "";
       echo "#{$m_id} ({$overview->date}) - From: {$m_from} {$m_msgid}\n";
       $headers = imap_fetchheader($mbox, $m_id);
+      $header_info = imap_headerinfo($mbox, $m_id);
       $uname = "";
       $reply_to = "";
-      $to = "";
-      $cc = "";
+      $to = $header_info->toaddress;
+      $cc = $header_info->ccaddress;
       $tid = 0;
       $debug_body = "";
       $debug_only = 0;
@@ -100,14 +101,6 @@ while($result = sql_fetch_array($query)) {
         }
         else if(preg_match("/^Reply-to: (.*)/", $header, $matches)) {
           $reply_to = $matches[1];
-        }
-        if(preg_match("/^To: (.*)/", $header, $matches)) {
-          $to = $matches[1];
-          continue;
-        }
-        if(preg_match("/^[Cc]{2}: (.*)/", $header, $matches)) {
-          $cc = $matches[1];
-          continue;
         }
         if(preg_match("/^X-Priority: (.*)/", $header, $matches)) {
           if($matches[1] == "1") $upriority = 20; /* high priority */
@@ -179,21 +172,7 @@ while($result = sql_fetch_array($query)) {
           }
         }
       }
-      if(strstr($subject, "=?UTF-8?")) {
-        $debug_body .= "Subject before imap_utf8(1)=".$subject."\n";
-        $subject = imap_utf8($subject);
-        $debug_body .= "Subject after imap_utf8(1)=".$subject."\n";
-        if($tid == 0) {
-          /* Let's try to catch the ticket ID again... */
-          if(preg_match("/^.*(#([\d,]+)).*/", $subject, $matches)) {
-            if(isset($matches[2])) $tid = str_replace(",","",$matches[2]);
-          }
-          else if(preg_match("/^.*(#(\d+).*)/", $subject, $matches)) {
-            if(isset($matches[2])) $tid = $matches[2];
-          }
-        }
-      }
-      if(strstr($m_subject, "=?UTF-8?")) {
+      if(strstr($m_subject, "=?UTF-8?") || strstr($m_subject, "=?GB2312?") || strstr($m_subject, "=?ISO-2022-JP?")) {
         $debug_body .= "M_Subject before imap_utf8(2)=".$m_subject."\n";
         $m_subject = imap_utf8($m_subject);
         $debug_body .= "M_Subject after imap_utf8(2)=".$m_subject."\n";
@@ -256,6 +235,7 @@ while($result = sql_fetch_array($query)) {
       /* If the user priority is *lower* than the system priority, we'll use the user priority */
       if($priority > $upriority) $priority = $upriority;
       $rep_g = KARNAF_DEFAULT_GROUP;
+      if(stristr($m_from,"@supersonic.com")) $rep_g = "karnaf-supersonic";
       $cat3_id = $result['cat3_id'];
       $extra = "";
       foreach($mail_rules as $mail_rule) {
