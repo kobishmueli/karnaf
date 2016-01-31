@@ -172,7 +172,7 @@ while($result = sql_fetch_array($query)) {
           }
         }
       }
-      if(strstr($m_subject, "=?UTF-8?") || strstr($m_subject, "=?GB2312?") || strstr($m_subject, "=?ISO-2022-JP?")) {
+      if(strstr($m_subject, "=?UTF-8?")) {
         $debug_body .= "M_Subject before imap_utf8(2)=".$m_subject."\n";
         $m_subject = imap_utf8($m_subject);
         $debug_body .= "M_Subject after imap_utf8(2)=".$m_subject."\n";
@@ -186,7 +186,7 @@ while($result = sql_fetch_array($query)) {
           }
         }
       }
-      if(strstr($m_subject, "=?WINDOWS-1252?")) {
+      if(strstr($m_subject, "=?WINDOWS-1252?") || strstr($m_subject, "=?GB2312?") || strstr($m_subject, "=?ISO-2022-JP?")) {
         $debug_body .= "M_Subject before imap_mime_header_decode=".$m_subject."\n";
         $arr = imap_mime_header_decode($m_subject);
         $m_subject = "";
