@@ -59,7 +59,7 @@ sql_free_result($query2);
 </select>
 </form>
 <br><br>
-<table border="1" width="90%" style="border-collapse: collapse" bordercolor="#111111" cellpadding="1" cellspacing="1">
+<table>
 <tr class="Karnaf_L_Head">
 <td>ID</td>
 <td>User</td>
@@ -134,8 +134,9 @@ while($result = sql_fetch_array($query)) {
   if($priority < 20) {
     # Mark USA, China and Ukraine as special.
     if(strstr($result['ulocation'],"China")) $status_style = "Karnaf_P_Special";
-    if(strstr($result['ulocation'],"USA") || strstr($result['ulocation'],"US-")) $status_style = "Karnaf_P_Special";
+    if($result['ulocation']=="US" || strstr($result['ulocation'],"USA") || strstr($result['ulocation'],"US-")) $status_style = "Karnaf_P_Special";
     if(strstr($result['ulocation'],"Ukrain")) $status_style = "Karnaf_P_Special";
+    if(strstr($result['ulocation'],"Mobile-")) $status_style = "Karnaf_P_Special2";
     if(endsWith($result['uemail'], 'supersonic.com')) $status_style = "Karnaf_P_Special2";
   }
   $body = "";

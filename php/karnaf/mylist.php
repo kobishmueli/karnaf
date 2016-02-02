@@ -156,7 +156,7 @@ else $showall = "";
 </select>
 <form name="checks" id="checks" method="post">
 <br><br>
-<table border="1" width="90%" bgcolor="White" style="border-collapse: collapse" bordercolor="#111111" cellpadding="1" cellspacing="1">
+<table>
 <tr class="Karnaf_L_Head">
 <td><input name="allbox" type="checkbox" onClick="javascript:CheckAll()"></td>
 <td>ID</td>
@@ -214,8 +214,9 @@ while($result = sql_fetch_array($query)) {
   if($priority < 20) {
     # Mark USA, China and Ukraine as special.
     if(strstr($result['ulocation'],"China")) $status_style = "Karnaf_P_Special";
-    if(strstr($result['ulocation'],"USA") || strstr($result['ulocation'],"US-")) $status_style = "Karnaf_P_Special";
+    if($result['ulocation']=="US" || strstr($result['ulocation'],"USA") || strstr($result['ulocation'],"US-")) $status_style = "Karnaf_P_Special";
     if(strstr($result['ulocation'],"Ukrain")) $status_style = "Karnaf_P_Special";
+    if(strstr($result['ulocation'],"Mobile-")) $status_style = "Karnaf_P_Special2";
     if(endsWith($result['uemail'], 'supersonic.com')) $status_style = "Karnaf_P_Special2";
   }
   $body = "";
@@ -237,14 +238,12 @@ echo $userinfo;
 ?>
 </td>
 <td><?=str_replace("<","&lt;",$result['title'])?></td>
-<td>
 <?
   if($result['rep_u'] == $nick) echo "<td style=\"border: 1px solid black; background-color: green;\">".$result['rep_u']."</td>\n";
   else if(!empty($result['rep_u'])) echo "<td><span title=\"".$result['rep_g']."\" style=\"cursor:pointer\">".$result['rep_u']."</span></td>\n";
   else if(IsGroupMember($result['rep_g'])) echo "<td class=\"karnaf_my_team\">".$result['rep_g']."</td>\n";
   else echo "<td class=\"karnaf_not_my_team\">".$result['rep_g']."</td>\n";
 ?>
-</td>
 <td><?=$result['spriority']?></td>
 <td><?=showtime($result['open_time'])?></td>
 <td><?=$action_cnt+$reply_cnt?></td>
