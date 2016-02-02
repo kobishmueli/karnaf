@@ -25,6 +25,12 @@ Karnaf v5.0.13
 - Changed scheduler to do more SQL schema upgrades.
 - ktools fixes (mostly function_exists checks for DALnet).
 - IRC_MODE: Removed check user and send sms buttons from edit.php.
+- fetch-emails.php changes:
+  - Get To/CC headers from imap_headerinfo().
+  - Only use the m_subject variable and not the subject variable.
+  - More non-utf-8 checks.
+- Make "karnaf-supersonic" the default group for @supersonic.com emails.
+- Added a special color for SuperSonic tickets based on email and trimmed the search input
 
 Karnaf v5.0.12
 - Show the ticket description & title on the "new reply" tab when editing tickets.
