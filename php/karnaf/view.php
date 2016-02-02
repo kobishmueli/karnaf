@@ -42,7 +42,7 @@ if(!isset($_GET['ajax'])) show_title("Ticket #".$id);
 if(IsKarnafOperSession()) $isoper = 1;
 else $isoper = 0;
 $isadmin = 0;
-$query = squery("SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
+$query = squery("SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.ulocation,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS 
 cat3_name,s.status_name,up.priority_name AS upriority,sp.priority_name AS priority,c3.extra,t.ext1,t.ext2,t.ext3,t.merged_to,t.cc,
 g.private_actions,t.lastupd_time 
@@ -109,6 +109,10 @@ if($result = sql_fetch_array($query)) {
 </tr>
 <? } ?>
 <? if(!defined("IRC_MODE")) { ?>
+<tr>
+<td>Location:</td>
+<td><?=$result['ulocation']?></td>
+</tr>
 <tr>
 <td>Phone:</td>
 <td><?=$result['uphone']?></td>
