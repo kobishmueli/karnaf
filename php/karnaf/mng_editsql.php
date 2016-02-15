@@ -111,6 +111,10 @@ if(isset($_POST['submit'])) {
     else $row = $sql_rows[0];
     $query = squery(0, "INSERT INTO ".$sql_table."(".$row.") VALUES('%s')", $_POST["es-".$row]);
     $id = sql_insert_id();
+    if(!$id) {
+      /* If we got no insert id, let's try to base it on our sql_id... */
+      $id = $_POST["es-".$sql_id];
+    }
     foreach($sql_rows as $row) {
       if(is_array($row)) $row = $row[0];
       if($row == $sql_id) continue; /* No need to update the primary ID since we already insrted it... */
