@@ -192,7 +192,7 @@ $cnt = 0;
 array_unshift($argv, $qstr);
 $query = squery_args($argv);
 while($result = sql_fetch_array($query)) {
-  if($a_user != $result['rep_u'] && !IsGroupMember($result['rep_g']) && (!defined("IRC_MODE") || !IsKarnafAdminSession())) continue; /* Skip tickets for other teams */
+  if($a_user != $result['rep_u'] && !IsGroupMember($result['rep_g']) && (strtolower($result['rep_g'])!=PSEUDO_GROUP) && (!defined("IRC_MODE") || !IsKarnafAdminSession())) continue; /* Skip tickets for other teams */
   if((strtolower($showall) == "none") && !empty($result['rep_u'])) continue;
   if((strtolower($showall) == "onlymy") && empty($result['rep_u'])) continue;
   $cnt++;
@@ -214,10 +214,11 @@ while($result = sql_fetch_array($query)) {
   if($priority < 20) {
     # Mark USA, China and Ukraine as special.
     if(strstr($result['ulocation'],"China")) $status_style = "Karnaf_P_Special";
-    if($result['ulocation']=="US" || strstr($result['ulocation'],"USA") || strstr($result['ulocation'],"US-")) $status_style = "Karnaf_P_Special";
-    if(strstr($result['ulocation'],"Ukrain")) $status_style = "Karnaf_P_Special";
-    if(strstr($result['ulocation'],"Mobile-")) $status_style = "Karnaf_P_Special2";
-    if(endsWith($result['uemail'], 'supersonic.com')) $status_style = "Karnaf_P_Special2";
+    else if($result['ulocation']=="US" || strstr($result['ulocation'],"USA") || strstr($result['ulocation'],"US-")) $status_style = "Karnaf_P_Special";
+    else if(strstr($result['ulocation'],"Ukrain")) $status_style = "Karnaf_P_Special";
+    else if(strstr($result['ulocation'],"Mobile-")) $status_style = "Karnaf_P_Special2";
+    else if(endsWith($result['uemail'], 'supersonic.com')) $status_style = "Karnaf_P_Special2";
+    else if($result['ulocation']=="UK") $status_style = "Karnaf_P_Special";
   }
   $body = "";
   if(!empty($result['title'])) $body = "Title: ".$result['title']."\n\n";
