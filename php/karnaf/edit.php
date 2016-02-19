@@ -155,7 +155,10 @@ if(isset($_POST['reply_text'])) {
     }
     else {
       $autostatus = "The ticket has been closed.";
-      if(isset($email_update_str) && strstr($email_update_str,"A new reply was sent to you.\r\nReply message:")) $email_update_str = str_replace("A new reply was sent to you.\r\nReply message:","The ticket has been closed:",$email_update_str);
+      if(isset($email_update_str) && strstr($email_update_str,"A new reply was sent to you.\r\nReply message:")) {
+        $email_update_str = str_replace("A new reply was sent to you.\r\nReply message:","The ticket has been closed:",$email_update_str);
+        $email_update_str .= "\r\n*** If your problem wasn't resolved, please reply to this email and we will re-open the ticket ***\r\n";
+      }
       else $email_update_str = "The ticket has been closed.";
       squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'The ticket has been closed.','%s','%s',%d,1,%d)", 
              $id, $nick, $group, (time()+1), $is_private);
