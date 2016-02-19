@@ -55,9 +55,10 @@ if($result = sql_fetch_array($query)) {
     squery("INSERT INTO karnaf_replies(tid,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s')", $id, $_POST['reply_text'],
            $nick, time(), $nick, get_session_ip());
     if((int)$result['status'] == 2) {
-      squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d AND status=2", time(), $id);
+      squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d,newuserreply=1 WHERE id=%d AND status=2", time(), $id);
       send_memo($result['rep_u'], "User has replied to ticket #".$result['id'].". For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
     }
+    else squery("UPDATE karnaf_tickets SET lastupd_time=%d,newuserreply=1 WHERE id=%d", time(), $id);
     echo "<div class=\"status\">Your reply has been saved.</div><br>";
     $result['status'] = 1;
   }
