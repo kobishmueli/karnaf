@@ -144,6 +144,7 @@ if(isset($_POST['reply_text'])) {
              $id, $reply_text, $nick, time(), $r_by, get_session_ip());
       $email_update_str = "A new reply was sent to you.\r\nReply message:\r\n".$reply_text;
     }
+    squery("UPDATE karnaf_tickets SET lastupd_time=%d,newuserreply=0 WHERE id=%d", time(), $id);
   }
   $autostatus = "The ticket has been updated.";
   if($result['private_actions']) $is_private = 2;
@@ -237,7 +238,7 @@ if(isset($_POST['action_text'])) {
     }
     squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,is_private) VALUES(%d,'%s','%s','%s',%d,%d)", $id, $_POST['action_text'], 
            $nick, $group, time(), $is_private);
-    squery("UPDATE karnaf_tickets SET last_note='%s' WHERE id=%d", $_POST['action_text']." (".$nick.")", $id);
+    squery("UPDATE karnaf_tickets SET last_note='%s',lastupd_time=%d,newuserreply=0 WHERE id=%d", $_POST['action_text']." (".$nick.")", time(), $id);
     $autostatus = "The ticket has been updated.";
     if($is_private != 1) $email_update_str = "A new action has been added to the ticket.\r\nAction message: ".$_POST['action_text'];
   }

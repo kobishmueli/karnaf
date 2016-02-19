@@ -74,7 +74,7 @@ sql_free_result($query2);
 <?
 $qstr = "SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.ulocation,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS
-cat3_name,s.status_name,up.priority_name AS upriority,t.priority,sp.priority_name AS spriority,t.last_note 
+cat3_name,s.status_name,up.priority_name AS upriority,t.priority,sp.priority_name AS spriority,t.last_note,t.newuserreply 
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent
 INNER JOIN karnaf_cat1 AS c1 ON c1.id=c2.parent INNER JOIN karnaf_statuses AS s ON s.status_id=t.status INNER JOIN karnaf_priorities AS up ON
 up.priority_id=t.upriority INNER JOIN karnaf_priorities AS sp ON
@@ -146,7 +146,11 @@ while($result = sql_fetch_array($query)) {
   $body = str_replace("<","&lt;",$body);
 ?>
 <tr class="<?=$curcol?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.location.href="edit.php?id=<?=$result['id']?>">
-<td class="<?=$status_style?>" align="center"><span title="<?=$body?>" style="cursor:pointer"><?=$result['id']?></span></td>
+<td class="<?=$status_style?>" align="center"><span title="<?=$body?>" style="cursor:pointer">
+<? if((int)$result['newuserreply'] == 1) echo "<b>"; ?>
+<?=$result['id']?>
+<? if((int)$result['newuserreply'] == 1) echo "</b>"; ?>
+</span></td>
 <td>
 <?
 $userinfo = ($result['unick']=="Guest"?$result['uemail']:$result['unick']);

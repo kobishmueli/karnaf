@@ -1,6 +1,6 @@
 <?
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 /* This is a script to deal with scheduled Karnaf tasks */
@@ -65,6 +65,10 @@ if($result = sql_fetch_array($query)) {
   if($cur_version < 9) {
     squery("alter table karnaf_tickets add `ulocation` varchar(250) NOT NULL DEFAULT '' after uphone");
     squery("INSERT INTO karnaf_schema(version) VALUES(9)");
+  }
+  if($cur_version < 10) {
+    squery("alter table karnaf_tickets add `newuserreply` tinyint(1) NOT NULL DEFAULT '0' after last_note");
+    squery("INSERT INTO karnaf_schema(version) VALUES(10)");
   }
 }
 sql_free_result($query);

@@ -1,6 +1,6 @@
 <?
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 /* This is a script to fetch emails from multiple mail accounts into Karnaf */
@@ -354,10 +354,10 @@ while($result = sql_fetch_array($query)) {
             squery("INSERT INTO karnaf_replies(tid,title,reply,r_by,r_time,r_from,ip,message_id) VALUES(%d,'%s','%s','%s',%d,'%s','%s','%s')",
                    $tid, $m_subject, $m_body, "Guest", time(), $uname, "(EMAIL)", $m_msgid);
             if((int)$result2['status'] == 2) {
-              squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d", time(), $tid);
+              squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d,newuserreply=1 WHERE id=%d", time(), $tid);
               send_memo($result2['rep_u'], "User has replied to ticket #".$result2['id'].". For more information visit: ".KARNAF_URL."/edit.php?id=".$result2['id']);
             }
-            else squery("UPDATE karnaf_tickets SET lastupd_time=%d WHERE id=%d", time(), $tid);
+            else squery("UPDATE karnaf_tickets SET lastupd_time=%d,newuserreply=1 WHERE id=%d", time(), $tid);
             $text = "New reply from: ".$uname."\r\n\r\n";
             $text .= "To edit the ticket: ".KARNAF_URL."/edit.php?id=".$tid."\r\n";
             $text .= "---------------------------------------------------------------------------------------------\r\n";
