@@ -235,7 +235,6 @@ while($result = sql_fetch_array($query)) {
       /* If the user priority is *lower* than the system priority, we'll use the user priority */
       if($priority > $upriority) $priority = $upriority;
       $rep_g = KARNAF_DEFAULT_GROUP;
-      if(stristr($m_from,"@supersonic.com")) $rep_g = "karnaf-supersonic";
       $cat3_id = $result['cat3_id'];
       $extra = "";
       foreach($mail_rules as $mail_rule) {
