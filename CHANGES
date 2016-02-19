@@ -3,6 +3,15 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.14
+- Cosmetic changes to list.php and mylist.php.
+- Added ulocation support to view.php.
+- Updated copyright year.
+- Updated mng_editsql.php to use our own primary id if sql_insert_id() doesn't return one (because the schema doesn't have one defined).
+- Updated KARNAF_VERSION to 5.0.14.
+- Mark new user replies with bold.
+- Fixed missing lastupd_time updates.
+
 Karnaf v5.0.13
 - Encoding fixes to php/karnaf-scripts/fetch-emails.php.
 - Fixed a bug on php/karnaf/edit_replies.php that prevented opers from being able to reopen tickets from the replies tab.
