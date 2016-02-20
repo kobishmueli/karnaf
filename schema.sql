@@ -127,6 +127,7 @@ CREATE TABLE `karnaf_tickets` (
   `opened_by` text NOT NULL,
   `rep_u` varchar(30) NOT NULL DEFAULT '',
   `rep_g` varchar(30) NOT NULL DEFAULT '',
+  `rep_cc` varchar(30) NOT NULL DEFAULT '',
   `closed_by` varchar(30) NOT NULL DEFAULT '',
   `is_real` tinyint(1) NOT NULL DEFAULT '0',
   `is_private` tinyint(1) NOT NULL DEFAULT '0',
