@@ -215,10 +215,10 @@ while($result = sql_fetch_array($query)) {
     # Mark USA, China and Ukraine as special.
     if(strstr($result['ulocation'],"China")) $status_style = "Karnaf_P_Special";
     else if($result['ulocation']=="US" || strstr($result['ulocation'],"USA") || strstr($result['ulocation'],"US-")) $status_style = "Karnaf_P_Special";
+    else if($result['ulocation']=="UK") $status_style = "Karnaf_P_Special";
     else if(strstr($result['ulocation'],"Ukrain")) $status_style = "Karnaf_P_Special";
     else if(strstr($result['ulocation'],"Mobile-")) $status_style = "Karnaf_P_Special2";
     else if(endsWith($result['uemail'], 'supersonic.com')) $status_style = "Karnaf_P_Special2";
-    else if($result['ulocation']=="UK") $status_style = "Karnaf_P_Special";
   }
   $body = "";
   if(!empty($result['title'])) $body = "Title: ".$result['title']."\n\n";
