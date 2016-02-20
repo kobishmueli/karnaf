@@ -11,6 +11,13 @@ Karnaf v5.0.14
 - Updated KARNAF_VERSION to 5.0.14.
 - Mark new user replies with bold.
 - Fixed missing lastupd_time updates.
+- Cosmetic change to the closed ticket message.
+- Cosmetic changes to php/karnaf/list.php and php/karnaf/mylist.php.
+- Removed supersonic domain check from php/karnaf-scripts/fetch-emails.php.
+- Changed php/karnaf-scripts/fetch-emails.php not to re-open tickets that were closed for more than 60 days (but create new tickets instead).
+- Added Admin CC: Let operators send a comment to another operator/team.
+- Fixed action formatting on php/karnaf/edit_actions.php.
+- Let opers see tickets they are admin cc'ed to on php/karnaf/mylist.php.
 
 Karnaf v5.0.13
 - Encoding fixes to php/karnaf-scripts/fetch-emails.php.
