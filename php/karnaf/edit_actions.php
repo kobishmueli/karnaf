@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -99,6 +99,33 @@ Action on behalf of:
 </select>
 <br>
 <? } ?>
+Admin CC: 
+<select name="rep_cc">
+<option value="" SELECTED>---------------</option>
+<?
+  $query2 = squery("SELECT id,name,gdesc FROM groups WHERE iskarnaf=1 ORDER BY name");
+  while($result2 = sql_fetch_array($query2)) {
+    if($result2['name'] == PSEUDO_GROUP) continue;
+?>
+<option value="<?=$result2['name']?>"><?=$result2['gdesc']?></option>
+<?
+  }
+  sql_free_result($query2);
+?>
+<option value="">---------------</option>
+<?
+  $query3 = squery("SELECT DISTINCT(u.user),u.fullname FROM (group_members AS gm INNER JOIN users AS u ON gm.user_id=u.id) ".
+                   "WHERE gm.group_id IN (SELECT id FROM groups WHERE iskarnaf=1) ORDER BY u.user");
+  while($result3 = sql_fetch_array($query3)) {
+    if(empty($result3['fullname'])) $result3['fullname'] = $result3['user'];
+?>
+<option value="<?=$result3['user']?>"><?=$result3['fullname']?></option>
+<?
+  }
+  sql_free_result($query3);
+?>
+</select>
+<br>
 <input type="checkbox" name="is_private" id="is_private" CHECKED>&nbsp;Private action (hide it from users).
 <br>
 <input type="checkbox" name="team_action" id="team_action"<? if($result['private_actions']) echo " CHECKED"; ?>>&nbsp;Team reply (hide the oper's nick).

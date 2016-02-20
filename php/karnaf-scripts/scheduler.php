@@ -68,6 +68,7 @@ if($result = sql_fetch_array($query)) {
   }
   if($cur_version < 10) {
     squery("alter table karnaf_tickets add `newuserreply` tinyint(1) NOT NULL DEFAULT '0' after last_note");
+    squery("alter table karnaf_tickets add `rep_cc` varchar(30) NOT NULL DEFAULT '' after rep_g");
     squery("INSERT INTO karnaf_schema(version) VALUES(10)");
   }
 }

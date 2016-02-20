@@ -244,6 +244,36 @@ if(isset($_POST['action_text'])) {
     squery("UPDATE karnaf_tickets SET last_note='%s',lastupd_time=%d,newuserreply=0 WHERE id=%d", $_POST['action_text']." (".$nick.")", time(), $id);
     $autostatus = "The ticket has been updated.";
     if($is_private != 1) $email_update_str = "A new action has been added to the ticket.\r\nAction message: ".$_POST['action_text'];
+    if(!empty($_POST['rep_cc'])) {
+      $admincc = "";
+      /* Let's first check if rep_cc is a group... */
+      $query2 = squery("SELECT autoforward FROM groups WHERE iskarnaf=1 AND name='%s'", $_POST['rep_cc']);
+      if($result2 = sql_fetch_array($query2)) {
+        $admincc = $result2['autoforward'];
+      }
+      sql_free_result($query2);
+      /* If we didn't find it, let's try to find a user with that name... */
+      if(empty($admincc)) {
+        $query2 = squery("SELECT u.email FROM (group_members AS gm INNER JOIN users AS u ON gm.user_id=u.id) ".
+                         "WHERE u.user='%s' AND gm.group_id IN (SELECT id FROM groups WHERE iskarnaf=1)", $_POST['rep_cc']);
+        if($result2 = sql_fetch_array($query2)) {
+          $admincc = $result2['email'];
+        }
+        sql_free_result($query2);
+      }
+      if(!empty($admincc)) {
+        squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'%s','%s','%s',%d,1,%d)",
+               $id, "Admin CC: ".$_POST['rep_cc'], $nick, $group, time()+1, $is_private);
+        squery("UPDATE karnaf_tickets SET rep_cc='%s' WHERE id=%d", $_POST['rep_cc'], $id);
+        if(!defined("IRC_MODE") && isset($a_fullname) && !empty($a_fullname))
+          $body = "A new comment has been added by ".$a_fullname.":\r\n".$_POST['action_text']."\r\n";
+        else $body = "A new comment has been added by ".$a_user.":\r\n".$_POST['action_text']."\r\n";
+        $body .= "---\r\nFor more information visit: ".KARNAF_URL."/edit.php?id=".$id;
+        $newsubject = "[KARNAF-COMMENT] Ticket #".$id;
+        if(!empty($result['title'])) $newsubject .= " - ".$result['title'];
+        send_mail($admincc, $newsubject, $body);
+      }
+    }
   }
   else $autostatus = "Nothing to update...";
   if($_POST['close'] == "1") {
