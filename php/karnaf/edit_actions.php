@@ -56,7 +56,7 @@ if($result = sql_fetch_array($query)) {
 <td align="center"><?=($is_private==2 && !$isoper)?"Oper":$result2['a_by_u']?></td>
 <? if($a_type == 0) { ?>
 <td>
-<?=$action?>
+<?=show_board_body($action)?>
 <?
     if($is_private == 1) echo "<br>(private action)\r\n";
     if($is_private == 2) echo "<br>(hidden oper nick)\r\n";
