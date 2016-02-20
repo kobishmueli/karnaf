@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -54,11 +54,12 @@ if($result = sql_fetch_array($query)) {
 <?
   $query2 = squery("SELECT id,name,gdesc FROM groups WHERE iskarnaf=1 AND name='%s'", $result['rep_g']);
   if($result2 = sql_fetch_array($query2)) {
-    $query3 = squery("SELECT u.user FROM (group_members AS gm INNER JOIN users AS u ON gm.user_id=u.id) WHERE gm.group_id=%d ORDER BY u.user", $result2['id']);
+    $query3 = squery("SELECT u.user,u.fullname FROM (group_members AS gm INNER JOIN users AS u ON gm.user_id=u.id) WHERE gm.group_id=%d ORDER BY u.user", $result2['id']);
     while($result3 = sql_fetch_array($query3)) {
       if($result3['user'] == $result['rep_u']) $selected = 1;
+      if(defined("IRC_MODE") || empty($result3['fullname'])) $result3['fullname'] = $result3['user'];
 ?>
-<option value="<?=$result3['user']?>"<? if($result3['user'] == $result['rep_u']) echo " SELECTED"; ?>><?=$result2['gdesc']?>\<?=$result3['user']?></option>
+<option value="<?=$result3['user']?>"<? if($result3['user'] == $result['rep_u']) echo " SELECTED"; ?>><?=$result2['gdesc']?>\<?=$result3['fullname']?></option>
 <?
     }
     sql_free_result($query3);
