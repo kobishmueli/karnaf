@@ -55,7 +55,7 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
     if(($result2 = sql_fetch_array($query2))) {
       squery("UPDATE karnaf_tickets SET merged_to=%d,status=0,close_time=%d,lastupd_time=%d WHERE id=%d", $merged_to, time(), time(), $id);
       # Merge the original ticket description as a new reply...
-      squery("INSERT INTO karnaf_replies(tid,title,reply,r_time,r_by,r_from,ip) VALUES(%d,'%s','%s',%d,'%s','%s','%s')",
+      squery("INSERT INTO karnaf_replies(tid,title,reply,r_time,r_from,r_by,ip) VALUES(%d,'%s','%s',%d,'%s','%s','%s')",
              $merged_to, $result['title'], $result['description'], $result['open_time'], $result['ufullname']." (Merged from Ticket #".$id.")",
              $result['unick'], "N/A");
       # Merge actions...
