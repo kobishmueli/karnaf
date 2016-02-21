@@ -185,7 +185,8 @@ else {
   $qstr .= " t.status=%d";
   array_push($argv, $status);
 }
-$qstr .= " AND (rep_u='%s' or rep_u='')";
+$qstr .= " AND (rep_u='%s' or rep_u='' or rep_cc='%s')";
+array_push($argv, $nick);
 array_push($argv, $nick);
 $qstr .= " ORDER BY t.priority DESC,t.open_time";
 $cnt = 0;
