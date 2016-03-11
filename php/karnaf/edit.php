@@ -115,10 +115,21 @@ if(isset($_POST['save']) && ($_POST['save'] == "3")) {
 if(isset($_POST['reply_text'])) {
   if($is_private) $r_by = $group;
   else $r_by = $nick;
-  if(empty($result['rep_u']) && isset($_POST['auto_assign']) && $_POST['auto_assign']=="on" && $group!=PSEUDO_GROUP) {
+  if(empty($result['rep_u']) && isset($_POST['auto_assign']) && $_POST['auto_assign']=="on") {
     /* Auto-assign is checked */
     if($result['private_actions'] || $is_private) $a_type = 4;
     else $a_type = 3;
+    if($group == PSEUDO_GROUP) {
+      /* Try to find the operator's real group and assign the ticket to it... */
+      $query2 = squery("SELECT name FROM groups WHERE iskarnaf=1 AND id IN (SELECT group_id FROM group_members WHERE user_id=(SELECT id FROM users WHERE user='%s'))",
+                       $nick);
+      if(($result2 = sql_fetch_array($query2))) {
+        squery("UPDATE karnaf_tickets SET rep_g='%s',lastupd_time=%d WHERE id=%d", $result2['name'], time(), $id);
+        squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'%s','%s','%s',%d,2,%d)",
+               $id, $result2['name'], $nick, $group, (time()-2), $is_private);
+      }
+      sql_free_result($query2);
+    }
     squery("UPDATE karnaf_tickets SET rep_u='%s',lastupd_time=%d WHERE id=%d", $nick, time(), $id);
     squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type) VALUES(%d,'%s','%s','%s',%d,%d)",
            $id, $nick, $nick, $group, (time()-1), $a_type);
