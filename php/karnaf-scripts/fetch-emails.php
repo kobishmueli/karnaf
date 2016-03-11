@@ -204,6 +204,25 @@ while($result = sql_fetch_array($query)) {
           }
         }
       }
+      if($tid == 0) {
+        /* Let's try to find the ID from other ticket systems... */
+        $stid = "";
+        if(preg_match("/^.*(\[#[A-Z]{3}-\d{3}-\d+\]).*/", $m_subject, $matches)) $stid = $matches[1];
+        #Amazon:
+        if(preg_match("/^.*(case: \d+).*/", $m_subject, $matches)) $stid = $matches[1];
+        if(preg_match("/^.*(\[Case \d+\]).*/", $m_subject, $matches)) $stid = $matches[1];
+        if(preg_match("/^.*(Report \[\d+\]).*/", $m_subject, $matches)) $stid = $matches[1];
+        if(preg_match("/^.*(Report \[\d+-\d\]).*/", $m_subject, $matches)) $stid = $matches[1];
+        #10gbps.io:
+        if(preg_match("/^.*(\[Support #\d+\]).*/", $m_subject, $matches)) $stid = $matches[1];
+        #Purchasing Requests:
+        if(preg_match("/^.*(PR #\d+).*/", $m_subject, $matches)) $stid = $matches[1];
+        if($stid != "") {
+          $query2 = squery("SELECT id FROM karnaf_tickets WHERE status!=0 AND title LIKE '%s' ORDER BY id LIMIT 1", "%".$stid."%");
+          if($result2 = sql_fetch_array($query2)) $tid = (int)$result2['id'];
+          sql_free_result($query2);
+        }
+      }
       if(substr($m_body,0,1) == "\n") $m_body = substr($m_body,1);
       if(strstr($m_body,"<DEFANGED_DIV>")) $m_body = strip_tags($m_body);
       if(strstr($m_body,"<head>") && strstr($m_body,"<body") && strstr($m_body,"</body>") && strstr($m_body,"</html>")) {
