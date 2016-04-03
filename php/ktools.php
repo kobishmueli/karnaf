@@ -224,13 +224,15 @@ function real_squery($argv) {
     safe_die("SQUERY Error: Query is too long!");
   }
 
+  sql_connect();
+
   for ($i = 0; $i < $len; $i++) {
     if($orgstr[$i]=="%") {
       $i++;
       if($orgstr[$i] == "s") {
         if($orgstr[$i-2]!="'" || ($orgstr[$i+1]!="'" && $orgstr[$i+1]!="%" && $orgstr[$i+2]!="%" && $orgstr[$i+3]!="'")) safe_die("SQUERY Error: String is not quoted correctly!");
         $i++;
-        $newstr .= mysql_real_escape_string($argv[$argc]);
+        $newstr .= mysql_real_escape_string($argv[$argc], $connection);
         $argc++;
       }
       elseif($orgstr[$i] == "d") {
@@ -243,8 +245,6 @@ function real_squery($argv) {
     }
     $newstr .= $orgstr[$i];
   }
-
-  sql_connect();
 
   $query = mysql_query($newstr) or safe_die("SQL Error: ".mysql_error());
 

@@ -23,6 +23,9 @@ Karnaf v5.0.14
 - Updated fetch-emails.php to try to catch ticket numbers from common ticketing systems.
 - Changed php/karnaf/edit.php to automatically find the operator's group and assign the ticket to it when the current group is PSEUDO_GROUP
   and auto-assign is checked.
+- Cosmetic CSS change to Karnaf_P_Critical.
+- Updated squery() to use the sql connection for mysql_real_escape_string
+  (since it's using unix socket by default and won't work if mysql isn't installed locally).
 
 Karnaf v5.0.13
 - Encoding fixes to php/karnaf-scripts/fetch-emails.php.
