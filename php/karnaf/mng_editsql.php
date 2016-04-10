@@ -75,6 +75,12 @@ $allowed_tables = array(
                           "account_token",
                           "from_number",
                     )),
+                    array("karnaf_filters","id",array(
+                          "name",
+                          "tooltip",
+                          "querystr",
+                          "priority",
+                    )),
 );
 $sql_rows = 0;
 foreach($allowed_tables as $x) {

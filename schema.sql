@@ -275,6 +275,15 @@ CREATE TABLE `karnaf_sms_accounts` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `karnaf_filters` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) NOT NULL DEFAULT '',
+  `tooltip` varchar(255) NOT NULL DEFAULT '',
+  `querystr` TEXT NOT NULL DEFAULT '',
+  `priority` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `karnaf_schema` (
   `version` varchar(30) NOT NULL DEFAULT ''
 );
@@ -289,6 +298,7 @@ INSERT INTO `karnaf_schema` VALUES ('7');
 INSERT INTO `karnaf_schema` VALUES ('8');
 INSERT INTO `karnaf_schema` VALUES ('9');
 INSERT INTO `karnaf_schema` VALUES ('10');
+INSERT INTO `karnaf_schema` VALUES ('11');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');

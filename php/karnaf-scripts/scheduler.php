@@ -71,6 +71,16 @@ if($result = sql_fetch_array($query)) {
     squery("alter table karnaf_tickets add `rep_cc` varchar(30) NOT NULL DEFAULT '' after rep_g");
     squery("INSERT INTO karnaf_schema(version) VALUES(10)");
   }
+  if($cur_version < 11) {
+    squery("CREATE TABLE `karnaf_filters` (
+     `id` int(11) NOT NULL AUTO_INCREMENT,
+     `name` varchar(30) NOT NULL DEFAULT '',
+     `tooltip` varchar(255) NOT NULL DEFAULT '',
+     `querystr` TEXT NOT NULL DEFAULT '',
+     `priority` int(11) NOT NULL DEFAULT '0',
+     PRIMARY KEY (`id`))");
+    squery("INSERT INTO karnaf_schema(version) VALUES(11)");
+  }
 }
 sql_free_result($query);
 

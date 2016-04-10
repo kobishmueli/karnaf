@@ -11,6 +11,8 @@ make_menus("Karnaf (HelpDesk)");
 if(isset($_GET['status'])) $status = $_GET['status'];
 else $status = 1;
 if(!$status) safe_die("Invalid status!");
+if(isset($_GET['filter'])) $filter = $_GET['filter'];
+else $filter = 0;
 if(isset($_POST['ids'])) {
   if(!is_array($_POST['ids'])) $_POST['ids'] = array($_POST['ids']);
   foreach($_POST['ids'] as $id) {
@@ -133,7 +135,22 @@ setTimeout(refresh, 10000);
 <form name="form1" id="form1" method="get">
 <input type="hidden" name="flagspam" id="flagspam" value="0">
 <input type="hidden" name="reassign" id="reassign" value="0">
+<select name="filter" onChange="form1.submit();">
+<option value="">---</option>
+<?
+$query2 = squery("SELECT id,name FROM karnaf_filters ORDER BY priority");
+while($result2 = sql_fetch_array($query2)) {
+?>
+<option value="<?=$result2['id']?>"<? if($filter == $result2['id']) echo " SELECTED"; ?>><?=$result2['name']?></option>
+<?
+}
+sql_free_result($query2);
+?>
+</select>
 <select name="status" onChange="form1.submit();">
+<? if($filter != 0) { ?>
+<option value="" SELECTED>---</option>
+<? } ?>
 <option value="999"<? if($status == 999) echo " SELECTED"; ?>>Opened - All non-closed tickets</option>
 <?
 $query2 = squery("SELECT status_id,status_name FROM karnaf_statuses WHERE status_id!=0 AND status_id!=5 ORDER BY status_id");
@@ -178,7 +195,12 @@ INNER JOIN karnaf_cat1 AS c1 ON c1.id=c2.parent INNER JOIN karnaf_statuses AS s 
 up.priority_id=t.upriority INNER JOIN karnaf_priorities AS sp ON
 sp.priority_id=t.priority) WHERE ";
 $argv = array();
-if($status == 999) {
+if($filter != 0) {
+  $query2 = squery("SELECT id,name,querystr FROM karnaf_filters WHERE id=%d", $filter);
+  if($result2 = sql_fetch_array($query2)) $qstr .= $result2['querystr'];
+  sql_free_result($query2);
+}
+else if($status == 999) {
   $qstr .= " (t.status!=0 and t.status!=5)";
 }
 else {
