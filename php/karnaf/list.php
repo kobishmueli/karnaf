@@ -8,7 +8,7 @@ require_once("karnaf_header.php");
 CheckOperSession();
 show_title("Open Tickets");
 make_menus("Karnaf (HelpDesk)");
-if(isset($_GET['status'])) $status = $_GET['status'];
+if(isset($_GET['status']) && !empty($_GET['status'])) $status = $_GET['status'];
 else $status = 1;
 if(!$status) safe_die("Invalid status!");
 if(isset($_GET['filter'])) $filter = $_GET['filter'];
@@ -43,9 +43,7 @@ sql_free_result($query2);
 ?>
 </select>
 <select name="status" onChange="form1.submit();">
-<? if($filter != 0) { ?>
-<option value="" SELECTED>---</option>
-<? } ?>
+<? if($filter != 0) { $status = 9999; echo "<option value=\"\" SELECTED>---</option>\n"; } ?>
 <option value="999"<? if($status == 999) echo " SELECTED"; ?>>Opened - All non-closed tickets</option>
 <?
 $query2 = squery("SELECT status_id,status_name FROM karnaf_statuses WHERE status_id!=0 AND status_id!=5 ORDER BY status_id");
@@ -208,11 +206,13 @@ if($cnt > $limit) {
 #  else $myurl .= "?";
   $q = "?";
   if(isset($_GET['status'])) $q .= "status=".$_GET['status']."&";
+  if($filter != 0) $q .= "filter=".$filter."&";
   $q .= "start=".($start+$limit);
   #echo "<center>";
   if($start>0) {
     $q2 = "?";
     if(isset($_GET['status'])) $q2 .= "status=".$_GET['status']."&";
+    if($filter != 0) $q2 .= "filter=".$filter."&";
     $q2 .= "start=".($start-$limit);
     echo "<a href=\"".$q2."\">Previous Page</a> | ";
   }
