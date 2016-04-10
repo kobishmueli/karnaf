@@ -3,6 +3,9 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.15
+- Added support for custom filters.
+
 Karnaf v5.0.14
 - Cosmetic changes to list.php and mylist.php.
 - Added ulocation support to view.php.
@@ -26,6 +29,7 @@ Karnaf v5.0.14
 - Cosmetic CSS change to Karnaf_P_Critical.
 - Updated squery() to use the sql connection for mysql_real_escape_string
   (since it's using unix socket by default and won't work if mysql isn't installed locally).
+- SQL Schema fixes to let first-time users get the correct admin access.
 
 Karnaf v5.0.13
 - Encoding fixes to php/karnaf-scripts/fetch-emails.php.
