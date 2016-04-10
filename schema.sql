@@ -304,3 +304,7 @@ INSERT INTO `karnaf_statuses` VALUES (4,'Held - Possible spam',0);
 INSERT INTO `karnaf_statuses` VALUES (5,'Spam',1);
 
 INSERT INTO `users` VALUES (1,'admin','098f6bcd4621d373cade4e832627b4f6','admin@nonstop.co.il','',1426820239,1427066785,'',80,0,0,'127.0.0.1',0,'','','','System Administrator');
+
+INSERT INTO groups(name,gdesc,iskarnaf) VALUES('karnaf-admins', 'Karnaf Admins', 1);
+INSERT INTO groups(name,gdesc,iskarnaf) VALUES('karnaf-opers', 'Karnaf Operators', 1);
+INSERT INTO group_members(group_id,user_id,level) VALUES((SELECT id FROM groups WHERE name='karnaf-admins'), (SELECT id FROM users WHERE user='admin'), 30);
