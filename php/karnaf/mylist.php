@@ -195,7 +195,7 @@ sp.priority_id=t.priority) WHERE ";
 $argv = array();
 if($filter != 0) {
   $query2 = squery("SELECT id,name,querystr FROM karnaf_filters WHERE id=%d", $filter);
-  if($result2 = sql_fetch_array($query2)) $qstr .= $result2['querystr'];
+  if($result2 = sql_fetch_array($query2)) $qstr .= " ".$result2['querystr'];
   sql_free_result($query2);
 }
 else if($status == 999) {
