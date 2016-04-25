@@ -22,6 +22,7 @@ if($result = sql_fetch_array($query)) {
   if((int)$result2['file_size'] != 0) header("Content-length: ".$result2['file_size']);
   header("Content-type: ".$result2['file_type']);
   $file_ext = strtolower(substr($result2['file_name'],-4));
+  if($file_ext[0] != ".") $file_ext = strtolower(substr($result2['file_name'],-5));
   if($file_ext!=".jpg" && $file_ext!=".png") header("Content-Disposition: attachment; filename=".$result2['file_name']);
   $fn = KARNAF_UPLOAD_PATH."/".$id."/".$download.$file_ext;
   readfile($fn);
