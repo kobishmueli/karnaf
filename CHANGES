@@ -5,6 +5,8 @@
 
 Karnaf v5.0.15
 - Added support for custom filters.
+- Fixed a small bug with longer file extensions.
+- Added more times to stats.php.
 
 Karnaf v5.0.14
 - Cosmetic changes to list.php and mylist.php.
