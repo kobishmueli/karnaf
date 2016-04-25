@@ -11,12 +11,18 @@ make_menus("Karnaf (HelpDesk)");
 $today = strtotime("today 00:00:00", time());
 $today_end = strtotime("today 23:59:59", time());
 $times = array(
-                array("1", "Last Week", "last Sunday", "+604800"),
-                array("2", "Last Month", "first day of last month", "last day of last month"),
-                array("3", "Q1", "first day of January", "last day of March"),
-                array("4", "Q2", "first day of April", "last day of June"),
-                array("5", "Q3", "first day of July", "last day of September"),
-                array("6", "Q4", "first day of October", "last day of December"),
+                array("1", "Last Week", "Monday last week -1 day", "+604800"),
+                array("2", "This Week", "Monday this week -1 day", "+604800"),
+                array("3", "Last Month", "first day of last month", "last day of last month"),
+                array("4", "This Month", "first day of this month", "last day of this month"),
+                array("5", "Q1 2015", "first day of January 2015", "last day of March 2015"),
+                array("6", "Q2 2015", "first day of April 2015", "last day of June 2015"),
+                array("7", "Q3 2015", "first day of July 2015", "last day of September 2015"),
+                array("8", "Q4 2015", "first day of October 2015", "last day of December 2015"),
+                array("9", "Q1 2016", "first day of January 2016", "last day of March 2016"),
+                array("10", "Q2 2016", "first day of April 2016", "last day of June 2016"),
+                array("11", "Q3 2016", "first day of July 2016", "last day of September 2016"),
+                array("12", "Q4 2016", "first day of October 2016", "last day of December 2016"),
               );
 ?>
 <form name="form1" id="form1" method="get">
