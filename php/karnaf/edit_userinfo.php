@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -41,7 +41,7 @@ if($result = sql_fetch_array($query)) {
 </tr>
 <tr>
 <td>CC:</td>
-<td><input name="cc" type="text" value="<?=$result['cc']?>"></td>
+<td><input name="cc" type="text" value="<?=htmlspecialchars2($result['cc'])?>"></td>
 </tr>
 <? if(!defined("IRC_MODE")) { ?>
 <tr>
