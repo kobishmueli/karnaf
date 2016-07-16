@@ -3,10 +3,10 @@
 # Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
-/* KTools v1.5 */
+/* KTools v1.6 */
 
 require_once("defines.php");
-define("KARNAF_VERSION", "5.0.15");
+define("KARNAF_VERSION", "5.0.16");
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 set_magic_quotes_runtime(0);
 if(!isset($override_magicquotes) && get_magic_quotes_gpc() == 1) die("Error: Incorrect magic_quotes_gpc setting!");
