@@ -501,7 +501,8 @@ while($result = sql_fetch_array($query)) {
           else if($file_ext == ".png") $file_type = "image/png";
           else if($file_ext == ".gif") $file_type = "image/gif";
           else $file_type = "application/octet-stream";
-          if($file_ext!=".jpg" && $file_ext!=".png" && $file_ext!=".pdf" && $file_ext!=".log" && $file_ext!=".txt" && $file_ext!=".xls" && $file_ext!=".xlsx") continue; /* Skip invalid file extensions */
+          if($file_ext!=".jpg" && $file_ext!=".png" && $file_ext!=".pdf" && $file_ext!=".log" && $file_ext!=".txt" && $file_ext!=".xls" &&
+             $file_ext!=".xlsx" && $file_ext!=".doc" && $file_ext!=".docx") continue; /* Skip invalid file extensions */
           squery("INSERT INTO karnaf_files(tid,file_name,file_type,file_desc,file_size,lastupd_time) VALUES(%d,'%s','%s','%s',%d,%d)",
                  $tid, $file_name, $file_type, $file_desc, $file_size, time());
           $id = sql_insert_id();
