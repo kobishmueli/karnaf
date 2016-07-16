@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -24,6 +24,7 @@ if(isset($_POST['cat3'])) {
     $cat3_id = $result['id'];
   }
   sql_free_result($query);
+  if($isoper && !empty($_POST['assign_group'])) $rep_g = $_POST['assign_group'];
   if(!isset($cat3_id)) $error = "Invalid category provided, please try again!";
   if(isset($_POST['uphone'])) $uphone = fix_html($_POST['uphone']);
   else $uphone = "";
@@ -391,6 +392,23 @@ function open_search() {
 <tr>
 <td>Private Ticket:</td>
 <td><input name="private" type="checkbox"></td>
+</tr>
+<tr>
+<td>Assign to group:</td>
+<td>
+<select name="assign_group">
+<option value="">*** Default ***</option>
+<?
+  $query2 = squery("SELECT id,name,gdesc FROM groups WHERE iskarnaf=1 ORDER BY name");
+  while($result2 = sql_fetch_array($query2)) {
+?>
+<option value="<?=$result2['name']?>"><?=$result2['gdesc']?></option>
+<?
+  }
+  sql_free_result($query2);
+?>
+</select>
+</td>
 </tr>
 <? } ?>
 </table>
