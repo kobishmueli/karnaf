@@ -5,7 +5,10 @@
 ##################################################################
 
 require_once("karnaf_header.php");
-CheckOperSession(80);
+if(defined("STATS_GROUP")) {
+  if(!IsGroupMember(STATS_GROUP)) AccessDenied();
+}
+else CheckOperSession(80);
 show_title("Karnaf - Stats");
 make_menus("Karnaf (HelpDesk)");
 $today = strtotime("today 00:00:00", time());
