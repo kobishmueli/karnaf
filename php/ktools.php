@@ -132,6 +132,14 @@ function IsKarnafAdminSession() {
   else return 0;
 }
 
+/* IsKarnafEditorSession - check if the user has Karnaf Editor (or admin) access */
+function IsKarnafEditorSession() {
+  global $a_groups,$a_operlev;
+  if(in_array(KARNAF_EDITORS_GROUP, $a_groups) || in_array(KARNAF_ADMINS_GROUP, $a_groups)) return 1;
+  if($a_operlev==80) return 1;
+  else return 0;
+}
+
 /* IsKarnafOperSession - check if the user has Karnaf Operator access */
 function IsKarnafOperSession() {
   global $a_groups,$a_operlev;

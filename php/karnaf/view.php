@@ -437,7 +437,7 @@ Add attachment: <input type="file" style="width:100%" name="attachment-file" id=
 </tr>
 <? } ?>
 </table>
-<? if(!isset($_GET['ajax']) && (in_array($result['rep_g'], $a_groups) || IsKarnafAdminSession())) { ?>
+<? if(!isset($_GET['ajax']) && (in_array($result['rep_g'], $a_groups) || IsKarnafEditorSession())) { ?>
 <br>
 <center><a href="edit.php?id=<?=$id?>" class="edit_ticket">Edit this ticket</a></center>
 <?

@@ -18,7 +18,7 @@ if(isset($_POST['ids'])) {
   foreach($_POST['ids'] as $id) {
      $query = squery("SELECT id,status,rep_u,rep_g,memo_upd,email_upd,unick,uemail,cc,randcode FROM karnaf_tickets WHERE id=%d", $id);
      if($result = sql_fetch_array($query)) {
-       if(!IsGroupMember($result['rep_g']) && !IsKarnafAdminSession()) echo "Ticket #".$id." is assigned to another team.<br>\n";
+       if(!IsGroupMember($result['rep_g']) && !IsKarnafEditorSession()) echo "Ticket #".$id." is assigned to another team.<br>\n";
        if(isset($_POST['reassign']) && (int)$_POST['reassign']==1) {
          if(isset($_POST['reassign_oper']) && !empty($_POST['reassign_oper'])) $assign_user = $_POST['reassign_oper'];
          else $assign_user = $nick;
@@ -213,7 +213,7 @@ $cnt = 0;
 array_unshift($argv, $qstr);
 $query = squery_args($argv);
 while($result = sql_fetch_array($query)) {
-  if($a_user != $result['rep_u'] && !IsGroupMember($result['rep_g']) && ($a_user != $result['rep_cc']) && !IsGroupMember($result['rep_cc']) && (strtolower($result['rep_g'])!=PSEUDO_GROUP) && (!defined("IRC_MODE") || !IsKarnafAdminSession())) continue; /* Skip tickets for other teams */
+  if($a_user != $result['rep_u'] && !IsGroupMember($result['rep_g']) && ($a_user != $result['rep_cc']) && !IsGroupMember($result['rep_cc']) && (strtolower($result['rep_g'])!=PSEUDO_GROUP) && (!defined("IRC_MODE") || !IsKarnafEditorSession())) continue; /* Skip tickets for other teams */
   if((strtolower($showall) == "none") && !empty($result['rep_u'])) continue;
   if((strtolower($showall) == "onlymy") && empty($result['rep_u'])) continue;
   $cnt++;

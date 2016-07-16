@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -137,7 +137,7 @@ sp.priority_id=t.priority) WHERE 1";
   $query = squery_args($argv);
   $cnt = 0;
   while($result = sql_fetch_array($query)) {
-    if(!IsGroupMember($result['rep_g']) && !IsKarnafAdminSession()) continue; /* Skip tickets for other teams */
+    if(!IsGroupMember($result['rep_g']) && !IsKarnafEditorSession()) continue; /* Skip tickets for other teams */
     $cnt++;
     if($cnt > $limit) {
       echo "<tr><td colspan=\"9\" align=\"center\">*** There are more results... ***</td></tr>";

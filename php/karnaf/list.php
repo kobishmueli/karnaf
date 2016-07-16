@@ -133,7 +133,8 @@ $cnt = 0;
 array_unshift($argv, $qstr);
 $query = squery_args($argv);
 while($result = sql_fetch_array($query)) {
-  if(!IsGroupMember($result['rep_g']) && !IsKarnafAdminSession()) continue; /* Skip tickets for other teams */
+  if(!IsGroupMember($result['rep_g']) && !IsKarnafEditorSession()) continue; /* Skip other teams' tickets from non-editors */
+  if($result['is_private'] && !IsGroupMember($result['rep_g']) && !IsKarnafAdminSession()) continue; /* Skip other teams' private tickets from non-admins */
   $cnt++;
   if($cnt > $limit) break;
   $query2 = squery("SELECT count(*) AS count FROM karnaf_actions WHERE tid=%d", $result['id']);
