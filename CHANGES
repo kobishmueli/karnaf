@@ -7,6 +7,12 @@ Karnaf v5.0.15
 - Added support for custom filters.
 - Fixed a small bug with longer file extensions.
 - Added more times to stats.php.
+- Fixed escaping of the CC field on edit_userinfo.php.
+- Added more stats.
+- Added support for STATS_GROUP - a group that can view the stats page.
+- Added more valid file extensions to php/karnaf-scripts/fetch-emails.php.
+- Made karnaf-it-usa the default karnaf group if the user's location is US.
+- Cosmetic change to php/karnaf/karnaf_header.php.
 
 Karnaf v5.0.14
 - Cosmetic changes to list.php and mylist.php.
