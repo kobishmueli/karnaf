@@ -11,6 +11,7 @@ Karnaf v5.0.16
 - Added set_private feature to groups: Automatically set tickets as private if they're assigned to a group with set_private enabled.
 - Made fetch-emails.php use the mail account's default group if one is defined.
 - Changed scheduler.php to cast the schema's version as unsigned.
+- Added is_private checks to edit_actions.php, edit_replies.php, edit_ticketinfo.php, edit_userinfo.php, edit_sms.php and edit_reassign.php.
 
 Karnaf v5.0.15
 - Added support for custom filters.
