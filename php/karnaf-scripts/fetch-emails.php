@@ -462,7 +462,7 @@ while($result = sql_fetch_array($query)) {
           if(!empty($m_subject)) $reply_subject .= " - ".$m_subject;
           karnaf_email($reply_to, $reply_subject, $reply);
         }
-        $query2 = squery("SELECT autoforward FROM groups WHERE name='%s'", $rep_g);
+        $query2 = squery("SELECT autoforward,set_private FROM groups WHERE name='%s'", $rep_g);
         if($result2 = sql_fetch_array($query2)) {
           if(!empty($result2['autoforward'])) {
             /* Automatically forward new tickets to the team... */
@@ -483,6 +483,7 @@ while($result = sql_fetch_array($query)) {
             if(!empty($m_subject)) $newsubject .= " - ".$m_subject;
             karnaf_email($result2['autoforward'], $newsubject, $text);
           }
+          if((int)$result2['set_private'] == 1) squery("UPDATE karnaf_tickets SET is_private=1 WHERE id=%d", $tid);
         }
         sql_free_result($query2);
       }

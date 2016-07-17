@@ -81,6 +81,10 @@ if($result = sql_fetch_array($query)) {
      PRIMARY KEY (`id`))");
     squery("INSERT INTO karnaf_schema(version) VALUES(11)");
   }
+  if($cur_version < 12) {
+    squery("alter table groups add `set_private` tinyint(1) NOT NULL DEFAULT '0' after assign_msg");
+    squery("INSERT INTO karnaf_schema(version) VALUES(12)");
+  }
 }
 sql_free_result($query);
 

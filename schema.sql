@@ -22,6 +22,7 @@ CREATE TABLE `groups` (
   `iskarnaf` tinyint(1) NOT NULL DEFAULT '0',
   `autoforward` TEXT DEFAULT NULL,
   `assign_msg` TEXT DEFAULT NULL,
+  `set_private` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 );
 
@@ -299,6 +300,7 @@ INSERT INTO `karnaf_schema` VALUES ('8');
 INSERT INTO `karnaf_schema` VALUES ('9');
 INSERT INTO `karnaf_schema` VALUES ('10');
 INSERT INTO `karnaf_schema` VALUES ('11');
+INSERT INTO `karnaf_schema` VALUES ('12');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');
