@@ -252,7 +252,7 @@ if(isset($_POST['assign_group'])) {
 if(isset($_POST['action_text'])) {
   if(!$is_private && isset($_POST['team_action']) && ($_POST['team_action'] == "on")) $is_private = 2;
   if(!empty($_POST['action_text'])) {
-    if(!empty($_POST['onbehalf_g']) && (IsGroupMember("dalnet-aob") || IsKarnafAdminSession()) && IsGroupMember($_POST['onbehalf_g'])) {
+    if(!empty($_POST['onbehalf_g']) && (IsGroupMember(KARNAF_AOB_GROUP) || IsKarnafAdminSession()) && IsGroupMember($_POST['onbehalf_g'])) {
       /* Let SRAs/AOB/karnaf-admins add special actions */
       $group = $_POST['onbehalf_g'];
     }

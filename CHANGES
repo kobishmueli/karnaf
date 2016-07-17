@@ -12,6 +12,7 @@ Karnaf v5.0.16
 - Made fetch-emails.php use the mail account's default group if one is defined.
 - Changed scheduler.php to cast the schema's version as unsigned.
 - Added is_private checks to edit_actions.php, edit_replies.php, edit_ticketinfo.php, edit_userinfo.php, edit_sms.php and edit_reassign.php.
+- Added KARNAF_AOB_GROUP definition for dalnet-aob (members of the group can add special actions to tickets).
 
 Karnaf v5.0.15
 - Added support for custom filters.

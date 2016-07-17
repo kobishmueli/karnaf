@@ -7,6 +7,7 @@
 define("KARNAF_ADMINS_GROUP", "karnaf-admins");   // Members of the group have full access to the karnaf system
 define("KARNAF_EDITORS_GROUP", "karnaf-editors"); // Members of the group can see tickets of other groups as long as they're not private
 define("KARNAF_OPERS_GROUP", "karnaf-opers");     // Members of the group can manage their own team's tickets
+define("KARNAF_AOB_GROUP", "dalnet-aob");         // Members of the group can add special actions to tickets
 define("DB_HOST", "localhost");
 define("DB_USER", "karnaf");
 define("DB_PASS", "changeme");

@@ -84,14 +84,14 @@ if($result = sql_fetch_array($query)) {
 <tr>
 <td colspan="2">
 <textarea rows="8" style="width:99%" name="action_text" id="action_text"></textarea><br>
-<? if(IsGroupMember("dalnet-aob") || IsKarnafAdminSession()) { ?>
+<? if(IsGroupMember(KARNAF_AOB_GROUP) || IsKarnafAdminSession()) { ?>
 Action on behalf of:
 <select name="onbehalf_g">
 <option value="">---</option>
 <?
   $query2 = squery("SELECT id,name,gdesc FROM groups ORDER BY name");
   while($result2 = sql_fetch_array($query2)) {
-    if(!IsGroupMember($result2['name']) || ($result2['name']!=KARNAF_ADMINS_GROUP && $result2['name']!="dalnet-aob" && $result2['name']!="dalnet-sra" && $result2['name']!=$result['rep_g'])) continue;
+    if(!IsGroupMember($result2['name']) || ($result2['name']!=KARNAF_ADMINS_GROUP && $result2['name']!=KARNAF_AOB_GROUP && $result2['name']!="dalnet-sra" && $result2['name']!=$result['rep_g'])) continue;
 ?>
 <option value="<?=$result2['name']?>"><?=$result2['name']?></option>
 <?
