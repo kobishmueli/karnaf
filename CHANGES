@@ -15,6 +15,7 @@ Karnaf v5.0.16
 - Added KARNAF_AOB_GROUP definition for dalnet-aob (members of the group can add special actions to tickets).
 - Fixed a few mng_editsql.php bugs (used id instead of name).
 - Let admins manage the groups table via mng_editsql.php.
+- Added ktools-custom.php require to ktools.php and added an empty ktools-custom.php file.
 
 Karnaf v5.0.15
 - Added support for custom filters.
