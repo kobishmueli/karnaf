@@ -7,7 +7,7 @@
 
 require("../ktools.php");
 
-$query = squery("SELECT MAX(version) FROM karnaf_schema")
+$query = squery("SELECT MAX(CAST(version AS unsigned)) FROM karnaf_schema")
 if($result = sql_fetch_array($query)) {
   $cur_version = (int)$result[0];
   if($cur_version < 1) {
