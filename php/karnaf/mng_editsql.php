@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -21,7 +21,7 @@ $allowed_tables = array(
                       "name",
                       "priority",
                       array("parent","sqlselect","select id,name from karnaf_cat1"),
-                      array("allowed_group","sqlselect","select '' AS id,'---' AS name union select id,name FROM groups ORDER BY name"),
+                      array("allowed_group","sqlselect","select '' AS id,'---' AS name union select name AS id,name FROM groups ORDER BY name"),
                     )),
                     array("karnaf_cat3","id",array(
                       "name",
@@ -30,7 +30,7 @@ $allowed_tables = array(
                       array("default_priority","sqlselect","select priority_id,priority_name FROM karnaf_priorities"),
                       array("default_group","sqlselect","select '','---' union select name,name FROM groups WHERE iskarnaf=1"),
                       "extra",
-                      array("allowed_group","sqlselect","select '' AS id,'---' AS name union select id,name FROM groups ORDER BY name"),
+                      array("allowed_group","sqlselect","select '' AS id,'---' AS name union select name AS id,name FROM groups ORDER BY name"),
                     )),
                     array("karnaf_mail_accounts","id",array(
                           array("active","sqlselect","select 1,'Yes' union select 0,'No'"),
@@ -40,7 +40,7 @@ $allowed_tables = array(
                           "user",
                           array("pass","password"),
                           array("cat3_id","sqlselect","select cat3.id,concat(cat1.name,' - ',cat2.name,' - ',cat3.name) from (karnaf_cat3 AS cat3 LEFT JOIN karnaf_cat2 AS cat2 ON cat3.parent=cat2.id LEFT JOIN karnaf_cat1 AS cat1 ON cat1.id=cat2.parent)"),
-                          array("default_group","sqlselect","select '','---' union select id,name FROM groups WHERE iskarnaf=1"),
+                          array("default_group","sqlselect","select '','---' union select name,name FROM groups WHERE iskarnaf=1"),
                     )),
                     array("karnaf_ldap_accounts","id",array(
                           array("active","sqlselect","select 1,'Yes' union select 0,'No'"),
@@ -52,6 +52,16 @@ $allowed_tables = array(
                           "filter",
                     )),
                     array("users", "id", array("user", "pass", "email")),
+                    array("groups", "id", array(
+                          "name",
+                          "gdesc",
+                          array("isteam","sqlselect","select 0,'No' union select 1,'Yes'"),
+                          array("private_actions","sqlselect","select 0,'No' union select 1,'Yes'"),
+                          array("iskarnaf","sqlselect","select 1,'Yes' union select 0,'No'"),
+                          "autoforward",
+                          "assign_msg",
+                          array("set_private","sqlselect","select 0,'No' union select 1,'Yes'"),
+                    )),
                     array("karnaf_mail_rules","id",array(
                           array("active","sqlselect","select 1,'Yes' union select 0,'No'"),
                           "name",
