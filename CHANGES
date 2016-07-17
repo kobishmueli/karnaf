@@ -9,6 +9,7 @@ Karnaf v5.0.16
 - Updated KARNAF_VERSION to 5.0.16.
 - Removed php/karnaf/main.php (it was replaced by mylist.php long time ago).
 - Added set_private feature to groups: Automatically set tickets as private if they're assigned to a group with set_private enabled.
+- Made fetch-emails.php use the mail account's default group if one is defined.
 
 Karnaf v5.0.15
 - Added support for custom filters.

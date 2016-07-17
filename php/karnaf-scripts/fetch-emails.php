@@ -34,7 +34,7 @@ while($result = sql_fetch_array($query)) {
 }
 sql_free_result($query);
 
-$query = squery("SELECT type,host,port,user,pass,cat3_id FROM karnaf_mail_accounts WHERE active=1");
+$query = squery("SELECT type,host,port,user,pass,cat3_id,default_group FROM karnaf_mail_accounts WHERE active=1");
 while($result = sql_fetch_array($query)) {
   echo "Checking ".$result['host'].":".$result['port']."...\n";
   $type = (int)$result['type'];
@@ -253,7 +253,8 @@ while($result = sql_fetch_array($query)) {
       if(!isset($upriority)) $upriority = 0;
       /* If the user priority is *lower* than the system priority, we'll use the user priority */
       if($priority > $upriority) $priority = $upriority;
-      $rep_g = KARNAF_DEFAULT_GROUP;
+      if(!empty($result['default_group'])) $rep_g = $result['default_group'];
+      else $rep_g = KARNAF_DEFAULT_GROUP;
       $cat3_id = $result['cat3_id'];
       $extra = "";
       foreach($mail_rules as $mail_rule) {
