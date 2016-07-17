@@ -1,0 +1,3 @@
+<?
+// ktools-custom.php is where custom non-open-source code is stored...
+?>

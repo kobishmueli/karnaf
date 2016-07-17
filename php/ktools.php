@@ -5,6 +5,7 @@
 ##################################################################
 /* KTools v1.6 */
 
+require_once("ktools-custom.php");
 require_once("defines.php");
 define("KARNAF_VERSION", "5.0.16");
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
