@@ -3,7 +3,7 @@
 # Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
-/* KTools v1.6 */
+/* KTools v1.7 */
 
 require_once("ktools-custom.php");
 require_once("defines.php");
@@ -629,6 +629,24 @@ function api_create_ticket($unick, $uname, $uemail, $title, $description, $uip, 
   $id = sql_insert_id();
   if(!empty($ext1)) squery("UPDATE karnaf_tickets SET ext1='%s' WHERE id=%d", $ext1, $id);
   return $id;
+}
+
+/* API function to update or create new tickets */
+function api_create_or_update_ticket($unick, $uname, $uemail, $title, $description, $uip, $rep_g, $cat3_id=71, $ext1="", $tid) {
+  $query = squery("SELECT id,status FROM karnaf_tickets WHERE id=%d AND status!=0", $tid);
+  if($result = sql_fetch_array($query)) {
+    squery("INSERT INTO karnaf_replies(tid,title,reply,r_by,r_time,r_from,ip) VALUES(%d,'%s','%s','%s',%d,'%s','%s')",
+           $tid, $title, $description, $uname, time(), $uname, "(API)");
+    if((int)$result['status'] == 2) {
+      squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d,newuserreply=1 WHERE id=%d", time(), $tid);
+      send_memo($result2['rep_u'], "User has replied to ticket #".$result['id'].". For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
+    }
+    else squery("UPDATE karnaf_tickets SET lastupd_time=%d,newuserreply=1 WHERE id=%d", time(), $tid);
+  }
+  else $tid = api_create_ticket($unick, $uname, $uemail, $title, $description, $uip, $rep_g, $cat3_id, $ext1);
+  sql_free_result($query);
+
+  return $tid;
 }
 
 function send_sms($sms_account, $sms_to, $sms_body) {
