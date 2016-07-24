@@ -133,5 +133,8 @@ while($result = sql_fetch_array($query)) {
 }
 sql_free_result($query);
 
+/* Run custom post actions code if the scheduler_post_actions() function exists: */
+if(function_exists("scheduler_post_actions")) scheduler_post_actions();
+
 require_once("../contentpage_ftr.php");
 ?>
