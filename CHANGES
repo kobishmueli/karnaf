@@ -17,7 +17,7 @@ Karnaf v5.0.16
 - Let admins manage the groups table via mng_editsql.php.
 - Added ktools-custom.php require to ktools.php and added an empty ktools-custom.php file.
 - Added api_create_or_update_ticket() function to ktools to either create or update an existing ticket.
-- Added scheduler_post_actions() support to scheduler.php.
+- Added custom_scheduler_post_actions() support to scheduler.php.
 
 Karnaf v5.0.15
 - Added support for custom filters.
