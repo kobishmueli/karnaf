@@ -63,7 +63,7 @@ else $rep_u = "";
 <option value="">---</option>
 <option value="none"<? if(strtolower($rep_u) == "none") echo " SELECTED"; ?>>*** Not Assigned ***</option>
 <?
-$query2 = squery("SELECT DISTINCT(rep_u) FROM karnaf_tickets WHERE status!=0 AND rep_u!='' ORDER BY rep_u");
+$query2 = squery("SELECT DISTINCT(rep_u) FROM karnaf_tickets WHERE status!=0 AND status!=5 AND rep_u!='' ORDER BY rep_u");
 while($result2 = sql_fetch_array($query2)) {
 ?>
 <option value="<?=$result2['rep_u']?>"<? if($result2['rep_u'] == $rep_u) echo " SELECTED"; ?>><?=$result2['rep_u']?></option>

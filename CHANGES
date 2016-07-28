@@ -18,6 +18,7 @@ Karnaf v5.0.16
 - Added ktools-custom.php require to ktools.php and added an empty ktools-custom.php file.
 - Added api_create_or_update_ticket() function to ktools to either create or update an existing ticket.
 - Added custom_scheduler_post_actions() support to scheduler.php.
+- Added status!=5 to the operators filter on list.php.
 
 Karnaf v5.0.15
 - Added support for custom filters.
