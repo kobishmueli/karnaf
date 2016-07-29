@@ -213,7 +213,7 @@ $cnt = 0;
 array_unshift($argv, $qstr);
 $query = squery_args($argv);
 while($result = sql_fetch_array($query)) {
-  if($a_user != $result['rep_u'] && !IsGroupMember($result['rep_g']) && ($a_user != $result['rep_cc']) && !IsGroupMember($result['rep_cc']) && (strtolower($result['rep_g'])!=PSEUDO_GROUP) && (!defined("IRC_MODE") || !IsKarnafEditorSession())) continue; /* Skip tickets for other teams */
+  if($a_user != $result['rep_u'] && !IsGroupMember($result['rep_g']) && ($a_user != $result['rep_cc']) && !IsGroupMember($result['rep_cc']) && (strtolower($result['rep_g'])!=PSEUDO_GROUP || !IsKarnafEditorSession()) && (!defined("IRC_MODE") || !IsKarnafEditorSession())) continue; /* Skip tickets for other teams */
   if((strtolower($showall) == "none") && !empty($result['rep_u'])) continue;
   if((strtolower($showall) == "onlymy") && empty($result['rep_u'])) continue;
   $cnt++;
