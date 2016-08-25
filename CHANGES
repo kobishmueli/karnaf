@@ -3,6 +3,9 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.17
+- Updated KARNAF_VERSION to 5.0.17.
+
 Karnaf v5.0.16
 - Let opers choose the assigned group for new tickets they open.
 - Added KARNAF_EDITORS_GROUP support (members of this group can see tickets of other groups as long as they're not private).
