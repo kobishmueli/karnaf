@@ -33,7 +33,7 @@ if(isset($_POST['max_results'])) {
     if(!is_numeric($next)) safe_die("Invalid number for next!");
   }
   $argv = array();
-  $qstr = "SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
+  $qstr = "SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.ulocation,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS
 cat3_name,s.status_name,up.priority_name AS upriority,t.priority,sp.priority_name AS spriority,t.close_time 
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent
@@ -157,6 +157,7 @@ sp.priority_id=t.priority) WHERE 1";
     if($priority > 19) $status_style = "Karnaf_P_High"; // Red
     if($priority > 29) $status_style = "Karnaf_P_Critical";
     if($result['status'] == 0) $status_style = "Karnaf_P_Closed";
+    custom_list_item($result);
     $body = "";
     if(!empty($result['title'])) $body = "Title: ".$result['title']."\n\n";
     $body .= $result['description'];

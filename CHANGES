@@ -5,6 +5,9 @@
 
 Karnaf v5.0.17
 - Updated KARNAF_VERSION to 5.0.17.
+- Added custom_list_item() function to ktools to manipulate status styles.
+- Added custom_list_item() support to list.php, mylist.php and search.php.
+- Removed the old status style manipulation code.
 
 Karnaf v5.0.16
 - Let opers choose the assigned group for new tickets they open.

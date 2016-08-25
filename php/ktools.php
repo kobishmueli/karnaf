@@ -695,5 +695,6 @@ if(!function_exists("custom_new_ticket_ext1_check")) { function custom_new_ticke
 if(!defined("USER_FIELD")) define("USER_FIELD", "Username");
 if(!function_exists("custom_view_row_info")) { function custom_view_row_info($row, $value, $isoper) { echo $value; } }
 if(!function_exists("custom_view_more")) { function custom_view_more($result, $isoper) { } }
+if(!function_exists("custom_list_item")) { function custom_list_item($result) { } }
 
 ?>
