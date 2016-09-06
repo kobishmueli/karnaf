@@ -42,7 +42,13 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
       squery("UPDATE karnaf_tickets SET close_time=%d,lastupd_time=%d WHERE id=%d", time(), time(), $id);
       squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'The ticket has been closed.','%s','%s',%d,1,%d)", $id, $nick, $group, (time()+1), $is_private);
     }
-    else squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'Status changed','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
+    else {
+      $old_status_name = get_karnaf_status_by_id($result['status']);
+      $new_status_name = get_karnaf_status_by_id($_POST['status']);
+      squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'%s','%s','%s',%d,1,%d)", $id,
+             "Status changed from ".$old_status_name." to ".$new_status_name,
+             $nick, $group, time(), $is_private);
+    }
   }
   if($result['priority_id'] != $_POST['priority']) squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'System priority changed','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
   if($result['upriority_id'] != $_POST['upriority']) squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'User priority changed','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);

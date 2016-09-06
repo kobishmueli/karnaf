@@ -9,6 +9,7 @@ Karnaf v5.0.17
 - Added custom_list_item() support to list.php, mylist.php and search.php.
 - Removed the old status style manipulation code.
 - Added status ttl support (automatic status change after X minutes).
+- Changed edit.php to save the previous and new status names on the "Status changed" action.
 
 Karnaf v5.0.16
 - Let opers choose the assigned group for new tickets they open.

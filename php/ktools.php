@@ -3,7 +3,7 @@
 # Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
-/* KTools v1.7 */
+/* KTools v1.8 */
 
 require_once("ktools-custom.php");
 require_once("defines.php");
@@ -687,6 +687,15 @@ function send_sms($sms_account, $sms_to, $sms_body) {
 
 function endsWith($haystack, $needle) {
   return substr($haystack, -strlen($needle))===$needle;
+}
+
+function get_karnaf_status_by_id($status_id) {
+  $query = squery("SELECT status_name FROM karnaf_statuses WHERE status_id=%d", $status_id);
+  if($result = sql_fetch_array($query)) $res = $result['status_name'];
+  else $res = "N/A";
+  sql_free_result($query);
+
+  return $res;
 }
 
 if(!function_exists("custom_new_ticket_welcome")) { function custom_new_ticket_welcome() { } }
