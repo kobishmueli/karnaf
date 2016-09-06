@@ -15,6 +15,8 @@ $allowed_tables = array(
                       "status_id",
                       "status_name",
                       array("is_closed","sqlselect","select 0,'No' union select 1,'Yes'"),
+                      "ttl",
+                      array("ttl_status,"sqlselect","select status_id,status_name from karnaf_statuses order by status_id"),
                     )),
                     array("karnaf_cat1","id",array("name","priority")),
                     array("karnaf_cat2","id",array(

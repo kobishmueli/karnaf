@@ -85,6 +85,11 @@ if($result = sql_fetch_array($query)) {
     squery("alter table groups add `set_private` tinyint(1) NOT NULL DEFAULT '0' after assign_msg");
     squery("INSERT INTO karnaf_schema(version) VALUES(12)");
   }
+  if($cur_version < 13) {
+    squery("alter table karnaf_statuses add `ttl` varchar(250) NOT NULL DEFAULT '' after is_closed");
+    squery("alter table karnaf_statuses add `ttl_status` int(11) NOT NULL DEFAULT '0' after ttl");
+    squery("INSERT INTO karnaf_schema(version) VALUES(13)");
+  }
 }
 sql_free_result($query);
 
@@ -130,6 +135,21 @@ while($result = sql_fetch_array($query)) {
   #squery("INSERT INTO karnaf_memo_queue(tonick,memo) VALUES('%s','*Warning* Priority for ticket #%s has been increased to High. For more information visit: XXX/edit.php?id=%s')", $sender);
   #squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,0,1,'%s',%d,'%s','%s')", $result['id'],
   #       "Team leader was notified by MemoServ", time()+1, "System", $result['rep_g']);
+}
+sql_free_result($query);
+
+/* Search for statuses with ttl enabled */
+$query = squery("SELECT s.status_id,s.status_name,s.ttl,s.ttl_status,n.status_name AS newstatus FROM (karnaf_statuses AS s LEFT JOIN karnaf_statuses AS n ON n.status_id=s.ttl_status) WHERE s.ttl!=''");
+while($result = sql_fetch_array($query)) {
+  $ttl = (int)$result['ttl'] * 60; /* Convert minutes into seconds */
+  $query2 = squery("SELECT id,rep_g FROM karnaf_tickets WHERE status=%d AND lastupd_time<%d", $result['status_id'], time() - $ttl);
+  while($result2 = sql_fetch_array($query2)) {
+    squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,0,1,'%s',%d,'%s','%s')",
+           $result2['id'], "Status automatically changed from ".$result['status_name']." to ".$result['newstatus']." after ".$ttl." minutes",
+           time(), "System", $result2['rep_g']);
+    squery("UPDATE karnaf_tickets SET status=%d,lastupd_time=%d WHERE id=%d", $result['ttl_status'], time(), $result2['id']);
+  }
+  sql_free_result($query2);
 }
 sql_free_result($query);
 
