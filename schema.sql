@@ -99,6 +99,7 @@ CREATE TABLE `karnaf_statuses` (
   `is_closed` tinyint(1) NOT NULL DEFAULT '0',
   `ttl` varchar(250) NOT NULL DEFAULT '',
   `ttl_status` int(11) NOT NULL DEFAULT '0',
+  `priority` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`status_id`)
 );
 
@@ -311,12 +312,12 @@ INSERT INTO `karnaf_priorities` VALUES (10,'Above Normal');
 INSERT INTO `karnaf_priorities` VALUES (20,'High');
 INSERT INTO `karnaf_priorities` VALUES (30,'Critical');
 
-INSERT INTO karnaf_statuses(status_id,status_name,is_closed) VALUES (0,'Closed',1);
-INSERT INTO karnaf_statuses(status_id,status_name,is_closed) VALUES (1,'Opened',0);
-INSERT INTO karnaf_statuses(status_id,status_name,is_closed) VALUES (2,'Opened - Waiting for user reply',0);
-INSERT INTO karnaf_statuses(status_id,status_name,is_closed) VALUES (3,'Held',0);
-INSERT INTO karnaf_statuses(status_id,status_name,is_closed) VALUES (4,'Held - Possible spam',0);
-INSERT INTO karnaf_statuses(status_id,status_name,is_closed) VALUES (5,'Spam',1);
+INSERT INTO karnaf_statuses(status_id,status_name,is_closed,priority) VALUES (0,'Closed',1,0);
+INSERT INTO karnaf_statuses(status_id,status_name,is_closed,priority) VALUES (1,'Opened',0,1);
+INSERT INTO karnaf_statuses(status_id,status_name,is_closed,priority) VALUES (2,'Opened - Waiting for user reply',0,2);
+INSERT INTO karnaf_statuses(status_id,status_name,is_closed,priority) VALUES (3,'Held',0,3);
+INSERT INTO karnaf_statuses(status_id,status_name,is_closed,priority) VALUES (4,'Held - Possible spam',0,4);
+INSERT INTO karnaf_statuses(status_id,status_name,is_closed,priority) VALUES (5,'Spam',1,5);
 
 INSERT INTO `users` VALUES (1,'admin','098f6bcd4621d373cade4e832627b4f6','admin@nonstop.co.il','',1426820239,1427066785,'',80,0,0,'127.0.0.1',0,'','','','System Administrator');
 

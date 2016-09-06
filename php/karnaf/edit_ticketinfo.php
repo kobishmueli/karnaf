@@ -28,7 +28,7 @@ if($result = sql_fetch_array($query)) {
 <td>
 <select name="status">
 <?
-$query2 = squery("SELECT status_id,status_name FROM karnaf_statuses ORDER BY status_id");
+$query2 = squery("SELECT status_id,status_name FROM karnaf_statuses ORDER BY priority,status_name");
 while($result2 = sql_fetch_array($query2)) {
 ?>
 <option value="<?=$result2['status_id']?>"<? if($result['status'] == $result2['status_id']) echo " SELECTED"; ?>><?=$result2['status_name']?></option>

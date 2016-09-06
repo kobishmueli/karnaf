@@ -46,7 +46,7 @@ sql_free_result($query2);
 <? if($filter != 0) { $status = 9999; echo "<option value=\"\" SELECTED>---</option>\n"; } ?>
 <option value="999"<? if($status == 999) echo " SELECTED"; ?>>Opened - All non-closed tickets</option>
 <?
-$query2 = squery("SELECT status_id,status_name FROM karnaf_statuses WHERE status_id!=0 AND status_id!=5 ORDER BY status_id");
+$query2 = squery("SELECT status_id,status_name FROM karnaf_statuses WHERE status_id!=0 AND status_id!=5 ORDER BY priority,status_name");
 while($result2 = sql_fetch_array($query2)) {
 ?>
 <option value="<?=$result2['status_id']?>"<? if($status == $result2['status_id']) echo " SELECTED"; ?>><?=$result2['status_name']?></option>

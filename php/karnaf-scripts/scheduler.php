@@ -88,6 +88,7 @@ if($result = sql_fetch_array($query)) {
   if($cur_version < 13) {
     squery("alter table karnaf_statuses add `ttl` varchar(250) NOT NULL DEFAULT '' after is_closed");
     squery("alter table karnaf_statuses add `ttl_status` int(11) NOT NULL DEFAULT '0' after ttl");
+    squery("alter table karnaf_statuses add `priority` int(11) NOT NULL DEFAULT '0' after ttl_status");
     squery("INSERT INTO karnaf_schema(version) VALUES(13)");
   }
 }
