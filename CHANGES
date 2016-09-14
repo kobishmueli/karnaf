@@ -11,6 +11,7 @@ Karnaf v5.0.17
 - Added status ttl support (automatic status change after X minutes).
 - Changed edit.php to save the previous and new status names on the "Status changed" action.
 - Added priority to statuses in order to control the status list order.
+- Changed php/karnaf/new.php to automatically get the user's full name.
 
 Karnaf v5.0.16
 - Let opers choose the assigned group for new tickets they open.
