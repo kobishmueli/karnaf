@@ -64,6 +64,7 @@ $allowed_tables = array(
                           "autoforward",
                           "assign_msg",
                           array("set_private","sqlselect","select 0,'No' union select 1,'Yes'"),
+                          array("flags","flags",$all_gflags),
                     )),
                     array("karnaf_mail_rules","id",array(
                           array("active","sqlselect","select 1,'Yes' union select 0,'No'"),
@@ -121,7 +122,17 @@ $rows_data = array();
 if(isset($_POST['submit'])) {
   if(isset($_GET['editrow'])) {
     foreach($sql_rows as $row) {
-      if(is_array($row)) $row = $row[0];
+      if(is_array($row)) {
+        if($row[1]=="flags") {
+          $flags = 0;
+          foreach($row[2] as $flag) {
+            if(isset($_POST["es-".$row[0]."-".$flag[1]]) && $_POST["es-".$row[0]."-".$flag[1]]=="on") $flags |= $flag[0];
+          }
+          $query = squery(0, "UPDATE ".$sql_table." SET ".$row[0]."=%d WHERE ".$sql_id."=%d", $flags, $_GET['editrow']);
+          continue;
+        }
+        else $row = $row[0];
+      }
       $query = squery(0, "UPDATE ".$sql_table." SET ".$row."='%s' WHERE ".$sql_id."=%d", $_POST["es-".$row], $_GET['editrow']);
     }
     add_log($sql_table, "UPDATE ".$sql_id."=".$_GET['editrow']);
@@ -137,7 +148,17 @@ if(isset($_POST['submit'])) {
       $id = $_POST["es-".$sql_id];
     }
     foreach($sql_rows as $row) {
-      if(is_array($row)) $row = $row[0];
+      if(is_array($row)) {
+        if($row[1]=="flags") {
+          $flags = 0;
+          foreach($row[2] as $flag) {
+            if(isset($_POST["es-".$row[0]."-".$flag[1]]) && $_POST["es-".$row[0]."-".$flag[1]]=="on") $flags |= $flag[0];
+          }
+          $query = squery(0, "UPDATE ".$sql_table." SET ".$row[0]."=%d WHERE ".$sql_id."=%d", $flags, $id);
+          continue;
+        }
+        else $row = $row[0];
+      }
       if($row == $sql_id) continue; /* No need to update the primary ID since we already insrted it... */
       $query = squery(0, "UPDATE ".$sql_table." SET ".$row."='%s' WHERE ".$sql_id."=%d", $_POST["es-".$row], $id);
     }
@@ -181,6 +202,16 @@ if(!isset($_POST['submit']) && (isset($_GET['editrow']) || isset($_GET['addrow']
       }
       sql_free_result($query);
       echo '</select>';
+      echo '</td></td></tr>';
+    }
+    else if(is_array($row) && $row[1]=="flags") {
+      echo '<tr><td>'.$row[0].'</td><td><td>';
+      foreach($row[2] as $flag) {
+        if(isset($rows_data[$row[0]]) && ($rows_data[$row[0]] & $flag[0]))
+          echo '<input name="es-'.$row[0].'-'.$flag[1].'" type="checkbox" checked> '.$flag[2].'<br>';
+        else
+          echo '<input name="es-'.$row[0].'-'.$flag[1].'" type="checkbox"> '.$flag[2].'<br>';
+      }
       echo '</td></td></tr>';
     }
     else if(is_array($row) && $row[1]=="password") {
