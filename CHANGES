@@ -7,6 +7,8 @@ Karnaf v5.0.18
 - Updated KARNAF_VERSION to 5.0.18.
 - Added (specific) order by support to php/karnaf/mng_editsql.php.
 - Added flags support to php/karnaf/mng_editsql.php (in order to manage the group flags).
+- Added support for the GFLAG_NO_STATUSUPD (don't email status updates)
+  and GFLAG_MAIL_GRPASSIGN (email group when a ticket is assigned to the group) flags to php/karnaf/edit.php.
 
 Karnaf v5.0.17
 - Updated KARNAF_VERSION to 5.0.17.

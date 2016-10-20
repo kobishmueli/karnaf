@@ -214,10 +214,20 @@ if(isset($_POST['assign_group'])) {
            $id, $_POST['assign_group'], $nick, $group, (time()+1), $is_private);
     $autostatus = "The ticket has been re-assigned to ".$_POST['assign_group'].".";
     $email_update_str = "";
-    $query2 = squery("SELECT assign_msg FROM groups WHERE name='%s'", $_POST['assign_group']);
-    if(($result2 = sql_fetch_array($query2))) $email_update_str = $result2['assign_msg'];
+    $gflags = 0;
+    $query2 = squery("SELECT assign_msg,flags,autoforward FROM groups WHERE name='%s'", $_POST['assign_group']);
+    if(($result2 = sql_fetch_array($query2))) {
+      $email_update_str = $result2['assign_msg'];
+      $gflags = (int)$result2['flags'];
+      if($gflags & GFLAG_MAIL_GRPASSIGN) {
+        $newsubject = "[".strtoupper($group)."] Ticket #".$result['id'];
+        if(!empty($result['title'])) $newsubject .= " - ".$result['title'];
+        send_mail($result2['autoforward'], $newsubject, "Ticket #".$result['id']." has been assigned to your team (".$_POST['assign_group']."). For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
+      }
+    }
     sql_free_result($query2);
     if($email_update_str == "default") $email_update_str = "The ticket has been re-assigned to another team (this means your ticket has been forwarded to another team who will deal with it and you need to wait for their reply).";
+    if($gflags & GFLAG_NO_STATUSUPD) $email_update_str = "";
   }
   else if($_POST['assign_user'] != $result['rep_u']) {
     if(empty($_POST['assign_user'])) {
@@ -229,8 +239,12 @@ if(isset($_POST['assign_group'])) {
     }
     else {
      $a_type = 3;
-      $query2 = squery("SELECT private_actions FROM groups WHERE name='%s'", $result['rep_g']);
-      if(($result2 = sql_fetch_array($query2)) && $result2['private_actions']) $a_type = 4;
+      $gflags = 0;
+      $query2 = squery("SELECT private_actions,flags FROM groups WHERE name='%s'", $result['rep_g']);
+      if(($result2 = sql_fetch_array($query2))) {
+        $gflags = (int)$result2['flags'];
+        if($result2['private_actions']) $a_type = 4;
+      }
       sql_free_result($query2);
       squery("UPDATE karnaf_tickets SET rep_u='%s',lastupd_time=%d WHERE id=%d", $_POST['assign_user'], time(), $id);
       squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type) VALUES(%d,'%s','%s','%s',%d,%d)", 
@@ -248,6 +262,7 @@ if(isset($_POST['assign_group'])) {
         if(($result2 = sql_fetch_array($query2))) send_mail($result2['email'], $newsubject, "Ticket #".$result['id']." has been assigned to you. For more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']);
         sql_free_result($query2);
       }
+      if($gflags & GFLAG_NO_STATUSUPD) $email_update_str = "";
     }
   }
   /* Remove waiting for user reply status from tickets that are re-assigned */
