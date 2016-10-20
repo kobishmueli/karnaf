@@ -3,7 +3,7 @@
 # Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
-/* KTools v1.8 */
+/* KTools v1.9 */
 
 require_once("ktools-custom.php");
 require_once("defines.php");
@@ -12,6 +12,16 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 set_magic_quotes_runtime(0);
 if(!isset($override_magicquotes) && get_magic_quotes_gpc() == 1) die("Error: Incorrect magic_quotes_gpc setting!");
 if(function_exists("date_default_timezone_set")) date_default_timezone_set("UTC");
+
+/* Karnaf group flags: */
+define("GFLAG_NO_STATUSUPD",   0x1);
+define("GFLAG_MAIL_GRPASSIGN", 0x2);
+
+$all_gflags = array(
+                array(GFLAG_NO_STATUSUPD,   "nostatusupd", "Don't send status updates"),
+                array(GFLAG_MAIL_GRPASSIGN, "grpassign",   "Email group when a ticket is assigned to the group"),
+              );
+/* End of karnaf group flags. */
 
 /* safe_die - same as die() but also adds the footer and closes the database connection */
 if(!function_exists("safe_die")) {
