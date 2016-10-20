@@ -13,6 +13,7 @@ Karnaf v5.0.17
 - Added priority to statuses in order to control the status list order.
 - Changed php/karnaf/new.php to automatically get the user's full name.
 - Made sure the cc variable is set on php/karnaf-scripts/fetch-emails.php.
+- Added html escaping to php/karnaf/mng_viewlogs.php.
 
 Karnaf v5.0.16
 - Let opers choose the assigned group for new tickets they open.

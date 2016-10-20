@@ -90,7 +90,7 @@ if(isset($_POST['max_results'])) {
 <td class=<?=$class?>><?=$sdate?></td>
 <td class=<?=$class?>><?=$result['ip']?></td>
 <td class=<?=$class?>><?=$result['user']?></td>
-<td class=<?=$class?>><b><?=strtoupper($result['logtype'])?></b> -> <?=$result['action']?></td>
+<td class=<?=$class?>><b><?=strtoupper($result['logtype'])?></b> -> <?=fix_html($result['action'])?></td>
 </tr>
 <?
   }
