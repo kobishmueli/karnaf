@@ -3,6 +3,9 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.18
+- Updated KARNAF_VERSION to 5.0.18.
+
 Karnaf v5.0.17
 - Updated KARNAF_VERSION to 5.0.17.
 - Added custom_list_item() function to ktools to manipulate status styles.
