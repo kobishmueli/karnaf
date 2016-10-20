@@ -5,6 +5,7 @@
 
 Karnaf v5.0.18
 - Updated KARNAF_VERSION to 5.0.18.
+- Added (specific) order by support to php/karnaf/mng_editsql.php.
 
 Karnaf v5.0.17
 - Updated KARNAF_VERSION to 5.0.17.

@@ -101,6 +101,8 @@ foreach($allowed_tables as $x) {
     $sql_table = $x[0];
     $sql_id = $x[1];
     $sql_rows = $x[2];
+    if(!empty($x[3])) $sql_order = $x[3];
+    else $sql_order = $sql_id;
   }
 }
 if(!IsKarnafAdminSession() && !($sql_table == "test-table" && IsGroupMember("test-group"))) AccessDenied();
@@ -230,7 +232,7 @@ if(!isset($_POST['submit']) && (isset($_GET['editrow']) || isset($_GET['addrow']
 <?
   $curcol = "col2";
   $cnt = 0;
-  $query = squery(0, "SELECT ".$sql_id.",".merge_array($sql_rows)." FROM $sql_table ORDER BY ".$sql_id);
+  $query = squery(0, "SELECT ".$sql_id.",".merge_array($sql_rows)." FROM $sql_table ORDER BY ".$sql_order);
   if($query) {
     while($result = sql_fetch_array($query)) {
       $cnt++;
