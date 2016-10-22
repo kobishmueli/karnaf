@@ -9,6 +9,9 @@ Karnaf v5.0.18
 - Added flags support to php/karnaf/mng_editsql.php (in order to manage the group flags).
 - Added support for the GFLAG_NO_STATUSUPD (don't email status updates)
   and GFLAG_MAIL_GRPASSIGN (email group when a ticket is assigned to the group) flags to php/karnaf/edit.php.
+- Added the group flags (GFLAG_NO_STATUSUPD & GFLAG_MAIL_GRPASSIGN) to KTools.
+- Fixed a php/karnaf-scripts/fetch-email.php bug when the subject is empty (null).
+- Added keywords for catagories (karnaf_cat3).
 
 Karnaf v5.0.17
 - Updated KARNAF_VERSION to 5.0.17.
