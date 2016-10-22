@@ -91,6 +91,10 @@ if($result = sql_fetch_array($query)) {
     squery("alter table karnaf_statuses add `priority` int(11) NOT NULL DEFAULT '0' after ttl_status");
     squery("INSERT INTO karnaf_schema(version) VALUES(13)");
   }
+  if($cur_version < 14) {
+    squery("alter table karnaf_cat3 add `keywords` TEXT NOT NULL DEFAULT '' after allowed_group");
+    squery("INSERT INTO karnaf_schema(version) VALUES(14)");
+  }
 }
 sql_free_result($query);
 
@@ -151,6 +155,18 @@ while($result = sql_fetch_array($query)) {
     squery("UPDATE karnaf_tickets SET status=%d,lastupd_time=%d WHERE id=%d", $result['ttl_status'], time(), $result2['id']);
   }
   sql_free_result($query2);
+}
+sql_free_result($query);
+
+/* Set categories for open tickets according to the keywords (this should really be moved to php/karnaf-scripts/fetch-emails.php once it becomes stable) -Kobi. */
+$query = squery("SELECT id,title,description,cat3_id FROM karnaf_tickets WHERE status IN (SELECT status_id FROM karnaf_statuses WHERE is_closed=0) AND cat3_id IN (SELECT cat3_id FROM karnaf_mail_accounts WHERE active=1)");
+while($result = sql_fetch_array($query)) {
+  $new_cat3 = find_karnaf_cat_by_keyword($result['title'], $result['description']);
+  if($new_cat3 != 0) {
+    squery("UPDATE karnaf_tickets SET cat3_id=%d WHERE id=%d", $new_cat3, $result['id']);
+    if(defined("KARNAF_DEBUG") && KARNAF_DEBUG==1) squery("INSERT INTO karnaf_debug(tid,body) VALUES(%d,'%s')",
+                                                          $result['id'], "Category changed from ".$result['cat3_id']." to ".$new_cat3);
+  }
 }
 sql_free_result($query);
 

@@ -708,6 +708,69 @@ function get_karnaf_status_by_id($status_id) {
   return $res;
 }
 
+function find_karnaf_cat_by_keyword($title, $description) {
+  global $cached_cats;
+
+  /* Let's only cache the categories and keywords once... */
+  if(!isset($cached_cats)) {
+    $cached_cats = array();
+    $query = squery("SELECT id,keywords FROM karnaf_cat3 WHERE keywords!=''");
+    while($result = sql_fetch_array($query)) {
+      if(strchr($result['keywords'],",")) $cached_cats[$result['id']] = explode(",",$result['keywords']);
+      else $cached_cats[$result['id']] = array($result['keywords']);
+    }
+    sql_free_result($query);
+  }
+
+  $maxpoints = 0;
+  $maxcat = 0;
+  foreach($cached_cats as $cat => $keywords) {
+    $points[$cat] = 0;
+    foreach($keywords as $keyword) {
+      $lower_keyword = strtolower($keyword);
+      $found = stristr($title,$keyword);
+      if(!$found) $found = stristr($description,$keyword);
+      #Was used for debugging:
+      #if($found) echo "search=".$keyword." found=".substr($found,0,10)."   --- ".(isset($found[strlen($keyword)])?$found[strlen($keyword)]:"<NULL>")."\n";
+      if($found && (!isset($found[strlen($keyword)])) || $found[strlen($keyword)]==" " || $found[strlen($keyword)]=="." || $found[strlen($keyword)]=="/") {
+        if($lower_keyword == "problem") $points[$cat] += 2;
+        else if($lower_keyword == "feature") $points[$cat] += 2;
+        else if($lower_keyword == "request") $points[$cat] += 1;
+        else if($lower_keyword == "hardware") $points[$cat] += 1;
+        else if($lower_keyword == "user") $points[$cat] += 1;
+        else if($lower_keyword == "computer") $points[$cat] += 1;
+        else if($lower_keyword == "desktop") $points[$cat] += 1;
+        else if($lower_keyword == "install") $points[$cat] += 1;
+        else if($lower_keyword == "add") $points[$cat] += 1;
+        else if($lower_keyword == "adding") $points[$cat] += 1;
+        else if($lower_keyword == "create") $points[$cat] += 1;
+        else if($lower_keyword == "email") $points[$cat] += 1;
+        else if($lower_keyword == "network") $points[$cat] += 1;
+        else if($lower_keyword == "aws") $points[$cat] += 1;
+        else if($lower_keyword == "permission") $points[$cat] += 1;
+        else if($lower_keyword == "permissions") $points[$cat] += 1;
+        else if($lower_keyword == "access") $points[$cat] += 1;
+        else if(strlen($lower_keyword) > 10) $points[$cat] += 10;
+        else if(strlen($lower_keyword) > 5) $points[$cat] += 5;
+        else $points[$cat] += 3;
+      }
+      else {
+        /* If we didn't find a match, let's "punish" them for common words... */
+        if($lower_keyword == "problem") $points[$cat] -= 3;
+        if($lower_keyword == "aws") $points[$cat] -= 3;
+      }
+    }
+    if($points[$cat] > $maxpoints) {
+      $maxpoints = $points[$cat];
+      $maxcat = $cat;
+    }
+  }
+
+  if($maxpoints > 2) return $maxcat;
+
+  return 0;
+}
+
 if(!function_exists("custom_new_ticket_welcome")) { function custom_new_ticket_welcome() { } }
 if(!function_exists("custom_new_ticket_thankyou")) { function custom_new_ticket_thankyou() { } }
 if(!function_exists("custom_new_ticket_ext1_check")) { function custom_new_ticket_ext1_check($ext1) { } }

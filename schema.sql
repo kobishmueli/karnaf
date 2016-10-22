@@ -64,6 +64,7 @@ CREATE TABLE `karnaf_cat3` (
   `default_group` text NOT NULL,
   `extra` text,
   `allowed_group` text,
+  `keywords` text NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 );
 
@@ -305,6 +306,7 @@ INSERT INTO `karnaf_schema` VALUES ('10');
 INSERT INTO `karnaf_schema` VALUES ('11');
 INSERT INTO `karnaf_schema` VALUES ('12');
 INSERT INTO `karnaf_schema` VALUES ('13');
+INSERT INTO `karnaf_schema` VALUES ('14');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');

@@ -34,6 +34,7 @@ $allowed_tables = array(
                       array("default_group","sqlselect","select '','---' union select name,name FROM groups WHERE iskarnaf=1"),
                       "extra",
                       array("allowed_group","sqlselect","select '' AS id,'---' AS name union select name AS id,name FROM groups ORDER BY name"),
+                      "keywords",
                     )),
                     array("karnaf_mail_accounts","id",array(
                           array("active","sqlselect","select 1,'Yes' union select 0,'No'"),
