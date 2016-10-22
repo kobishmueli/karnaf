@@ -58,7 +58,8 @@ while($result = sql_fetch_array($query)) {
     foreach ($iresult as $overview) {
       $m_id = $overview->msgno;
       $m_from = $overview->from;
-      $m_subject = $overview->subject;
+      if(isset($overview->subject)) $m_subject = $overview->subject;
+      else $m_subject = "";
       $m_msgid = $overview->message_id;
       if($overview->seen == 0) $m_new = 1;
       else $m_new = 0;
