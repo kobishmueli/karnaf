@@ -292,7 +292,7 @@ function open_search() {
 <? } ?>
 <tr>
 <td>Name:</td>
-<td><input name="uname" type="text" value="<?=$a_fullname?>"></td>
+<td><input name="uname" type="text" value="<?=($isoper?"":$a_fullname)?>"></td>
 </tr>
 <tr>
 <td>E-Mail:</td>
