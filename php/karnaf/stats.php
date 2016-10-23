@@ -25,8 +25,9 @@ $times = array(
                 array("9", "Q1 2016", "first day of January 2016", "last day of March 2016"),
                 array("10", "Q2 2016", "first day of April 2016", "last day of June 2016"),
                 array("11", "Q3 2016", "first day of July 2016", "last day of September 2016"),
-                array("12", "Last Year", "first day of January last year", "last day of December last year"),
-                array("13", "This Year", "first day of January this year", "last day of December this year"),
+                array("12", "Q4 2016", "first day of October 2016", "last day of December 2016"),
+                array("13", "Last Year", "first day of January last year", "last day of December last year"),
+                array("14", "This Year", "first day of January this year", "last day of December this year"),
               );
 ?>
 <form name="form1" id="form1" method="get">
