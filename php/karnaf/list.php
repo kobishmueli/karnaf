@@ -128,7 +128,7 @@ $qstr .= " ORDER BY t.priority DESC,t.open_time";
 $limit = 100;
 if(isset($_GET['start'])) $start = (int)$_GET['start'];
 else $start = 0;
-$qstr .= " LIMIT ".$start.",".($limit+1);
+$qstr .= " LIMIT ".$start.",".($limit*2);
 $cnt = 0;
 array_unshift($argv, $qstr);
 $query = squery_args($argv);
