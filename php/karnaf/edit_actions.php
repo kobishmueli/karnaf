@@ -119,7 +119,7 @@ Admin CC:
   $query3 = squery("SELECT DISTINCT(u.user),u.fullname FROM (group_members AS gm INNER JOIN users AS u ON gm.user_id=u.id) ".
                    "WHERE gm.group_id IN (SELECT id FROM groups WHERE iskarnaf=1) ORDER BY u.user");
   while($result3 = sql_fetch_array($query3)) {
-    if(empty($result3['fullname'])) $result3['fullname'] = $result3['user'];
+    if(defined("IRC_MODE") || empty($result3['fullname'])) $result3['fullname'] = $result3['user'];
 ?>
 <option value="<?=$result3['user']?>"><?=$result3['fullname']?></option>
 <?
