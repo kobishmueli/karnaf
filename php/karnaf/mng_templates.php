@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -37,7 +37,7 @@ $r_id = "";
 <th>Subject</th>
 </tr>
 <?
-  $query = squery("SELECT t.id,g.name,t.subject,t.body FROM (karnaf_templates AS t INNER JOIN groups AS g ON g.id=t.group_id)");
+  $query = squery("SELECT t.id,g.name,t.subject,t.body FROM (karnaf_templates AS t INNER JOIN groups AS g ON g.id=t.group_id) ORDER BY subject");
   while($result = sql_fetch_array($query)) {
     if(isset($_GET['edit']) && $result['id']==$_GET['edit']) {
       $r_cmd = "Edit";
