@@ -15,6 +15,10 @@ Karnaf v5.0.18
 - Doubled the actual query limit on php/karnaf/list.php to make sure the list won't truncated before we reach the limit (due to permissions continues).
 - Order the karnaf templates by subject.
 - Cosmetic CSS changes on php/karnaf/karnaf_header.php.
+- Added 2016 Q4 to php/karnaf/stats.php.
+- Changed php/karnaf/edit_actions.php not to use full names when running in IRC_MODE.
+- Fixed php/karnaf/new.php not to fill the full name information for opers (it should fill it only for users).
+- Fixed a bug on php/karnaf/new.php when running in IRC_MODE: setinfo() js function tried to update uphone (which doesn't exist in IRC_MODE) and failed.
 
 Karnaf v5.0.17
 - Updated KARNAF_VERSION to 5.0.17.
