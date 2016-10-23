@@ -12,6 +12,9 @@ Karnaf v5.0.18
 - Added the group flags (GFLAG_NO_STATUSUPD & GFLAG_MAIL_GRPASSIGN) to KTools.
 - Fixed a php/karnaf-scripts/fetch-email.php bug when the subject is empty (null).
 - Added keywords for catagories (karnaf_cat3).
+- Doubled the actual query limit on php/karnaf/list.php to make sure the list won't truncated before we reach the limit (due to permissions continues).
+- Order the karnaf templates by subject.
+- Cosmetic CSS changes on php/karnaf/karnaf_header.php.
 
 Karnaf v5.0.17
 - Updated KARNAF_VERSION to 5.0.17.
