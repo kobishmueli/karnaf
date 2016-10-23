@@ -246,7 +246,9 @@ function setinfo(username,name,email,phone) {
   form1.unick.value = username;
   form1.uname.value = name;
   form1.uemail.value = email;
+<? if(!defined("IRC_MODE")) { ?>
   form1.uphone.value = phone;
+<? } ?>
 }
 
 function open_search() {
