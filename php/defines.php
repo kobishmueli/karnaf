@@ -23,4 +23,5 @@ define("KARNAF_DEFAULT_GROUP", "karnaf-helpdesk");
 define("KARNAF_UPLOAD_PATH", "/var/www/karnaf/upload");
 define("KARNAF_DEBUG", 0);
 define("PSEUDO_GROUP", "karnaf-it-all");
+define("KARNAF_HIDE_TITLE_FROM_LIST", 0); // Don't show the title on list.php and mylist.php
 ?>

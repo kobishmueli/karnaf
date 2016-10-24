@@ -5,6 +5,7 @@
 
 Karnaf v5.0.19
 - Updated KARNAF_VERSION to 5.0.19.
+- Added an option (KARNAF_HIDE_TITLE_FROM_LIST) to hide the title from list.php and mylist.php (disabled by default).
 
 Karnaf v5.0.18
 - Updated KARNAF_VERSION to 5.0.18.

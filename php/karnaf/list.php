@@ -78,7 +78,9 @@ sql_free_result($query2);
 <tr class="Karnaf_L_Head">
 <td>ID</td>
 <td>User</td>
+<? if(!(defined("KARNAF_HIDE_TITLE_FROM_LIST") && KARNAF_HIDE_TITLE_FROM_LIST==1)) { ?>
 <td>Title</td>
+<? } ?>
 <td>Assigned to</td>
 <td>Priority</td>
 <td>Open Date</td>
@@ -173,8 +175,12 @@ if(strlen($userinfo) > 30) $userinfo = substr($userinfo,0,30)."...";
 echo $userinfo;
 ?>
 </td>
+<?
+  if(!(defined("KARNAF_HIDE_TITLE_FROM_LIST") && KARNAF_HIDE_TITLE_FROM_LIST==1)) {
+?>
 <td><?=str_replace("<","&lt;",$result['title'])?></td>
 <?
+  }
   if($result['rep_u'] == $nick) echo "<td class=\"karnaf_my_ticket\">".$result['rep_u']."</td>\n";
   else if(!empty($result['rep_u'])) echo "<td><span title=\"".$result['rep_g']."\" style=\"cursor:pointer\">".$result['rep_u']."</span></td>\n";
   else if(IsGroupMember($result['rep_g'])) echo "<td class=\"karnaf_my_team\">".$result['rep_g']."</td>\n";
