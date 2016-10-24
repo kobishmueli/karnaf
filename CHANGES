@@ -19,6 +19,9 @@ Karnaf v5.0.18
 - Changed php/karnaf/edit_actions.php not to use full names when running in IRC_MODE.
 - Fixed php/karnaf/new.php not to fill the full name information for opers (it should fill it only for users).
 - Fixed a bug on php/karnaf/new.php when running in IRC_MODE: setinfo() js function tried to update uphone (which doesn't exist in IRC_MODE) and failed.
+- Fixed a bug on php/karnaf/search.php when the links didn't work if the page was loaded without a frame.
+- php/karnaf/check_user.php is now disabled when running in IRC_MODE.
+- Cosmetic changes to php/karnaf/list.php (now using css class instead of bgcolor).
 
 Karnaf v5.0.17
 - Updated KARNAF_VERSION to 5.0.17.
