@@ -164,7 +164,7 @@ sp.priority_id=t.priority) WHERE 1";
     $body = str_replace("\"","''",$body);
     $body = str_replace("<","&lt;",$body);
 ?>
-<tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.parent.main.location.href="edit.php?id=<?=$result['id']?>">
+<tr class="<?=$status_style?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:window.location.href="edit.php?id=<?=$result['id']?>">
 <td><span title="<?=$body?>" style="cursor:pointer"><?=$result['id']?></span></td>
 <td><?=$result['unick']?></td>
 <td><?=$result['opened_by']?></td>
