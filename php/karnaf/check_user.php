@@ -1,11 +1,12 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
 require_once("karnaf_header.php");
 CheckOperSession();
+if(defined("IRC_MODE")) safe_die("This feature is not available when running in IRC_MODE.");
 if(!isset($_GET['ajax'])) {
   show_title("Check User");
   make_menus("Karnaf (HelpDesk)");
