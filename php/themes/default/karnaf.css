@@ -94,6 +94,12 @@ td.karnaf_not_my_team {
   border: 1px solid Black;
 }
 
+td.karnaf_my_ticket {
+  color: Black;
+  background-color: Green;
+  border: 1px solid Black;
+}
+
 td.ticket_body {
   background-color: White;
   color: Black;

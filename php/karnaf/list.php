@@ -175,7 +175,7 @@ echo $userinfo;
 </td>
 <td><?=str_replace("<","&lt;",$result['title'])?></td>
 <?
-  if($result['rep_u'] == $nick) echo "<td bgcolor=\"green\">".$result['rep_u']."</td>\n";
+  if($result['rep_u'] == $nick) echo "<td class=\"karnaf_my_ticket\">".$result['rep_u']."</td>\n";
   else if(!empty($result['rep_u'])) echo "<td><span title=\"".$result['rep_g']."\" style=\"cursor:pointer\">".$result['rep_u']."</span></td>\n";
   else if(IsGroupMember($result['rep_g'])) echo "<td class=\"karnaf_my_team\">".$result['rep_g']."</td>\n";
   else echo "<td class=\"karnaf_not_my_team\">".$result['rep_g']."</td>\n";
