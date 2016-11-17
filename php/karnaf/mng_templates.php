@@ -34,7 +34,7 @@ $r_id = "";
 <tr class="Karnaf_Head2">
 <th>ID</th>
 <th>Group</th>
-<th>Subject</th>
+<th>Template Name</th>
 </tr>
 <?
   $query = squery("SELECT t.id,g.name,t.subject,t.body FROM (karnaf_templates AS t INNER JOIN groups AS g ON g.id=t.group_id) ORDER BY subject");
@@ -68,7 +68,7 @@ $r_id = "";
 <table border="1">
 <tr class="Karnaf_Head2"><th colspan="2"><?=$r_cmd?> template</th></tr>
 <tr>
-<td>Subject:</td>
+<td>Template Name:</td>
 <td><input name="subject" size="30" type="text" value="<?=$r_subject?>"></td>
 </tr>
 <tr>
