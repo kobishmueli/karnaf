@@ -95,6 +95,15 @@ if($result = sql_fetch_array($query)) {
     squery("alter table karnaf_cat3 add `keywords` TEXT NOT NULL DEFAULT '' after allowed_group");
     squery("INSERT INTO karnaf_schema(version) VALUES(14)");
   }
+  if($cur_version < 15) {
+    squery("CREATE TABLE `karnaf_watching` (
+     `tid` int(11) NOT NULL,
+     `user` varchar(30) NOT NULL DEFAULT '',
+     `fullname` varchar(250) NOT NULL DEFAULT '',
+     `timestamp` bigint(14) DEFAULT NULL,
+     KEY `tid` (`tid`));");
+    squery("INSERT INTO karnaf_schema(version) VALUES(15)");
+  }
 }
 sql_free_result($query);
 
@@ -169,6 +178,9 @@ while($result = sql_fetch_array($query)) {
   }
 }
 sql_free_result($query);
+
+/* Delete karnaf_watching rows that are older than 5 minutes */
+squery("DELETE FROM karnaf_watching WHERE timestamp<%d", (time()-60*5));
 
 /* Run custom post actions code if the scheduler_post_actions() function exists: */
 if(function_exists("custom_scheduler_post_actions")) custom_scheduler_post_actions();

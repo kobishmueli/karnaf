@@ -289,6 +289,14 @@ CREATE TABLE `karnaf_filters` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `karnaf_watching` (
+  `tid` int(11) NOT NULL,
+  `user` varchar(30) NOT NULL DEFAULT '',
+  `fullname` varchar(250) NOT NULL DEFAULT '',
+  `timestamp` bigint(14) DEFAULT NULL,
+  KEY `tid` (`tid`)
+);
+
 CREATE TABLE `karnaf_schema` (
   `version` varchar(30) NOT NULL DEFAULT ''
 );
@@ -307,6 +315,7 @@ INSERT INTO `karnaf_schema` VALUES ('11');
 INSERT INTO `karnaf_schema` VALUES ('12');
 INSERT INTO `karnaf_schema` VALUES ('13');
 INSERT INTO `karnaf_schema` VALUES ('14');
+INSERT INTO `karnaf_schema` VALUES ('15');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');

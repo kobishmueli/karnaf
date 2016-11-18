@@ -523,6 +523,39 @@ function open_search() {
   window.open("searchuser.php","searchwin","status=0,toolbar=0,location=0,scrollbars=1,width=500,height=200");
 }
 
+function do_reportwatch_change() {
+    if (xmlhttpstatus.readyState==4) {
+        if (xmlhttpstatus.status==200) {
+            document.getElementById('status').innerHTML = xmlhttpstatus.responseText;
+        }
+        xmlhttpstatus = null;
+    }
+}
+
+function report_watch() {
+  // Ajax stuff:
+  var url = "ajax_edit.php?id=<?=$id?>&rand=" + Math.random();
+  xmlhttpstatus=null;
+  if (window.XMLHttpRequest) {// code for all new browsers
+      xmlhttpstatus=new XMLHttpRequest();
+  }
+  else if (window.ActiveXObject) {// code for IE5 and IE6
+      xmlhttpstatus=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  if (xmlhttpstatus!=null) {
+      xmlhttpstatus.onreadystatechange=do_reportwatch_change;
+      xmlhttpstatus.open("GET",url,true);
+      xmlhttpstatus.send(null);
+  }
+  else {
+      alert("Your browser does not support XMLHTTP.");
+  }
+  // End of the ajax stuff
+  setTimeout('report_watch()', 20000);
+}
+
+report_watch();
+
 function do_closewarning() {
     if (ischanged && document.getElementById('reply_text') && document.getElementById('reply_text').value != '') {
       return "Your changes will *NOT* be saved.";
