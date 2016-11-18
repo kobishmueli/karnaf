@@ -171,6 +171,27 @@ else $showall = "";
 </select>
 <form name="checks" id="checks" method="post">
 <br><br>
+<?
+$query2 = squery("SELECT t.status,count(*) AS cnt,s.status_name FROM (karnaf_tickets AS t INNER JOIN karnaf_statuses AS s ON s.status_id=t.status) WHERE t.status!=0 AND t.status!=%d AND s.is_closed=0 AND t.rep_u='%s' GROUP BY t.status ORDER BY s.priority", $status, $a_user);
+while($result2 = sql_fetch_array($query2)) {
+  echo "You have ".$result2['cnt']." <a href=\"?status=".$result2['status']."\">".$result2['status_name']."</a> ticket".((int)$result2['cnt']==1?"":"s")." assigned to yourself.<br>";
+}
+sql_free_result($query2);
+foreach($a_groups as $grp) {
+  if($grp == "all-users") continue;
+  $query2 = squery("SELECT t.status,count(*) AS cnt,s.status_name FROM (karnaf_tickets AS t INNER JOIN karnaf_statuses AS s ON s.status_id=t.status) WHERE t.status!=0 AND t.status!=%d AND s.is_closed=0 AND t.rep_g='%s' AND t.rep_u='' GROUP BY t.status ORDER BY s.priority", $status, $grp);
+  while($result2 = sql_fetch_array($query2)) {
+    $tickets = (int)$result2['cnt'];
+    if($tickets > 0) {
+      echo "You have $tickets <a href=\"list.php?group=".$grp."&status=".$result2['status']."\">".$result2['status_name']."</a> ticket";
+      if($tickets != 1) echo "s";
+      echo " assigned to ".$grp.".<br>";
+    }
+  }
+  sql_free_result($query2);
+}
+?>
+<br>
 <table>
 <tr class="Karnaf_L_Head">
 <td><input name="allbox" type="checkbox" onClick="javascript:CheckAll()"></td>
