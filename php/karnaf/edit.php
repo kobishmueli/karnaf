@@ -76,6 +76,7 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
       # Merge replies...
       $query3 = squery("SELECT title,reply,r_time,r_by,r_from,ip,message_id FROM karnaf_replies WHERE tid=%d", $id);
       while(($result3 = sql_fetch_array($query3))) {
+        if(!isset($result3['title'])) $result3['title'] = "";
         squery("INSERT INTO karnaf_replies(tid,title,reply,r_time,r_by,r_from,ip,message_id) VALUES(%d,'%s','%s',%d,'%s','%s','%s','%s')",
                $merged_to, $result3['title'], $result3['reply'], $result3['r_time'], $result3['r_by'], $result3['r_from'], $result3['ip'], $result3['message_id']);
       }
