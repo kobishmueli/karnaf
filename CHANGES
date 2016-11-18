@@ -6,6 +6,12 @@
 Karnaf v5.0.19
 - Updated KARNAF_VERSION to 5.0.19.
 - Added an option (KARNAF_HIDE_TITLE_FROM_LIST) to hide the title from list.php and mylist.php (disabled by default).
+- Cosmetic change: Subject --> Template name.
+- Made php/karnaf-scripts/fetch-emails.php ignore emails from MY_EMAIL define.
+- Updated php/karnaf/mylist.php to show summary of other ticket statuses.
+- Added support for acknowledging user replies.
+- Fixed a possible bug when merging tickets that have replies with empty subjects.
+- Added new feature: Let operators know when other operators are editing the same ticket they are.
 
 Karnaf v5.0.18
 - Updated KARNAF_VERSION to 5.0.18.
