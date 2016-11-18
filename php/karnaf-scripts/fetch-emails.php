@@ -238,6 +238,7 @@ while($result = sql_fetch_array($query)) {
       else if(preg_match("/^(.*)/", $m_from, $matches)) {
         $uname = $matches[1];
       }
+      if(strstr($m_from,MY_EMAIL)) continue;
       if(strstr($m_from,"noreply")) continue;
       if(strstr($m_from,"no-reply")) continue;
       if(stristr($m_from,"users@dal.net")) continue;
