@@ -3,7 +3,7 @@
 # Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
-/* KTools v1.9 */
+/* KTools v1.10 */
 
 require_once("ktools-custom.php");
 require_once("defines.php");
@@ -16,10 +16,12 @@ if(function_exists("date_default_timezone_set")) date_default_timezone_set("UTC"
 /* Karnaf group flags: */
 define("GFLAG_NO_STATUSUPD",   0x1);
 define("GFLAG_MAIL_GRPASSIGN", 0x2);
+define("GFLAG_CANACK_USERREPLY", 0x4);
 
 $all_gflags = array(
                 array(GFLAG_NO_STATUSUPD,   "nostatusupd", "Don't send status updates"),
                 array(GFLAG_MAIL_GRPASSIGN, "grpassign",   "Email group when a ticket is assigned to the group"),
+                array(GFLAG_CANACK_USERREPLY, "canackuserreply", "Opers can acknowledge user replies"),
               );
 /* End of karnaf group flags. */
 

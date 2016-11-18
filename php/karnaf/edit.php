@@ -387,6 +387,7 @@ function load_page(id) {
     if (id == 7) url = 'check_user.php?tid=<?=$id?>&uuser=<?=$unick?>&ajax=1';
     if (id == 8) url = 'edit_replies.php?id=<?=$id?>&ajax=1&short=1';
     if (id == 9) url = 'edit_sms.php?id=<?=$id?>&ajax=1';
+    if (id == 10) url = 'view.php?id=<?=$id?>&ajax=1&ack=1';
     url = url + "&rand=" + Math.random();
     xmlhttp=null;
     if (window.XMLHttpRequest) {// code for all new browsers
@@ -557,6 +558,13 @@ window.onload = auto_load;
 <input name="check_user" type="button" value="Check User" onClick="javascript:load_page(7)">
 <input name="send_sms" type="button" value="SMS" onClick="javascript:load_page(9)">
 <? } ?>
+<?
+$query2 = squery("SELECT flags FROM groups WHERE name='%s'", $result['rep_g']);
+if(($result2 = sql_fetch_array($query2))) {
+  if((int)$result2['flags'] & GFLAG_CANACK_USERREPLY) echo "<input name=\"ack_userreply\" type=\"button\" value=\"Ack User Reply\" onClick=\"javascript:load_page(10)\">\n";
+}
+sql_free_result($query2);
+?>
 </center>
 <br><br>
 <span id="Edit_Space">

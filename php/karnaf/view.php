@@ -45,7 +45,7 @@ $isadmin = 0;
 $query = squery("SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.ulocation,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS 
 cat3_name,s.status_name,up.priority_name AS upriority,sp.priority_name AS priority,c3.extra,t.ext1,t.ext2,t.ext3,t.merged_to,t.cc,
-g.private_actions,t.lastupd_time 
+g.private_actions,t.lastupd_time,t.newuserreply 
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent 
 INNER JOIN karnaf_cat1 AS c1 ON c1.id=c2.parent INNER JOIN karnaf_statuses AS s ON s.status_id=t.status INNER JOIN karnaf_priorities AS up ON 
 up.priority_id=t.upriority INNER JOIN karnaf_priorities AS sp ON sp.priority_id=t.priority LEFT JOIN groups AS g ON g.name=t.rep_g) WHERE t.id=%d", $id);
@@ -79,6 +79,21 @@ if($result = sql_fetch_array($query)) {
     add_log("karnaf_view", $result['id']);
     if(isset($_GET['usermode'])) $isoper = $isadmin = 0;
     else make_menus("Karnaf (HelpDesk)");
+    if(isset($_GET['ack']) && (int)$result['newuserreply']==1) {
+      $query2 = squery("SELECT private_actions,flags FROM groups WHERE name='%s'", $result['rep_g']);
+      if(($result2 = sql_fetch_array($query2))) {
+        if($result2['private_actions']) $is_private = 2;
+        else $is_private = 0;
+        if((int)$result2['flags'] & GFLAG_CANACK_USERREPLY) {
+          squery("UPDATE karnaf_tickets SET lastupd_time=%d,newuserreply=0 WHERE id=%d AND newuserreply=1", time(), $id);
+          squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'User reply acknowledged','%s','%s',%d,1,%d)", $id,
+                 $nick, $result['rep_g'], time(), $is_private);
+          echo "<div class=\"status\">User reply has been acknowledged.</div><br>\r\n";
+        }
+        else echo "<div class=\"status_err\">Error: You don't have access to acknowledge this ticket.</div><br>\r\n";
+      }
+    }
+    else if(isset($_GET['ack']) && (int)$result['newuserreply']==0) echo "<div class=\"status_err\">Error: There is nothing to acknowledge.</div><br>\r\n";
   }
   if($isoper && defined("IRC_MODE")) echo "<center>*** You are an IRC Operator and see things users don't ***</center><br>\r\n";
 ?>
