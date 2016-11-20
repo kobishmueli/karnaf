@@ -526,7 +526,11 @@ function open_search() {
 function do_reportwatch_change() {
     if (xmlhttpstatus.readyState==4) {
         if (xmlhttpstatus.status==200) {
-            document.getElementById('status').innerHTML = xmlhttpstatus.responseText;
+            if (xmlhttpstatus.responseText.length > 0) {
+                document.getElementById('status').innerHTML = xmlhttpstatus.responseText;
+            } else {
+                document.getElementById('status').innerHTML = '<?=$autostatus?>';
+            }
         }
         xmlhttpstatus = null;
     }
