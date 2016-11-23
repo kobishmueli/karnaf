@@ -8,6 +8,7 @@ require_once("karnaf_header.php");
 CheckOperSession();
 show_title("Search Tickets");
 make_menus("Karnaf (HelpDesk)");
+
 if(isset($_POST['max_results'])) {
 ?>
 <table border="1" width="90%" bgcolor="White" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
@@ -108,9 +109,6 @@ sp.priority_id=t.priority) WHERE 1";
     $qstr .= " AND t.priority=%d";
     array_push($argv, $_POST['priority']);
   }
-  if((!IsKarnafAdminSession()) || !isset($_POST['show_private']) || $_POST['show_private']!="on") {
-    $qstr .= " AND t.is_private!=1";
-  }
   if(!empty($_POST['search_template'])) {
     $time_start = time();
     if($_POST['search_template'] == "monthly") $time_start = $time_start - 2592000;
@@ -136,7 +134,10 @@ sp.priority_id=t.priority) WHERE 1";
   array_unshift($argv, $qstr);
   $query = squery_args($argv);
   $cnt = 0;
+  if(IsKarnafAdminSession() && isset($_POST['show_private']) && $_POST['show_private']=="on") $adminshowprivate = 1;
+  else $adminshowprivate = 0;
   while($result = sql_fetch_array($query)) {
+    if($result['is_private']==1 && !IsGroupMember($result['rep_g']) && !$adminshowprivate) continue; /* Skip private tickets for other teams */
     if(!IsGroupMember($result['rep_g']) && !IsKarnafEditorSession()) continue; /* Skip tickets for other teams */
     $cnt++;
     if($cnt > $limit) {
@@ -389,7 +390,7 @@ sql_free_result($query2);
 <? } ?>
 <tr>
 <td>Maximum results:</td>
-<td><input name="max_results" type="text" value="100"></td>
+<td><input name="max_results" type="text" value="1000"></td>
 </tr>
 </table>
 <input name="submit" type="submit" value="Search">
