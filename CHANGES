@@ -12,6 +12,9 @@ Karnaf v5.0.19
 - Added support for acknowledging user replies.
 - Fixed a possible bug when merging tickets that have replies with empty subjects.
 - Added new feature: Let operators know when other operators are editing the same ticket they are.
+- Fixed a php/karnaf/edit.php bug that made autostatus text disappear too quickly even if no other users are watching the ticket.
+- Fixed search.php to allow members of private tickets to search for them, if not admin.
+- Increased search.php search limit to 1,000.
 
 Karnaf v5.0.18
 - Updated KARNAF_VERSION to 5.0.18.
