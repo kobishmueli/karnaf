@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2017 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -59,7 +59,7 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
   if(isset($_POST['ext3']) && ($result['ext3'] != $_POST['ext3'])) squery("UPDATE karnaf_tickets SET ext3='%s' WHERE id=%d", $_POST['ext3'], $id);
   if(!empty($_POST['merged_to']) && $result['merged_to'] != $_POST['merged_to']) {
     $merged_to = $_POST['merged_to'];
-    $query2 = squery("SELECT id,status,uemail FROM karnaf_tickets WHERE id=%d AND status!=0 AND merged_to=0", $merged_to);
+    $query2 = squery("SELECT id,status,uemail,cc FROM karnaf_tickets WHERE id=%d AND (status!=0 OR lastupd_time>%d) AND merged_to=0", $merged_to, time() - (60*60*24*7));
     if(($result2 = sql_fetch_array($query2))) {
       squery("UPDATE karnaf_tickets SET merged_to=%d,status=0,close_time=%d,lastupd_time=%d WHERE id=%d", $merged_to, time(), time(), $id);
       # Merge the original ticket description as a new reply...
@@ -77,6 +77,7 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
       $query3 = squery("SELECT title,reply,r_time,r_by,r_from,ip,message_id FROM karnaf_replies WHERE tid=%d", $id);
       while(($result3 = sql_fetch_array($query3))) {
         if(!isset($result3['title'])) $result3['title'] = "";
+        if(!isset($result3['message_id'])) $result3['message_id'] = "";
         squery("INSERT INTO karnaf_replies(tid,title,reply,r_time,r_by,r_from,ip,message_id) VALUES(%d,'%s','%s',%d,'%s','%s','%s','%s')",
                $merged_to, $result3['title'], $result3['reply'], $result3['r_time'], $result3['r_by'], $result3['r_from'], $result3['ip'], $result3['message_id']);
       }
@@ -92,8 +93,23 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
              $merged_to, $id, $nick, $group, (time()+1), $is_private);
       squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,%d,'%s','%s',%d,6,%d)",
              $id, $merged_to, $nick, $group, (time()+1), $is_private);
-      if($result['uemail'] != $result2['uemail']) {
-        squery("UPDATE karnaf_tickets SET cc='%s' WHERE id=%d", $result['uemail'], $merged_to);
+      $ccs = array();
+      foreach(explode(",", $result['cc']) as $curcc) {
+        $curcc = trim($curcc);
+        if(!empty($curcc) && !in_array($curcc, $ccs) && !strstr($curcc,MY_EMAIL)) $ccs[] = $curcc;
+      }
+      foreach(explode(",", $result2['cc']) as $curcc) {
+        $curcc = trim($curcc);
+        if(!empty($curcc) && !in_array($curcc, $ccs) && !strstr($curcc,MY_EMAIL)) $ccs[] = $curcc;
+      }
+      if(($result['uemail'] != $result2['uemail']) && !in_array($result['uemail'], $ccs) && !strstr($result['uemail'],MY_EMAIL)) {
+        $ccs[] = $result['uemail'];
+      }
+      if(count($ccs) > 0) squery("UPDATE karnaf_tickets SET cc='%s',lastupd_time=%d WHERE id=%d", implode(", ", $ccs), time(), $merged_to);
+      if((int)$result2['status'] == 0) {
+        squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d", $merged_to, time());
+        squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'The ticket has been re-opened.','%s','%s',%d,1,%d)",
+               $merged_to, $nick, $group, (time()+1), $is_private);
       }
       $autostatus = "The ticket has been merged with Ticket #".$merged_to;
     }
