@@ -1,6 +1,6 @@
 <?
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2017 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 /* This is a script to fetch emails from multiple mail accounts into Karnaf */
@@ -251,6 +251,14 @@ while($result = sql_fetch_array($query)) {
       if(stristr($m_from,"operhelp@dal.net")) continue;
       if(stristr($m_from,"dalhelp@dal.net")) continue;
       if(stristr($m_from,"sabuse@dal.net")) continue;
+      if(stristr($m_from,"nobody@google.com")) continue;
+      if(stristr($m_from,"matthias.koch@melia.com")) continue;
+      if(stristr($m_from,"@abbyy.com")) continue;
+      if(stristr($m_from,"@moonfroglabs.com")) continue;
+      if(strstr($m_subject,"Automatic reply:")) continue;
+      if(strstr($m_subject,"Auto: ")) continue;
+      if(strstr($m_subject,"Auto Reply:")) continue;
+      if(strstr($m_subject,"Auto Reply :")) continue;
       /* Set default values for new tickets here before the mail rules... */
       $priority = 0;
       if(!isset($upriority)) $upriority = 0;
@@ -431,6 +439,7 @@ while($result = sql_fetch_array($query)) {
         $status = 1;
         /* Spam checks */
         if(strstr($m_subject,"[SPAM]")) $status = 4;
+        if(strstr($m_subject,"We know you're busy.")) $status = 4;
         /* End of spam checks */
         if(($rep_g == KARNAF_DEFAULT_GROUP) && defined("IRC_MODE")) {
           if(!empty($cc)) $m_body = "CC: ".$cc."\n".$m_body;
@@ -452,7 +461,7 @@ while($result = sql_fetch_array($query)) {
           sql_free_result($query2);
         }
 
-        if($rep_g==KARNAF_DEFAULT_GROUP && ($uteam=="US" || $uteam=="USA" || strstr($uteam,"US-"))) $rep_g = "karnaf-it-usa";
+        if($rep_g==KARNAF_DEFAULT_GROUP && ($uteam=="US" || $uteam=="USA" || strstr($uteam,"US-") || strstr($uteam,"US -"))) $rep_g = "karnaf-it-usa";
 
         squery("INSERT INTO karnaf_tickets(randcode,status,title,description,cat3_id,unick,ufullname,uemail,uphone,ulocation,uip,upriority,priority,open_time,opened_by,rep_u,rep_g,is_real,is_private,email_upd,memo_upd,message_id,ext1,cc) VALUES('%s',%d,'%s','%s','%d','%s','%s','%s','%s','%s','%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,'%s','%s','%s')",
            $randstr,$status,$m_subject,$m_body,$cat3_id,$unick,$uname,$reply_to,$uphone,$uteam,$uip,$upriority,$priority,time(),"(EMAIL)",$rep_u,
@@ -462,7 +471,7 @@ while($result = sql_fetch_array($query)) {
         $reply .= "Your Ticket ID: ".$tid."\r\nYour Verification Number: ".$randstr."\r\nThe ticket has been assigned to: ".$rep_g."\r\n";
         $reply .= "To view the ticket status: ".KARNAF_URL."/view.php?id=".$tid."&code=".$randstr."\r\n";
         if($status != 4) {
-          $reply_subject = "Ticket #".$tid;
+          $reply_subject = "Re: [".strtoupper($rep_g)."] Ticket #".$tid;
           if(!empty($m_subject)) $reply_subject .= " - ".$m_subject;
           karnaf_email($reply_to, $reply_subject, $reply);
         }
@@ -471,6 +480,7 @@ while($result = sql_fetch_array($query)) {
           if(!empty($result2['autoforward'])) {
             /* Automatically forward new tickets to the team... */
             $text = "New ticket from: ".$unick."\r\n\r\n";
+            if($status == 4) $text .= "*** THIS EMAIL HAS BEEN MARKED AS SPAM ***\r\n\r\n";
             $text .= "To edit the ticket: ".KARNAF_URL."/edit.php?id=".$tid."\r\n";
             $text .= "---------------------------------------------------------------------------------------------\r\n";
             $text .= "Sender: ".$uname." <".$reply_to.">\r\n";
@@ -500,6 +510,7 @@ while($result = sql_fetch_array($query)) {
         foreach($attachments as $attachment) {
           if(!isset($attachment['filename'])) continue; /* Skip empty attachments */
           $file_name = $attachment['filename'];
+          if(strstr($file_name, "=?UTF-8?")) $file_name = imap_utf8($file_name);
           $file_desc = "Attachment by ".$uname;
           $file_size = mb_strlen($attachment['data']);
           $file_ext = strtolower(substr($file_name,-4));
@@ -509,7 +520,10 @@ while($result = sql_fetch_array($query)) {
           else if($file_ext == ".gif") $file_type = "image/gif";
           else $file_type = "application/octet-stream";
           if($file_ext!=".jpg" && $file_ext!=".png" && $file_ext!=".pdf" && $file_ext!=".log" && $file_ext!=".txt" && $file_ext!=".xls" &&
-             $file_ext!=".xlsx" && $file_ext!=".doc" && $file_ext!=".docx") continue; /* Skip invalid file extensions */
+             $file_ext!=".xlsx" && $file_ext!=".doc" && $file_ext!=".docx" && $file_ext!=".xml") {
+            echo "Skipping invalid attachment ".$file_ext." for ".$file_name."\r\n";
+            continue; /* Skip invalid file extensions */
+          }
           squery("INSERT INTO karnaf_files(tid,file_name,file_type,file_desc,file_size,lastupd_time) VALUES(%d,'%s','%s','%s',%d,%d)",
                  $tid, $file_name, $file_type, $file_desc, $file_size, time());
           $id = sql_insert_id();
