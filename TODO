@@ -1,14 +1,27 @@
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2017 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
 TODO List:
 ----------
-Add support for email attachments
-Sync LDAP users & groups
-Check LDAP user / Reset password from the ticket
 Send secure message from the tickets
-Send SMS messages from tickets
 grep -R "TODO:" php/*.php
 manage tickets of external providers
+create table log_types SELECT DISTINCT(logtype) FROM ws_logs WHERE logtype NOT LIKE '%.php?id=%' ORDER BY logtype;
+re-assign to me & actions & replies links to mylist.php
+due date
+show user assets
+fast re-assign to merge groups + group users
+ignore duplicate attachments (add list list of known attachments md5?)
+---
+let opers add attachments to replies from the web UI (from Maria)
+karnaf feature request: Re-assign to groups from main screen
+time to first respones (excluding API)
+time to close
+reminder to the user when the ticket is waiting for your reply
+warn team leader if more than 20 actions/replies were done
+change_password_scheduling - schedule array of passwords and send random one every week
+table for creating automatic tickets at specific times
+add user comments - comments that are attached to users... "i.e. please contact Kobi before releasing this user."
+a button to clear last action note
