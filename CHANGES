@@ -1,5 +1,5 @@
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2017 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -15,6 +15,20 @@ Karnaf v5.0.19
 - Fixed a php/karnaf/edit.php bug that made autostatus text disappear too quickly even if no other users are watching the ticket.
 - Fixed search.php to allow members of private tickets to search for them, if not admin.
 - Increased search.php search limit to 1,000.
+- karnaf-scripts/fetch-emails.php changes:
+  - Updated copyright to 2017.
+  - Added more blocks for automatic emails.
+  - Cosmetic changes to karnaf-it-usa checks (will be removed in future versions).
+  - Replies to new tickets (for users) will be: "Re: [TEAM] Ticket #XXX - Subject" instead of "Ticket #XXX - Subject"
+  - Tell opers when a ticket is marked as a spam.
+  - Fixed a bug on UTF-8 encoded file names.
+  - Now accepting .xml files.
+  - Added debug message when skipping attachments due to invalid file extensions.
+- karnaf/edit.php changes:
+  - Updated copyright to 2017.
+  - Cosmetic fixes that caused (non-security) SQL errors.
+  - Now merging CC list of merged tickets together.
+  - Tickets can now be merged to closed tickets but only if they were closed in the last 7 days.
 
 Karnaf v5.0.18
 - Updated KARNAF_VERSION to 5.0.18.
