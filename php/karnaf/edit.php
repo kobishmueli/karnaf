@@ -107,7 +107,7 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
       }
       if(count($ccs) > 0) squery("UPDATE karnaf_tickets SET cc='%s',lastupd_time=%d WHERE id=%d", implode(", ", $ccs), time(), $merged_to);
       if((int)$result2['status'] == 0) {
-        squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d", $merged_to, time());
+        squery("UPDATE karnaf_tickets SET status=1,lastupd_time=%d WHERE id=%d", time(), $merged_to);
         squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'The ticket has been re-opened.','%s','%s',%d,1,%d)",
                $merged_to, $nick, $group, (time()+1), $is_private);
       }
