@@ -105,7 +105,7 @@ if($result = sql_fetch_array($query)) {
     squery("INSERT INTO karnaf_schema(version) VALUES(15)");
   }
   if($cur_version < 16) {
-    squery("alter table karnaf_tickets add `is_escalated` int(10) unsigned NOT NULL default '0' after newuserreply");
+    squery("alter table karnaf_tickets add `escalation` int(10) unsigned NOT NULL default '0' after newuserreply");
     squery("INSERT INTO karnaf_schema(version) VALUES(16)");
   }
 }
