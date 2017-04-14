@@ -78,6 +78,7 @@ while($result = sql_fetch_array($query)) {
       $tid = 0;
       $debug_body = "";
       $debug_only = 0;
+      $maybespam = 0;
       foreach(explode("\n", $headers) as $header) {
         if(preg_match("/^Subject: (.*(#([\d,]+)).*)/", $header, $matches)) {
           $subject = $matches[1];
@@ -109,6 +110,9 @@ while($result = sql_fetch_array($query)) {
           else if($matches[1] == "5") $upriority = -1; /* low priority */
           continue;
         }
+        if(preg_match("/^X-Autoreply: (.*)/", $header, $matches)) $maybespam = 1;
+        if(preg_match("/^X-Autorespond: (.*)/", $header, $matches)) $maybespam = 1;
+        if(preg_match("/^auto-submitted: auto-generated/", $header, $matches)) $maybespam = 1;
         if(preg_match("/^X-Karnaf-Debug: 1/", $header, $matches)) {
           $debug_only = 1;
           continue;
@@ -157,6 +161,7 @@ while($result = sql_fetch_array($query)) {
             foreach($structure->parts[$i]->dparameters as $object) {
               if(strtolower($object->attribute) == "filename") {
                 $attachments[$i]['filename'] = $object->value;
+                $debug_body .= "Found attachment by filename: ".$attachments[$i]['filename']."\n";
               }
             }
           }
@@ -164,13 +169,43 @@ while($result = sql_fetch_array($query)) {
             foreach($structure->parts[$i]->parameters as $object) {
               if(strtolower($object->attribute) == "name") {
                 $attachments[$i]['filename'] = $object->value;
+                $debug_body .= "Found attachment by name: ".$attachments[$i]['filename']."\n";
               }
             }
+          }
+          if(($structure->parts[$i]->type == 5) && (!isset($attachments[$i]['filename']))) {
+            $debug_body .= "Possible error: Found attachment by type with no name!\n";
           }
           if(isset($attachments[$i]['filename'])) {
             $attachments[$i]['data'] = imap_fetchbody($mbox, $m_id, $i+1);
             if($structure->parts[$i]->encoding == 3) $attachments[$i]['data'] = base64_decode($attachments[$i]['data']);
             if($structure->parts[$i]->encoding == 4) $attachments[$i]['data'] = quoted_printable_decode($attachments[$i]['data']);
+          }
+          if(isset($structure->parts[$i]->parts)) {
+            for($y = 0; $y < count($structure->parts[$i]->parts); $y++) {
+              if($structure->parts[$i]->parts[$y]->ifdparameters) {
+                foreach($structure->parts[$i]->parts[$y]->dparameters as $object) {
+                  if(strtolower($object->attribute) == "filename") {
+                    $attachments[($i+$y*2)]['filename'] = $object->value;
+                    $debug_body .= "Found sub-attachment by filename: ".$attachments[($i+$y*2)]['filename']."\n";
+                  }
+                }
+              }
+              if($structure->parts[$i]->parts[$y]->ifparameters) {
+                foreach($structure->parts[$i]->parts[$y]->parameters as $object) {
+                  if(strtolower($object->attribute) == "name") {
+                    $attachments[($i+$y*2)]['filename'] = $object->value;
+                    $debug_body .= "Found sub-attachment by name: ".$attachments[($i+$y*2)]['filename']."\n";
+                  }
+                }
+              }
+              if(isset($attachments[($i+$y*2)]['filename'])) {
+                $attachments[($i+$y*2)]['data'] = imap_fetchbody($mbox, $m_id, ($i+1).".".($y));
+                $debug_body .= "Adding sub-attachment ".($i+1).".".($y)." (size=".strlen($attachments[($i+$y*2)]['data']).")\n";
+                if($structure->parts[$i]->parts[$y]->encoding == 3) $attachments[($i+$y*2)]['data'] = base64_decode($attachments[($i+$y*2)]['data']);
+                if($structure->parts[$i]->parts[$y]->encoding == 4) $attachments[($i+$y*2)]['data'] = quoted_printable_decode($attachments[($i+$y*2)]['data']);
+              }
+            }
           }
         }
       }
@@ -255,6 +290,7 @@ while($result = sql_fetch_array($query)) {
       if(stristr($m_from,"matthias.koch@melia.com")) continue;
       if(stristr($m_from,"@abbyy.com")) continue;
       if(stristr($m_from,"@moonfroglabs.com")) continue;
+      if(stristr($m_from,"@lfb.org")) continue;
       if(strstr($m_subject,"Automatic reply:")) continue;
       if(strstr($m_subject,"Auto: ")) continue;
       if(strstr($m_subject,"Auto Reply:")) continue;
@@ -440,6 +476,8 @@ while($result = sql_fetch_array($query)) {
         /* Spam checks */
         if(strstr($m_subject,"[SPAM]")) $status = 4;
         if(strstr($m_subject,"We know you're busy.")) $status = 4;
+        if(stristr($m_from,"info@")) $status = 4;
+        if($maybespam == 1) $status = 4;
         /* End of spam checks */
         if(($rep_g == KARNAF_DEFAULT_GROUP) && defined("IRC_MODE")) {
           if(!empty($cc)) $m_body = "CC: ".$cc."\n".$m_body;
@@ -507,6 +545,7 @@ while($result = sql_fetch_array($query)) {
       }
       if($tid && isset($attachments) && count($attachments)>0) {
         /* We have attachment(s), let's add them to the ticket... */
+        $debug_body .= "Found attachments: ".count($attachments)."\n";
         foreach($attachments as $attachment) {
           if(!isset($attachment['filename'])) continue; /* Skip empty attachments */
           $file_name = $attachment['filename'];
