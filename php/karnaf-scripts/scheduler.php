@@ -1,6 +1,6 @@
 <?
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2017 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 /* This is a script to deal with scheduled Karnaf tasks */
@@ -141,18 +141,33 @@ while($result = sql_fetch_array($query)) {
 sql_free_result($query);
 
 /* Search for tickets that are *open* and waiting for an oper-reply for more than a week... */
-$query = squery("SELECT id,rep_g,unick,uemail FROM karnaf_tickets WHERE status=1 AND (lastupd_time<%d OR (open_time<%d AND lastupd_time is NULL AND rep_g='')) AND priority>=0 AND priority<20",
+$query = squery("SELECT id,rep_u,rep_g,unick,uemail,title FROM karnaf_tickets WHERE status=1 AND (lastupd_time<%d OR (open_time<%d AND lastupd_time is NULL AND rep_g='')) AND priority>=0 AND priority<20 AND escalation=0",
                 time()-604800, time()-604800);
 while($result = sql_fetch_array($query)) {
   $sender = $result['unick'];
   if($sender == "Guest" && !empty($result['uemail'])) $sender = $result['uemail'];
-  echo "-".$result['rep_g']."- Ticket #".$result['id']." from ".$sender." is now getting higher priority. ".KARNAF_URL."/edit.php?id=".$result['id']."\n";
+  echo "-".$result['rep_g']."- Ticket #".$result['id']." from ".$sender." is being escalated. ".KARNAF_URL."/edit.php?id=".$result['id']."\n";
   squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,0,1,'%s',%d,'%s','%s')",
-         $result['id'], "System priority increased to High", time(), "System", $result['rep_g']);
-  squery("UPDATE karnaf_tickets SET priority=20 WHERE id=%d", $result['id']);
+         $result['id'], "Ticket has been escalated due to inactivity", time(), "System", $result['rep_g']);
+  squery("UPDATE karnaf_tickets SET escalation=1 WHERE id=%d", $result['id']);
   #squery("INSERT INTO karnaf_memo_queue(tonick,memo) VALUES('%s','*Warning* Priority for ticket #%s has been increased to High. For more information visit: XXX/edit.php?id=%s')", $sender);
   #squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,0,1,'%s',%d,'%s','%s')", $result['id'],
   #       "Team leader was notified by MemoServ", time()+1, "System", $result['rep_g']);
+  $newsubject = "Escalated: [".strtoupper($result['rep_g'])."] Ticket #".$result['id'];
+  if(!empty($result['title'])) $newsubject .= " - ".$result['title'];
+  $body = "Ticket #".$result['id']." has been escalated due to inactivity.\r\n";
+  $body .= "Operator: ".$result['rep_u']."\r\n";
+  $body .= "Group: ".$result['rep_g']."\r\n";
+  $body .= "\r\nFor more information visit: ".KARNAF_URL."/edit.php?id=".$result['id']."\r\n";
+  $cc = "";
+  $query2 = squery("SELECT email,phone FROM users WHERE id IN (SELECT user_id FROM group_members WHERE group_id=(SELECT id FROM groups WHERE name='%s'))", KARNAF_ESCALATION_GROUP);
+  while($result2 = sql_fetch_array($query2)) {
+    if(!empty($cc)) $cc .= ", ";
+    $cc .= $result2['email'];
+    #For future use (maybe): send SMS message too.
+  }
+  sql_free_result($query2);
+  send_mail($cc, $newsubject, $body);
 }
 sql_free_result($query);
 
