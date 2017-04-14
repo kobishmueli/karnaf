@@ -736,6 +736,8 @@ function find_karnaf_cat_by_keyword($title, $description) {
       #if($found) echo "search=".$keyword." found=".substr($found,0,10)."   --- ".(isset($found[strlen($keyword)])?$found[strlen($keyword)]:"<NULL>")."\n";
       if($found && (!isset($found[strlen($keyword)])) || $found[strlen($keyword)]==" " || $found[strlen($keyword)]=="." || $found[strlen($keyword)]=="/") {
         if($lower_keyword == "problem") $points[$cat] += 2;
+        else if($lower_keyword == "can't") $points[$cat] += 2;
+        else if($lower_keyword == "couldn't") $points[$cat] += 2;
         else if($lower_keyword == "feature") $points[$cat] += 2;
         else if($lower_keyword == "request") $points[$cat] += 1;
         else if($lower_keyword == "hardware") $points[$cat] += 1;
@@ -759,6 +761,8 @@ function find_karnaf_cat_by_keyword($title, $description) {
       else {
         /* If we didn't find a match, let's "punish" them for common words... */
         if($lower_keyword == "problem") $points[$cat] -= 3;
+        if($lower_keyword == "can't") $points[$cat] -= 3;
+        if($lower_keyword == "couldn't") $points[$cat] -= 3;
         if($lower_keyword == "aws") $points[$cat] -= 3;
       }
     }

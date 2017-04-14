@@ -187,13 +187,14 @@ while($result = sql_fetch_array($query)) {
 sql_free_result($query);
 
 /* Set categories for open tickets according to the keywords (this should really be moved to php/karnaf-scripts/fetch-emails.php once it becomes stable) -Kobi. */
-$query = squery("SELECT id,title,description,cat3_id FROM karnaf_tickets WHERE status IN (SELECT status_id FROM karnaf_statuses WHERE is_closed=0) AND cat3_id IN (SELECT cat3_id FROM karnaf_mail_accounts WHERE active=1)");
+$query = squery("SELECT id,title,description,cat3_id FROM karnaf_tickets WHERE status IN (SELECT status_id FROM karnaf_statuses WHERE is_closed=0) AND cat3_id IN (SELECT cat3_id FROM karnaf_mail_accounts WHERE active=1) AND opened_by!='(API)'");
 while($result = sql_fetch_array($query)) {
   $new_cat3 = find_karnaf_cat_by_keyword($result['title'], $result['description']);
-  if($new_cat3 != 0) {
+  if(($new_cat3 != 0) && (int)$new_cat3!=(int)$result['cat3_id']) {
     squery("UPDATE karnaf_tickets SET cat3_id=%d WHERE id=%d", $new_cat3, $result['id']);
     if(defined("KARNAF_DEBUG") && KARNAF_DEBUG==1) squery("INSERT INTO karnaf_debug(tid,body) VALUES(%d,'%s')",
                                                           $result['id'], "Category changed from ".$result['cat3_id']." to ".$new_cat3);
+    echo "Ticket #".$result['id']." - Category changed from ".$result['cat3_id']." to ".$new_cat3."\n";
   }
 }
 sql_free_result($query);
