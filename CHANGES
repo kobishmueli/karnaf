@@ -3,6 +3,15 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.20
+- Updated KARNAF_VERSION to 5.0.20.
+- Fixed a typo bug that prevented merged to tickets from being re-opened.
+- Added escalation to karnaf tickets.
+- A few fetch-emails.php changes:
+  - Added more spam filters.
+  - Added more debug messages.
+  - Added support for apple inline attachments (parts inside parts).
+
 Karnaf v5.0.19
 - Updated KARNAF_VERSION to 5.0.19.
 - Added an option (KARNAF_HIDE_TITLE_FROM_LIST) to hide the title from list.php and mylist.php (disabled by default).
