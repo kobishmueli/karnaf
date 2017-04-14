@@ -104,6 +104,10 @@ if($result = sql_fetch_array($query)) {
      KEY `tid` (`tid`));");
     squery("INSERT INTO karnaf_schema(version) VALUES(15)");
   }
+  if($cur_version < 16) {
+    squery("alter table karnaf_tickets add `is_escalated` int(10) unsigned NOT NULL default '0' after newuserreply");
+    squery("INSERT INTO karnaf_schema(version) VALUES(16)");
+  }
 }
 sql_free_result($query);
 

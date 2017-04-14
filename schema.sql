@@ -147,6 +147,7 @@ CREATE TABLE `karnaf_tickets` (
   `message_id` varchar(250) DEFAULT NULL,
   `last_note` text DEFAULT NULL,
   `newuserreply` tinyint(1) NOT NULL DEFAULT '0',
+  `is_escalated` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (`id`),
   KEY `rep_u` (`rep_u`),
   KEY `status` (`status`),
@@ -316,6 +317,7 @@ INSERT INTO `karnaf_schema` VALUES ('12');
 INSERT INTO `karnaf_schema` VALUES ('13');
 INSERT INTO `karnaf_schema` VALUES ('14');
 INSERT INTO `karnaf_schema` VALUES ('15');
+INSERT INTO `karnaf_schema` VALUES ('16');
 
 INSERT INTO `karnaf_priorities` VALUES (-1,'Low');
 INSERT INTO `karnaf_priorities` VALUES (0,'Normal');
