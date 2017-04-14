@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2017 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -8,6 +8,7 @@ define("KARNAF_ADMINS_GROUP", "karnaf-admins");   // Members of the group have f
 define("KARNAF_EDITORS_GROUP", "karnaf-editors"); // Members of the group can see tickets of other groups as long as they're not private
 define("KARNAF_OPERS_GROUP", "karnaf-opers");     // Members of the group can manage their own team's tickets
 define("KARNAF_AOB_GROUP", "dalnet-aob");         // Members of the group can add special actions to tickets
+define("KARNAF_ESCALATION_GROUP", "karnaf-escalations"); // Members of the group receive escalation updates
 define("DB_HOST", "localhost");
 define("DB_USER", "karnaf");
 define("DB_PASS", "changeme");
