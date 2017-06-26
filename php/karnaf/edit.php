@@ -162,7 +162,7 @@ if(isset($_POST['reply_text'])) {
   if(!empty($_POST['reply_text'])) {
     $reply_text = str_replace("%OPERNICK%",$nick,$_POST['reply_text']);
     if(isset($a_fullname)) $reply_text = str_replace("%OPERFULLNAME%",$a_fullname,$_POST['reply_text']);
-    if(isset($_POST['reply_to']) && !empty($_POST['reply_to']) && $_POST['reply_to']!=$result['uemail']) {
+    if(isset($_POST['reply_to']) && !empty($_POST['reply_to']) && ($_POST['reply_to']!=$result['uemail'] || $_POST['reply_cc']!=$result['cc'])) {
       if($_POST['reply_cc']!=$result['cc']) $reply_text = "CC: ".$_POST['reply_cc']."\r\n".$reply_text;
       $reply_text = "To: ".$_POST['reply_to']."\r\n".$reply_text;
       if(!defined("IRC_MODE") && isset($a_fullname) && !empty($a_fullname)) $body = "Message from ".$a_fullname.":\r\n";
