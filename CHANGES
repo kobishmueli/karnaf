@@ -11,6 +11,10 @@ Karnaf v5.0.20
   - Added more spam filters.
   - Added more debug messages.
   - Added support for apple inline attachments (parts inside parts).
+- Added new escalation process to replace the old ticket priority increase process.
+- A few fixes & more debugging to the automatic category set based on keywords.
+- Changed list.php to mark escalated tickets.
+- Fixed a bug where CC replies aren't changed if the TO isn't changed as well.
 
 Karnaf v5.0.19
 - Updated KARNAF_VERSION to 5.0.19.
