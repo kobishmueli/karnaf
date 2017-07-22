@@ -15,6 +15,7 @@ Karnaf v5.0.20
 - A few fixes & more debugging to the automatic category set based on keywords.
 - Changed list.php to mark escalated tickets.
 - Fixed a bug where CC replies aren't changed if the TO isn't changed as well.
+- Allow operators to change the escalation level of tickets.
 
 Karnaf v5.0.19
 - Updated KARNAF_VERSION to 5.0.19.

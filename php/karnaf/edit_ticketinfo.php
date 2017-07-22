@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2017 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 require_once("../ktools.php");
@@ -10,7 +10,7 @@ $id = $_GET['id'];
 if(empty($id) || !is_numeric($id)) safe_die("Invalid Ticket ID!");
 $query = squery("SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS
-cat3_name,c3.id AS cat3_id,s.status_name,t.upriority,t.priority,t.merged_to,c3.extra,t.ext1,t.ext2,t.ext3 
+cat3_name,c3.id AS cat3_id,s.status_name,t.upriority,t.priority,t.merged_to,c3.extra,t.ext1,t.ext2,t.ext3,t.escalation 
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent
 INNER JOIN karnaf_cat1 AS c1 ON c1.id=c2.parent INNER JOIN karnaf_statuses AS s ON s.status_id=t.status INNER JOIN karnaf_priorities AS up ON
 up.priority_id=t.upriority INNER JOIN karnaf_priorities AS sp ON sp.priority_id=t.priority) WHERE t.id=%d", $id);
@@ -113,6 +113,10 @@ sql_free_result($query2);
 <tr>
 <td>Merge to another ticket:</td>
 <td><input name="merged_to" type="text" value="<? if($result['merged_to']) echo $result['merged_to']; ?>"></td>
+</tr>
+<tr>
+<td>Escalation Level:</td>
+<td><input name="escalation_level" type="text" value="<?=$result['escalation']?>"></td>
 </tr>
 <tr>
 <td>Title:</td>
