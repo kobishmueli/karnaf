@@ -72,6 +72,7 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
       # Merge actions...
       $query3 = squery("SELECT is_private,a_type,action,a_time,a_by_u,a_by_g FROM karnaf_actions WHERE tid=%d", $id);
       while(($result3 = sql_fetch_array($query3))) {
+        if((int)$result3['a_type'] == 0) $result3['action'] = "[Merged] ".$result3['action'];
         squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,%d,%d,'%s',%d,'%s','%s')",
                $merged_to, $result3['is_private'], $result3['a_type'], $result3['action'], $result3['a_time'], $result3['a_by_u'], $result3['a_by_g']);
       }
