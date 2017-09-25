@@ -16,6 +16,9 @@ Karnaf v5.0.20
 - Changed list.php to mark escalated tickets.
 - Fixed a bug where CC replies aren't changed if the TO isn't changed as well.
 - Allow operators to change the escalation level of tickets.
+- Marked merged actions as such.
+- Added action search option to search.php.
+- IRC Operators will only get "above normal" priority if they didn't choose a lower priority than "above normal".
 
 Karnaf v5.0.19
 - Updated KARNAF_VERSION to 5.0.19.
