@@ -70,7 +70,7 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
              $merged_to, $result['title'], $result['description'], $result['open_time'], $result['ufullname']." (Merged from Ticket #".$id.")",
              $result['unick'], "N/A");
       # Merge actions...
-      $query3 = squery("SELECT is_private,a_type,action,a_time,a_by_u,a_by_g FROM karnaf_actions WHERE tid=%d", $id);
+      $query3 = squery("SELECT is_private,a_type,action,a_time,a_by_u,a_by_g FROM karnaf_actions WHERE tid=%d AND a_type=0", $id);
       while(($result3 = sql_fetch_array($query3))) {
         if((int)$result3['a_type'] == 0) $result3['action'] = "[Merged] ".$result3['action'];
         squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,%d,%d,'%s',%d,'%s','%s')",
