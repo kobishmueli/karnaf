@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2017 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -88,6 +88,10 @@ sp.priority_id=t.priority) WHERE 1";
   if(isset($_POST['reply']) && !empty($_POST['reply'])) {
     $qstr .= " AND t.id IN (SELECT tid FROM karnaf_replies WHERE reply LIKE '%s')";
     array_push($argv, $_POST['reply']);
+  }
+  if(isset($_POST['action']) && !empty($_POST['action'])) {
+    $qstr .= " AND t.id IN (SELECT tid FROM karnaf_actions WHERE action LIKE '%s')";
+    array_push($argv, $_POST['action']);
   }
   if(isset($_POST['status']) && is_numeric($_POST['status'])) {
     $qstr .= " AND t.status=%d";
@@ -360,6 +364,12 @@ sql_free_result($query2);
 <td>Reply:</td>
 <td>
 <input name="reply" size="30" type="text">
+</td>
+</tr>
+<tr>
+<td>Action:</td>
+<td>
+<input name="action" size="30" type="text">
 </td>
 </tr>
 <tr>
