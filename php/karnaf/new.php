@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2017 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -37,8 +37,8 @@ if(isset($_POST['cat3'])) {
   if((strtoupper($unick) == strtoupper($nick)) && ($nick != "Guest")) {
     $is_real = 1;
     if(empty($uemail)) $uemail = $a_email;
-    /* IRC Operators will automatically get "above normal" priority unless they chose a low priority or the category has an higher priority */
-    if($isoper && $upriority>=0 && $priority<10) $priority = 10;
+    /* IRC Operators will automatically get "above normal" priority unless they chose a lower priority (than "above normal") or the category has an higher priority */
+    if($isoper && $upriority>=10 && $priority<10) $priority = 10;
   }
   else $is_real = 0;
   if(isset($_POST['private']) && ($_POST['private'] == "on")) $is_private = 1;
