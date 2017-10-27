@@ -50,8 +50,16 @@ if(isset($_POST['save']) && ($_POST['save'] == "2")) {
              $nick, $group, time(), $is_private);
     }
   }
-  if($result['priority_id'] != $_POST['priority']) squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'System priority changed','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
-  if($result['upriority_id'] != $_POST['upriority']) squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'User priority changed','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
+  if($result['priority_id'] != $_POST['priority']) {
+    if((int)$_POST['priority'] > (int)$result['priority_id'])
+      squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'System priority increased','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
+    else squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'System priority decreased','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
+  }
+  if($result['upriority_id'] != $_POST['upriority']) {
+    if((int)$_POST['upriority'] > (int)$result['upriority_id'])
+     squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'User priority increased','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
+    else squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'User priority decreased','%s','%s',%d,1,%d)", $id, $nick, $group, time(), $is_private);
+  }
   if($result['escalation'] != $_POST['escalation_level']) {
     squery("INSERT INTO karnaf_actions(tid,action,a_by_u,a_by_g,a_time,a_type,is_private) VALUES(%d,'%s','%s','%s',%d,1,%d)", $id, "Escalation level changed from ".$result['escalation']." to ".$_POST['escalation_level'], $nick, $group, time(), $is_private);
   }
