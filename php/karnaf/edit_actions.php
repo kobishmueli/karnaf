@@ -51,6 +51,13 @@ if($result = sql_fetch_array($query)) {
     else if($a_type == 4) $action = "The ticket has been re-assigned to Oper.";
     else if($a_type == 5) $action = "Merged from Ticket #".$result2['action'].".";
     else if($a_type == 6) $action = "Merged to Ticket #".$result2['action'].".";
+    else if($a_type == 7) {
+      /* Special system action... */
+      $result2['a_by_u'] = "System";
+      $result2['a_by_g'] = "---";
+      $a_type = 0;
+      $action = str_replace("<br>","\r\n",$result2['action']);
+    }
     else $action = $result2['action'];
     if($is_private==1 && !$isoper) continue;
 ?>

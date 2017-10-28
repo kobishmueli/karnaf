@@ -403,6 +403,13 @@ else echo $result['rep_g'];
         sql_free_result($query3);
       }
     }
+    else if($a_type == 7) {
+      /* Special system action... */
+      $result2['a_by_u'] = "System";
+      $result2['a_by_g'] = "---";
+      $a_type = 0;
+      $action = str_replace("<br>","\r\n",$result2['action']);
+    }
     else $action = $result2['action'];
     if($is_private==1 && !$isoper) continue;
 ?>
