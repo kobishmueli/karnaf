@@ -218,7 +218,18 @@ else echo $result['rep_g'];
 <? if($result['merged_to']) { ?>
 <tr>
 <td>Merged To:</td>
-<td><a href="?id=<?=$result['merged_to']?>"><?=$result['merged_to']?></a></td>
+<td>
+<?
+    if($isoper) echo "<a href=\"?id=".$result['merged_to']."\">".$result['merged_to']."</a>\n";
+    else {
+      $query2 = squery("SELECT randcode FROM karnaf_tickets WHERE id=%d", $result['merged_to']);
+      if(($result2 = sql_fetch_array($query2))) {
+        echo "<a href=\"?id=".$result['merged_to']."&code=".$result2['randcode']."\">".$result['merged_to']."</a>\n";
+      }
+      sql_free_result($query2);
+    }
+?>
+</td>
 </tr>
 <? } ?>
 <tr>
@@ -372,8 +383,26 @@ else echo $result['rep_g'];
       $is_private = 1;
     }
     else if($a_type == 4) $action = "The ticket has been re-assigned to Oper.";
-    else if($a_type == 5) $action = "Merged from <a href=\"?id=".$result2['action']."\">Ticket #".$result2['action']."</a>.";
-    else if($a_type == 6) $action = "Merged to <a href=\"?id=".$result2['action']."\">Ticket #".$result2['action']."</a>.";
+    else if($a_type == 5) {
+      if($isoper) $action = "Merged from <a href=\"?id=".$result2['action']."\">Ticket #".$result2['action']."</a>.";
+      else {
+        $query3 = squery("SELECT randcode FROM karnaf_tickets WHERE id=%d", $result2['action']);
+        if(($result3 = sql_fetch_array($query3))) {
+          $action = "Merged from <a href=\"?id=".$result2['action']."&code=".$result3['randcode']."\">Ticket #".$result2['action']."</a>.";
+        }
+        sql_free_result($query3);
+      }
+    }
+    else if($a_type == 6) {
+      if($isoper) $action = "Merged to <a href=\"?id=".$result2['action']."\">Ticket #".$result2['action']."</a>.";
+      else {
+        $query3 = squery("SELECT randcode FROM karnaf_tickets WHERE id=%d", $result2['action']);
+        if(($result3 = sql_fetch_array($query3))) {
+          $action = "Merged to <a href=\"?id=".$result2['action']."&code=".$result3['randcode']."\">Ticket #".$result2['action']."</a>.";
+        }
+        sql_free_result($query3);
+      }
+    }
     else $action = $result2['action'];
     if($is_private==1 && !$isoper) continue;
 ?>
