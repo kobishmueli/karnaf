@@ -19,6 +19,9 @@ Karnaf v5.0.20
 - Marked merged actions as such.
 - Added action search option to search.php.
 - IRC Operators will only get "above normal" priority if they didn't choose a lower priority than "above normal".
+- Changed edit.php to show (save) if the priority was increased or decreased.
+- Let users be able to see marged tickets without knowing their "random code" if they know the "random code" for the original ticket.
+- Added special a_type 7 for system actions.
 
 Karnaf v5.0.19
 - Updated KARNAF_VERSION to 5.0.19.
