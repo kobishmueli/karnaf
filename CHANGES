@@ -3,6 +3,9 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.21
+- Updated KARNAF_VERSION to 5.0.21.
+
 Karnaf v5.0.20
 - Updated KARNAF_VERSION to 5.0.20.
 - Fixed a typo bug that prevented merged to tickets from being re-opened.
