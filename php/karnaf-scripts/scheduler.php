@@ -129,10 +129,16 @@ sql_free_result($query);
 #sql_free_result($query);
 
 /* Search tickets that are waiting for user reply for more than a week... */
-$query = squery("SELECT id,rep_g,unick,uemail FROM karnaf_tickets WHERE status=2 AND lastupd_time<%d", time()-604800);
+$query = squery("SELECT id,rep_g,unick,uemail,opened_by FROM karnaf_tickets WHERE status=2 AND lastupd_time<%d", time()-604800);
 while($result = sql_fetch_array($query)) {
   $sender = $result['unick'];
   if($sender == "Guest" && !empty($result['uemail'])) $sender = $result['uemail'];
+  if($sender == "hrdb" && $result['opened_by'] == "(API)") {
+    squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,0,1,'%s',%d,'%s','%s')",
+           $result['id'], "Ticket has been automatically re-opened due to being waiting for user reply for a week.", time(), "System", $result['rep_g']);
+    squery("UPDATE karnaf_tickets SET status=1 WHERE id=%d", $result['id']);
+    continue;
+  }
   echo "Ticket #".$result['id']." from ".$sender." is being automatically closed. ".KARNAF_URL."/view.php?id=".$result['id']."\n";
   squery("INSERT INTO karnaf_actions(tid,is_private,a_type,action,a_time,a_by_u,a_by_g) VALUES(%d,0,1,'%s',%d,'%s','%s')",
          $result['id'], "Ticket has been automatically closed due to being waiting for user reply for a week.", time(), "System", $result['rep_g']);
