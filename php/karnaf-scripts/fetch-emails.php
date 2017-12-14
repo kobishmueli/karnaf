@@ -273,11 +273,12 @@ while($result = sql_fetch_array($query)) {
       else if(preg_match("/^(.*)/", $m_from, $matches)) {
         $uname = $matches[1];
       }
-      if(strstr($m_from,MY_EMAIL)) continue;
+      if(strstr($m_from,MY_EMAIL)) { echo "Deleting #".$m_id."...\n"; imap_delete($mbox, $m_id); continue; }
       if(strstr($m_from,"noreply")) continue;
-      if(strstr($m_from,"no-reply")) continue;
+      if(strstr($m_from,"no-reply")) { echo "Deleting #".$m_id."...\n"; imap_delete($mbox, $m_id); continue; }
       if(stristr($m_from,"users@dal.net")) continue;
-      if(stristr($m_from,"Mailer-Daemon@")) continue;
+      if(stristr($m_from,"Mailer-Daemon@")) { echo "Deleting #".$m_id."...\n"; imap_delete($mbox, $m_id); continue; }
+      if(stristr($m_from,"newsletter@")) continue;
       if(stristr($m_from,"suggestions@DAL.NET")) continue;
       if(stristr($m_from,"helpdesk@dal.net")) continue;
       if(stristr($m_from,"cybercafe@dal.net")) continue;
