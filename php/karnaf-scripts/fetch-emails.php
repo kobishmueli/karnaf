@@ -412,7 +412,7 @@ while($result = sql_fetch_array($query)) {
             $query2 = squery("SELECT t.id,t.status,t.rep_u,t.uphone,t.rep_g,t.title,o.email AS oemail,t.merged_to,t.close_time FROM (karnaf_tickets AS t LEFT JOIN users as o ON t.rep_u=o.user) WHERE t.id=%d", $tid);
             if(!($result2 = sql_fetch_array($query2))) $tid = 0;
           }
-          if($tid && (int)$result2['status']==0 && ((int)$result2['close_time'] - time()) >= 60*60*24*60) {
+          if($tid && (int)$result2['status']==0 && (time() - (int)$result2['close_time']) >= 60*60*24*60) {
             /* If the ticket is closed for more than 60 days, we'll create a new ticket... */
             $tid = 0;
           }
