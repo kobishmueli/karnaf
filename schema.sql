@@ -332,7 +332,7 @@ INSERT INTO karnaf_statuses(status_id,status_name,is_closed,priority) VALUES (3,
 INSERT INTO karnaf_statuses(status_id,status_name,is_closed,priority) VALUES (4,'Held - Possible spam',0,4);
 INSERT INTO karnaf_statuses(status_id,status_name,is_closed,priority) VALUES (5,'Spam',1,5);
 
-INSERT INTO `users` VALUES (1,'admin','098f6bcd4621d373cade4e832627b4f6','admin@nonstop.co.il','',1426820239,1427066785,'',80,0,0,'127.0.0.1',0,'','','','System Administrator');
+INSERT INTO `users`(id,user,pass,email,url,regtime,lasttime,lastseen_ip,operlev,flags,options,lasthost,title) VALUES (1,'admin','098f6bcd4621d373cade4e832627b4f6','admin@nonstop.co.il','',1426820239,1427066785,'',80,0,0,'127.0.0.1','System Administrator');
 
 INSERT INTO groups(name,gdesc,iskarnaf) VALUES('karnaf-admins', 'Karnaf Admins', 1);
 INSERT INTO groups(name,gdesc,iskarnaf) VALUES('karnaf-opers', 'Karnaf Operators', 1);
