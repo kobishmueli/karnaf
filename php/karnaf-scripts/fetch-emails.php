@@ -254,6 +254,8 @@ while($result = sql_fetch_array($query)) {
         if(preg_match("/^.*(\[Support #\d+\]).*/", $m_subject, $matches)) $stid = $matches[1];
         #Purchasing Requests:
         if(preg_match("/^.*(PR #\d+).*/", $m_subject, $matches)) $stid = $matches[1];
+        #Parallels:
+        if(preg_match("/^.*(\[Parallels #\d+\]).*/", $m_subject, $matches)) $stid = $matches[1];
         if($stid != "") {
           $query2 = squery("SELECT id FROM karnaf_tickets WHERE status!=0 AND title LIKE '%s' ORDER BY id LIMIT 1", "%".$stid."%");
           if($result2 = sql_fetch_array($query2)) $tid = (int)$result2['id'];
