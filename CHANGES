@@ -5,6 +5,13 @@
 
 Karnaf v5.0.21
 - Updated KARNAF_VERSION to 5.0.21.
+- Fixed the broken SQL INSERT.
+- Added stats for 2017.
+- Made fetch-emails.php script delete emails from itself, no-reply and Mailer-Daemon@. And also added newsletter@ to the ignore list.
+- Changed fetch-users.php script to change the user when the capitalization is changed.
+- Added the ability to run custom code to change/remove the reply text if the custom_fetch_emails_reply() function exists.
+- Fixed a broken logic bug on fetch-emails.php.
+- Changed scheduler.php to re-open HRDB API tickets after waiting for reply for too long instead of getting them closed.
 
 Karnaf v5.0.20
 - Updated KARNAF_VERSION to 5.0.20.
