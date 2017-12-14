@@ -509,7 +509,11 @@ while($result = sql_fetch_array($query)) {
         $reply = "Your ticket has been opened and we will take care of it as soon as possible.\r\n\r\n";
         $reply .= "Your Ticket ID: ".$tid."\r\nYour Verification Number: ".$randstr."\r\nThe ticket has been assigned to: ".$rep_g."\r\n";
         $reply .= "To view the ticket status: ".KARNAF_URL."/view.php?id=".$tid."&code=".$randstr."\r\n";
-        if($status != 4) {
+
+        /* Run custom code to change/remove the reply text if the custom_fetch_emails_reply() function exists: */
+        if(function_exists("custom_fetch_emails_reply")) $reply = custom_fetch_emails_reply($tid, $reply, $rep_g, $randstr, $status, $m_subject);
+
+        if($status != 4 && $reply!="") {
           $reply_subject = "Re: [".strtoupper($rep_g)."] Ticket #".$tid;
           if(!empty($m_subject)) $reply_subject .= " - ".$m_subject;
           karnaf_email($reply_to, $reply_subject, $reply);
