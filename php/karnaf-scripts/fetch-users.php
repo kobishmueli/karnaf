@@ -99,10 +99,10 @@ while($result = sql_fetch_array($query)) {
         /* Add/update the user */
         if(in_array(strtolower($found_user),$cached_users)) {
           echo "Found user: ".$found_user."\n";
-          squery("UPDATE users SET email='%s',fullname='%s',fname='%s',lname='%s',department='%s',team='%s',title='%s',phone='%s',room='%s',lastsync=%d WHERE user='%s'",
+          squery("UPDATE users SET email='%s',fullname='%s',fname='%s',lname='%s',department='%s',team='%s',title='%s',phone='%s',room='%s',lastsync=%d,user='%s' WHERE user='%s'",
                  $found_email, $found_fullname, $found_fname, $found_lname, $found_department, $found_team,
                  $found_title, $found_mobile, $found_room,
-                 $lastsync, $found_user);
+                 $lastsync, $found_user, $found_user);
           $updated_users[] = strtolower($found_user);
         }
         else {
