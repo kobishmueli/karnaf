@@ -423,6 +423,8 @@ function check_auth($xhost="") {
 }
 } # end of function_exists("check_auth")
 
+if(!function_exists("get_menus")) { function get_menus() { } }
+
 if(!function_exists("load_template")) {
   function load_template($file) {
     global $title,$theme,$a_user;
