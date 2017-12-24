@@ -566,7 +566,7 @@ while($result = sql_fetch_array($query)) {
           else if($file_ext == ".gif") $file_type = "image/gif";
           else $file_type = "application/octet-stream";
           if($file_ext!=".jpg" && $file_ext!=".png" && $file_ext!=".pdf" && $file_ext!=".log" && $file_ext!=".txt" && $file_ext!=".xls" &&
-             $file_ext!=".xlsx" && $file_ext!=".doc" && $file_ext!=".docx" && $file_ext!=".xml") {
+             $file_ext!=".xlsx" && $file_ext!=".doc" && $file_ext!=".docx" && $file_ext!=".xml" && $file_ext!=".gif") {
             echo "Skipping invalid attachment ".$file_ext." for ".$file_name."\r\n";
             continue; /* Skip invalid file extensions */
           }
