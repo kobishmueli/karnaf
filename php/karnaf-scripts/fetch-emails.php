@@ -513,7 +513,7 @@ while($result = sql_fetch_array($query)) {
         $reply .= "To view the ticket status: ".KARNAF_URL."/view.php?id=".$tid."&code=".$randstr."\r\n";
 
         /* Run custom code to change/remove the reply text if the custom_fetch_emails_reply() function exists: */
-        if(function_exists("custom_fetch_emails_reply")) $reply = custom_fetch_emails_reply($tid, $reply, $rep_g, $randstr, $status, $m_subject);
+        if(function_exists("custom_fetch_emails_reply")) $reply = custom_fetch_emails_reply($tid, $reply, $rep_g, $randstr, $status, $m_subject, $m_from);
 
         if($status != 4 && $reply!="") {
           $reply_subject = "Re: [".strtoupper($rep_g)."] Ticket #".$tid;
