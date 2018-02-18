@@ -1,5 +1,5 @@
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2017 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2018 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -12,6 +12,12 @@ Karnaf v5.0.21
 - Added the ability to run custom code to change/remove the reply text if the custom_fetch_emails_reply() function exists.
 - Fixed a broken logic bug on fetch-emails.php.
 - Changed scheduler.php to re-open HRDB API tickets after waiting for reply for too long instead of getting them closed.
+- Added "Parallels" subject check to fetch-emails.php.
+- Only use the set_magic_quotes_runtime() if it exists (was removed on PHP 7.0.0).
+- Added get_menus() pseudo function to KTools.
+- Added m_from variable to the custom_fetch_emails_reply() function.
+- Added gif to the allowed file extensions for attachments.
+- Added print button on edit mode, and open attachments in new tab (from Ido D).
 
 Karnaf v5.0.20
 - Updated KARNAF_VERSION to 5.0.20.
