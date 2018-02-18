@@ -347,7 +347,7 @@ else echo $result['rep_g'];
     }
 ?>
 <tr>
-<td><a href="download.php?id=<?=$id?>&download=<?=$result2['id']?>"><?=$result2['file_name']?></a></td>
+<td><a href="download.php?id=<?=$id?>&download=<?=$result2['id']?>" target="_blank"><?=$result2['file_name']?></a></td>
 <td><?=coolsize($result2['file_size'])?></td>
 <td><?=$result2['file_desc']?></td>
 </tr>

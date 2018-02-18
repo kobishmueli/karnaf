@@ -623,6 +623,7 @@ window.onload = auto_load;
 <? if(!defined("IRC_MODE")) { ?>
 <input name="check_user" type="button" value="Check User" onClick="javascript:load_page(7)">
 <input name="send_sms" type="button" value="SMS" onClick="javascript:load_page(9)">
+<input name="print_frame" type="button" value="Print" onClick="window.print()">
 <? } ?>
 <?
 $query2 = squery("SELECT flags FROM groups WHERE name='%s'", $result['rep_g']);
