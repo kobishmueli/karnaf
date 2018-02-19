@@ -162,7 +162,10 @@ sp.priority_id=t.priority) WHERE 1";
     if($priority > 19) $status_style = "Karnaf_P_High"; // Red
     if($priority > 29) $status_style = "Karnaf_P_Critical";
     if($result['status'] == 0) $status_style = "Karnaf_P_Closed";
-    custom_list_item($result);
+    if(custom_list_item($result) == 0) {
+      $cnt--;
+      continue;
+    }
     $body = "";
     if(!empty($result['title'])) $body = "Title: ".$result['title']."\n\n";
     $body .= $result['description'];

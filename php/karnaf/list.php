@@ -154,7 +154,10 @@ while($result = sql_fetch_array($query)) {
   if($priority < 0) $status_style = "Karnaf_P_Low"; // LightBlue
   if($priority > 19) $status_style = "Karnaf_P_High"; // Red
   if($priority > 29) $status_style = "Karnaf_P_Critical";
-  custom_list_item($result);
+  if(custom_list_item($result) == 0) {
+    $cnt--;
+    continue;
+  }
   $body = "";
   if(!empty($result['title'])) $body = "Title: ".$result['title']."\n\n";
   $body .= $result['description'];
