@@ -7,7 +7,7 @@
 
 require_once("ktools-custom.php");
 require_once("defines.php");
-define("KARNAF_VERSION", "5.0.21");
+define("KARNAF_VERSION", "5.0.22");
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 if(function_exists("set_magic_quotes_runtime")) set_magic_quotes_runtime(0);
 if(!isset($override_magicquotes) && get_magic_quotes_gpc() == 1) die("Error: Incorrect magic_quotes_gpc setting!");
