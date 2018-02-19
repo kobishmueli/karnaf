@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2018 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -52,6 +52,10 @@ table {
 table.view_ticket_table {
   background: white;
   color: black;
+}
+
+.last_note {
+  word-break: break-all;
 }
 
 #maincontent {
