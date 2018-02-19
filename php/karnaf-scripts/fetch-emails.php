@@ -294,6 +294,8 @@ while($result = sql_fetch_array($query)) {
       if(stristr($m_from,"@abbyy.com")) continue;
       if(stristr($m_from,"@moonfroglabs.com")) continue;
       if(stristr($m_from,"@lfb.org")) continue;
+      if(stristr($m_from,"support@yesware.zendesk.com")) continue;
+      if(stristr($m_from,"discounts@")) continue;
       if(strstr($m_subject,"Automatic reply:")) continue;
       if(strstr($m_subject,"Auto: ")) continue;
       if(strstr($m_subject,"Auto Reply:")) continue;
