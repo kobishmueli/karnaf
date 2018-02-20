@@ -10,7 +10,7 @@ CheckOperSession();
 
 if(isset($_GET['term'])) {
   $term = "%".$_GET['term']."%";
-  $query = squery("SELECT user,email,fullname FROM users WHERE user LIKE '%s' OR email LIKE '%s' OR fullname LIKE '%s'",
+  $query = squery("SELECT id,user,email,fullname FROM users WHERE user LIKE '%s' OR email LIKE '%s' OR fullname LIKE '%s'",
                   $term, $term, $term);
   while(($result = sql_fetch_array($query))) {
     $results[] = array('id' => $result['id'], "label" => $result['fullname']." - ".$result['email'], "value" => $result['email']);
