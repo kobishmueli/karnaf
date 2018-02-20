@@ -3,6 +3,15 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.22
+- Updated KARNAF_VERSION to 5.0.22.
+- Updated a few copyright messages to 2018.
+- Blocked two more senders on fetch-emails.php.
+- Let custom_list_item() skip items from the list.
+- CSS fixes.
+- Added ajax_searchemail.php for the reply/replies autocomplete.
+- Added Nir A's patch for reply/replies autocomplete.
+
 Karnaf v5.0.21
 - Updated KARNAF_VERSION to 5.0.21.
 - Fixed the broken SQL INSERT.
