@@ -3,13 +3,15 @@
 # Karnaf HelpDesk System - Copyright (C) 2001-2018 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
-/* KTools v1.11 */
+/* KTools v1.12 */
 
 require_once("ktools-custom.php");
 require_once("defines.php");
 define("KARNAF_VERSION", "5.0.22");
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 if(function_exists("set_magic_quotes_runtime")) set_magic_quotes_runtime(0);
+if(!function_exists("preg_replace")) die("Error: can't find preg_replace() function (do you have php-pcre lib installed?).");
+if(!function_exists("mysql_connect")) die("Error: can't find mysql_connect() function (do you have php-mysql lib installed?).");
 if(!isset($override_magicquotes) && get_magic_quotes_gpc() == 1) die("Error: Incorrect magic_quotes_gpc setting!");
 if(function_exists("date_default_timezone_set")) date_default_timezone_set("UTC");
 
