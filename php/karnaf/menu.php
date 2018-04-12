@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2015 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2018 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -99,8 +99,10 @@ function Add_Item3($name, $link) {
 <? Add_Itemx("View Logs","mng_viewlogs.php"); ?>
 <? Add_Itemx("Edit SQL","mng_editsql.php"); ?>
 <? Add_Itemx("Stats","stats.php"); ?>
-<? Add_Item("Logout","logout.php"); ?>
+<? } else if(defined("STATS_GROUP") && IsGroupMember(STATS_GROUP)) { ?>
+<? Add_Itemx("Stats","stats.php"); ?>
 <? } ?>
+<? Add_Item("Logout","logout.php"); ?>
 <tr><td>
 <br>
 <u>Tickets:</u>
