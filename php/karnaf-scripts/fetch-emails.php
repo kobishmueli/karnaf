@@ -17,14 +17,11 @@ function karnaf_email($mail_to, $mail_subject, $mail_body) {
 }
 
 if(!isset($argv[1]) || $argv[1]!="force") {
-  if(file_exists("/tmp/karnaf-fetch-emails.lock")) {
-    safe_die("Error: lock file exists!");
+  $fp = fopen("/tmp/karnaf-fetch-emails.lock", "a");
+  if (!$fp || !flock($fp,LOCK_EX|LOCK_NB,$wb) || $wb) {
+    safe_die("Error: Failed to acquire lock /tmp/karnaf-fetch-emails.lock!");
   }
 }
-
-$fp = fopen("/tmp/karnaf-fetch-emails.lock", "w");
-fwrite($fp, "locked");
-fclose($fp);
 
 /* Cache all the mail rules... */
 $mail_rules = array();
@@ -594,6 +591,7 @@ while($result = sql_fetch_array($query)) {
   else echo "Couldn't open mailbox! Error: ".imap_last_error()."\n";
 }
 sql_free_result($query);
+fclose($fp);
 unlink("/tmp/karnaf-fetch-emails.lock");
 require_once("../contentpage_ftr.php");
 ?>
