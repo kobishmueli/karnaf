@@ -9,8 +9,8 @@ require_once("../contentpage_hdr.php");
 ?>
 <style>
 <? if(file_exists("karnaf.css")) echo file_get_contents("karnaf.css"); ?>
-#maincontent a {
-  color: Gray;
+#maincontent a,a:link,a:visited {
+  color: Blue;
 }
 
 #maincontent a:hover {
