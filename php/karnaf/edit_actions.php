@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2018 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -98,7 +98,7 @@ Action on behalf of:
 <?
   $query2 = squery("SELECT id,name,gdesc FROM groups ORDER BY name");
   while($result2 = sql_fetch_array($query2)) {
-    if(!IsGroupMember($result2['name']) || ($result2['name']!=KARNAF_ADMINS_GROUP && $result2['name']!=KARNAF_AOB_GROUP && $result2['name']!="dalnet-sra" && $result2['name']!=$result['rep_g'])) continue;
+    if(!IsGroupMember($result2['name']) || ($result2['name']!=KARNAF_ADMINS_GROUP && $result2['name']!=KARNAF_AOB_GROUP && $result2['name']!="dalnet-services" && $result2['name']!=$result['rep_g'])) continue;
 ?>
 <option value="<?=$result2['name']?>"><?=$result2['name']?></option>
 <?
