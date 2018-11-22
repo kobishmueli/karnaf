@@ -8,6 +8,7 @@ require_once("../ktools.php");
 require_once("../contentpage_hdr.php");
 ?>
 <style>
+<? if(file_exists("karnaf.css")) echo file_get_contents("karnaf.css"); ?>
 #maincontent a {
   color: Gray;
 }
