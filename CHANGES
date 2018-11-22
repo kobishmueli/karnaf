@@ -3,6 +3,12 @@
 # See the LICENSE file for more information.                     #
 ##################################################################
 
+Karnaf v5.0.23
+- Updated KARNAF_VERSION to 5.0.23.
+- Cosmetic: dalnet-sra --> dalnet-services
+- Include karnaf.css in karnaf_header.php if it exists.
+- Cosmetic CSS changes...
+
 Karnaf v5.0.22
 - Updated KARNAF_VERSION to 5.0.22.
 - Updated a few copyright messages to 2018.
