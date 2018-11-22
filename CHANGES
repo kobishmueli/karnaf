@@ -11,6 +11,11 @@ Karnaf v5.0.22
 - CSS fixes.
 - Added ajax_searchemail.php for the reply/replies autocomplete.
 - Added Nir A's patch for reply/replies autocomplete.
+- Forgot to add the id column (to ajax_searchemail.php).
+- Added safeguards to ktools.php to make sure preg_replace() and mysql_connect() functions exist.
+- Added a special check for PSEUDO_GROUP.
+- Added stats to the menu for STATS_GROUP.
+- Let's lock the tmp "lock file" instead of just creating it and checking it exists.
 
 Karnaf v5.0.21
 - Updated KARNAF_VERSION to 5.0.21.
