@@ -169,6 +169,7 @@ else $showall = "";
 <option value="none"<? if(strtolower($showall) == "none") echo " SELECTED"; ?>>*** Not Assigned ***</option>
 <option value="onlymy"<? if(strtolower($showall) == "onlymy") echo " SELECTED"; ?>>*** Only My Tickets ***</option>
 </select>
+</form>
 <form name="checks" id="checks" method="post">
 <br><br>
 <?
