@@ -77,17 +77,17 @@ if(isset($_POST['ids'])) {
 ?>
 <script language="JavaScript">
 function flagspam_onclick() {
-  document.form1.method = "post";
-  document.form1.flagspam.value = "1";
-  document.form1.reassign.value = "0";
-  document.form1.submit();
+  document.checks.method = "post";
+  document.checks.flagspam.value = "1";
+  document.checks.reassign.value = "0";
+  document.checks.submit();
 }
 
 function reassign_onclick() {
-  document.form1.method = "post";
-  document.form1.reassign.value = "1";
-  document.form1.flagspam.value = "0";
-  document.form1.submit();
+  document.checks.method = "post";
+  document.checks.reassign.value = "1";
+  document.checks.flagspam.value = "0";
+  document.checks.submit();
 }
 
 function showspan(spanname) {
@@ -133,8 +133,6 @@ function refresh() {
 setTimeout(refresh, 10000);
 </script>
 <form name="form1" id="form1" method="get">
-<input type="hidden" name="flagspam" id="flagspam" value="0">
-<input type="hidden" name="reassign" id="reassign" value="0">
 <select name="filter" onChange="form1.submit();">
 <option value="">---</option>
 <?
@@ -171,6 +169,8 @@ else $showall = "";
 </select>
 </form>
 <form name="checks" id="checks" method="post">
+<input type="hidden" name="flagspam" id="flagspam" value="0">
+<input type="hidden" name="reassign" id="reassign" value="0">
 <br><br>
 <?
 $query2 = squery("SELECT t.status,count(*) AS cnt,s.status_name FROM (karnaf_tickets AS t INNER JOIN karnaf_statuses AS s ON s.status_id=t.status) WHERE t.status!=0 AND t.status!=%d AND s.is_closed=0 AND t.rep_u='%s' GROUP BY t.status ORDER BY s.priority", $status, $a_user);
@@ -268,7 +268,7 @@ while($result = sql_fetch_array($query)) {
   $body = str_replace("<","&lt;",$body);
 ?>
 <tr class="<?=$curcol?>" style="cursor:pointer" onmouseover="this.style.backgroundColor='LightGreen'; this.style.color='Black'" onmouseout="this.style.backgroundColor=''; this.style.color=''" onclick=javascript:showspan('tspan<?=$result['id']?>')>
-<td class="<?=$status_style?>" align="center"><input name="ids[]" type="checkbox" value="<?=$result['id']?>"></td>
+<td class="<?=$status_style?>" align="center"><input name="ids[]" id="ids[]" type="checkbox" value="<?=$result['id']?>"></td>
 <td><span title="<?=$body?>" style="cursor:pointer">
 <? if((int)$result['newuserreply'] == 1) echo "<b>"; ?>
 <?=$result['id']?>
