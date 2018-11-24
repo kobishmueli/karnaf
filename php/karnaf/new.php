@@ -317,6 +317,7 @@ function open_search() {
 </td>
 </tr>
 <? if($isoper) { ?>
+<tr>
 <td>CC:</td>
 <td><input name="cc" id="cc" type="text" value=""></td>
 </tr>
