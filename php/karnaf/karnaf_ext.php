@@ -29,5 +29,5 @@ if(!empty($extra)) {
 </table>
 <?
 }
-require_once("karnaf_header.php");
+require_once("karnaf_footer.php");
 ?>
