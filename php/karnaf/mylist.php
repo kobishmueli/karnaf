@@ -211,7 +211,8 @@ foreach($a_groups as $grp) {
 <?
 $qstr = "SELECT t.id,t.randcode,t.status,t.title,t.description,t.unick,t.ufullname,t.uemail,t.uphone,t.ulocation,t.uip,t.rep_u,
 t.rep_g,t.open_time,t.opened_by,t.is_real,t.is_private,t.email_upd,t.memo_upd,c1.name AS cat1_name,c2.name AS cat2_name,c3.name AS
-cat3_name,s.status_name,up.priority_name AS upriority,t.priority,sp.priority_name AS spriority, t.last_note,t.newuserreply,t.rep_cc 
+cat3_name,s.status_name,up.priority_name AS upriority,t.priority,sp.priority_name AS spriority, t.last_note,t.newuserreply,t.rep_cc,
+t.escalation 
 FROM (karnaf_tickets AS t INNER JOIN karnaf_cat3 AS c3 ON c3.id=t.cat3_id INNER JOIN karnaf_cat2 AS c2 ON c2.id=c3.parent
 INNER JOIN karnaf_cat1 AS c1 ON c1.id=c2.parent INNER JOIN karnaf_statuses AS s ON s.status_id=t.status INNER JOIN karnaf_priorities AS up ON
 up.priority_id=t.upriority INNER JOIN karnaf_priorities AS sp ON
@@ -297,7 +298,15 @@ echo $userinfo;
 <td><?=showtime($result['open_time'])?></td>
 <td><?=$action_cnt+$reply_cnt?></td>
 <td><?=do_duration(time() - $result['open_time'])?></td>
-<td><?=empty($result['last_note'])?"<center>N/A</center>":$result['last_note']?></td>
+<td>
+<?
+  if((int)$result['escalation'] >= 1) echo "<b><u>Escalated</u></b>: ";
+  $last_note = $result['last_note'];
+  if(empty($result['last_note'])) $last_note = "<center>N/A</center>";
+  if(strlen($last_note) > 100) $last_note = substr($last_note,0,100)."...";
+  echo $last_note;
+?>
+</td>
 </tr>
 <tr>
 <td id="tspan<?=$result['id']?>" style="display:none" colspan="10" align="center">

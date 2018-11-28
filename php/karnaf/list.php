@@ -196,8 +196,13 @@ echo $userinfo;
 </td>
 <td><?=do_duration(time() - $result['open_time'])?></td>
 <td>
-<? if((int)$result['escalation'] >= 1) echo "<b><u>Escalated</u></b>: "; ?>
-<?=empty($result['last_note'])?"<center>N/A</center>":$result['last_note']?>
+<?
+  if((int)$result['escalation'] >= 1) echo "<b><u>Escalated</u></b>: ";
+  $last_note = $result['last_note'];
+  if(empty($result['last_note'])) $last_note = "<center>N/A</center>";
+  if(strlen($last_note) > 100) $last_note = substr($last_note,0,100)."...";
+  echo $last_note;
+?>
 </td>
 </tr>
 <?
