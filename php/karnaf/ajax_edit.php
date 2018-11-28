@@ -32,7 +32,8 @@ while(($result2 = sql_fetch_array($query2))) {
   }
   $cnt++;
   if($res != "") $res .= ", ";
-  $res .= $result2['fullname'];
+  if(!defined("IRC_MODE") $res .= $result2['fullname'];
+  else $res .= $result2['user'];
 }
 sql_free_result($query2);
 if($foundme) squery("UPDATE karnaf_watching SET timestamp=%d WHERE tid=%d AND user='%s'", time(), $id, $a_user);
