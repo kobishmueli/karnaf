@@ -1,9 +1,9 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2018 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2019 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
-/* KTools v1.12 */
+/* KTools v1.13 */
 
 require_once("ktools-custom.php");
 require_once("defines.php");
@@ -484,7 +484,7 @@ if(!function_exists("AccessDenied")) {
 if(!function_exists("datetounixtime")) {
   function datetounixtime($date) {
     global $a_timezone;
-    list($day, $month, $year) = split('[/.-]', $date);
+    list($day, $month, $year) = preg_split('[/.-]', $date);
     return mktime(0, 0, 0, $month, $day, $year) - $a_timezone;
   }
 }
