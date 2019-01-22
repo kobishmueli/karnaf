@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2016 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2019 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -37,7 +37,7 @@ while(($result2 = sql_fetch_array($query2))) {
 }
 sql_free_result($query2);
 if($foundme) squery("UPDATE karnaf_watching SET timestamp=%d WHERE tid=%d AND user='%s'", time(), $id, $a_user);
-else squery("INSERT INTO karnaf_watching(tid,user,fullname,timestamp) VALUES(%d,'%s','%s',%d)", $id, $a_user, $a_fullname, time());
+else squery("INSERT INTO karnaf_watching(tid,user,fullname,timestamp) VALUES(%d,'%s','%s',%d)", $id, $a_user, isset($a_fullname)?$a_fullname:$a_user, time());
 
 if($cnt == 1) echo "The following operator is also editing this ticket: ".$res.".\r\n";
 else if($cnt > 0) echo "The following operators are also editing this ticket: ".$res.".\r\n";
