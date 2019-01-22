@@ -170,7 +170,7 @@ if($result = sql_fetch_array($query)) {
 <?
   if($result['extra']) {
     $i = 0;
-    foreach(split(',',$result['extra']) as $row) {
+    foreach(explode(',',$result['extra']) as $row) {
       $i++;
 ?>
 <tr>

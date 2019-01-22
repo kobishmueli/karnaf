@@ -16,7 +16,7 @@ if(!empty($extra)) {
 <tr class="Karnaf_Head2"><td colspan="2">Extra Information</td></tr>
 <?
   $i = 0;
-  foreach(split(',',$extra) as $row) {
+  foreach(explode(',',$extra) as $row) {
   $i++;
 ?>
 <tr>

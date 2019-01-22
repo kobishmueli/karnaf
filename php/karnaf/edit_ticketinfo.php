@@ -58,7 +58,7 @@ sql_free_result($query2);
 <?
   if($result['extra']) {
     $i = 0;
-    foreach(split(',',$result['extra']) as $row) {
+    foreach(explode(',',$result['extra']) as $row) {
       $i++;
 ?>
 <tr>
