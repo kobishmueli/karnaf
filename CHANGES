@@ -1,5 +1,5 @@
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2018 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2019 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 
@@ -8,6 +8,14 @@ Karnaf v5.0.23
 - Cosmetic: dalnet-sra --> dalnet-services
 - Include karnaf.css in karnaf_header.php if it exists.
 - Cosmetic CSS changes...
+- Add missing form closure to mylist.php.
+- Fix broken actions on mylist.php (thanks key!).
+- Fix logic mistake on karnaf_ext.php (karnaf_header.php instead of karnaf_footer.php).
+- Cosmetic: add missing tr to new.php.
+- Don't show full name when running in IRC_MODE (ajax_edit.php).
+- Truncate last_note on list.php and mylist.php if it's too long.
+- split --> explode (for PHP 7.0.0+).
+- Small fix for ajax_edit.php when a_fullname isn't set.
 
 Karnaf v5.0.22
 - Updated KARNAF_VERSION to 5.0.22.
