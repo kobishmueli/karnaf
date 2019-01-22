@@ -1,6 +1,6 @@
 <?php
 ##################################################################
-# Karnaf HelpDesk System - Copyright (C) 2001-2017 Kobi Shmueli. #
+# Karnaf HelpDesk System - Copyright (C) 2001-2019 Kobi Shmueli. #
 # See the LICENSE file for more information.                     #
 ##################################################################
 require_once("../ktools.php");
